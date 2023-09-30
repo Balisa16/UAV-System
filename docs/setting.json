@@ -1,0 +1,100 @@
+[
+    {
+        "host": "a2",
+        "ip": "192.168.0.100",
+        "pass": "1",
+        "param": [
+            {
+                "param_id": "VISO_TYPE",
+                "type": "select",
+                "value": 2,
+                "selection": [
+                    {
+                        "value": 0,
+                        "description": "None"
+                    },
+                    {
+                        "value": 1,
+                        "description": "MAVLink"
+                    },
+                    {
+                        "value": 2,
+                        "description": "Intel T265"
+                    },
+                    {
+                        "value": 3,
+                        "description": "VOXL (Modal AI)"
+                    }
+                ]
+            },
+            {
+                "param_id": "VISO_POS_X",
+                "type": "float",
+                "value": 0,
+                "min": -5,
+                "maks": 5,
+                "selection": []
+            },
+            {
+                "param_id": "VISO_POS_Y",
+                "type": "float",
+                "value": 0,
+                "min": -5,
+                "maks": 5,
+                "selection": []
+            },
+            {
+                "param_id": "VISO_POS_Z",
+                "type": "float",
+                "value": 0,
+                "min": -5,
+                "maks": 5,
+                "selection": []
+            },
+            {
+                "param_id": "VISO_ORIENT",
+                "type": "select",
+                "value": 0,
+                "selection": [
+                    {
+                        "value": 0,
+                        "description": "Forward"
+                    },
+                    {
+                        "value": 2,
+                        "description": "Right"
+                    },
+                    {
+                        "value": 4,
+                        "description": "Back"
+                    },
+                    {
+                        "value": 6,
+                        "description": "Left"
+                    },
+                    {
+                        "value": 24,
+                        "description": "Up"
+                    },
+                    {
+                        "value": 25,
+                        "description": "Down"
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "host": "odroid",
+        "ip": "192.168.0.102",
+        "pass": "odroid",
+        "commands": [
+            {
+                "name": "Stream Video",
+                "command": "./send.sh"
+            }
+        ]
+    }
+]
+
+  
