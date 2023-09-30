@@ -195,6 +195,451 @@
                 ]
             },
             {
+                "param_id": "EK3_ENABLE",
+                "type": "select",
+                "value": 1,
+                "selection": [
+                    {
+                        "value": 0,
+                        "description": "Disabled"
+                    },
+                    {
+                        "value": 1,
+                        "description": "Enable"
+                    }
+                ]
+            },
+            {
+                "param_id": "EK3_GLITCH_RAD",
+                "type": "float",
+                "value": 300,
+                "min": 100,
+                "max": 1000,
+            },
+            {
+                "param_id": "EK3_SRC_OPTIONS",
+                "type": "bool",
+                "value": 0,
+                "description": "Fuse All Velocities"
+            },
+            {
+                "param_id": "EK3_SRC1_POSXY",
+                "type": "select",
+                "value": 3,
+                "selection": [
+                    {
+                        "value": 0,
+                        "description": "None"
+                    },
+                    {
+                        "value": 3,
+                        "description": "GPS"
+                    },
+                    {
+                        "value": 4,
+                        "description": "Beacon"
+                    },
+                    {
+                        "value": 6,
+                        "description": "External Nav"
+                    }
+                ]
+            },
+            {
+                "param_id": "EK3_SRC1_VELXY",
+                "type": "select",
+                "value": 3,
+                "selection": [
+                    {
+                        "value": 0,
+                        "description": "None"
+                    },
+                    {
+                        "value": 3,
+                        "description": "GPS"
+                    },
+                    {
+                        "value": 4,
+                        "description": "Beacon"
+                    },
+                    {
+                        "value": 5,
+                        "description": "Optical Flow"
+                    },
+                    {
+                        "value": 6,
+                        "description": "External Nav"
+                    },
+                    {
+                        "value": 7,
+                        "description": "Wheel Encoder"
+                    },
+                ]
+            },
+            {
+                "param_id": "EK3_SRC1_POSZ",
+                "type": "select",
+                "value": 1,
+                "selection": [
+                    {
+                        "value": 0,
+                        "description": "None"
+                    },
+                    {
+                        "value": 1,
+                        "description": "Baro"
+                    },
+                    {
+                        "value": 2,
+                        "description": "Range Finder"
+                    },
+                    {
+                        "value": 3,
+                        "description": "GPS"
+                    },
+                    {
+                        "value": 4,
+                        "description": "Beacon"
+                    },
+                    {
+                        "value": 6,
+                        "description": "External Nav"
+                    }
+                ]
+            },
+            {
+                "param_id": "EK3_SRC1_VELZ",
+                "type": "select",
+                "value": 1,
+                "selection": [
+                    {
+                        "value": 0,
+                        "description": "None"
+                    },
+                    {
+                        "value": 3,
+                        "description": "GPS"
+                    },
+                    {
+                        "value": 4,
+                        "description": "Beacon"
+                    },
+                    {
+                        "value": 6,
+                        "description": "External Nav"
+                    }
+                ]
+            },
+            {
+                "param_id": "EK3_SRC1_YAW",
+                "type": "select",
+                "value": 1,
+                "selection": [
+                    {
+                        "value": 0,
+                        "description": "None"
+                    },
+                    {
+                        "value": 1,
+                        "description": "Compass"
+                    },
+                    {
+                        "value": 2,
+                        "description": "GPS"
+                    },
+                    {
+                        "value": 3,
+                        "description": "GPS with Compass Fallback"
+                    },
+                    {
+                        "value": 6,
+                        "description": "External Nav"
+                    },
+                    {
+                        "value": 8,
+                        "description": "GSF (Gaussian Sum Filter)"
+                    }
+                ]
+            },
+            {
+                "param_id": "EK3_SRC2_POSXY",
+                "type": "select",
+                "value": 3,
+                "selection": [
+                    {
+                        "value": 0,
+                        "description": "None"
+                    },
+                    {
+                        "value": 3,
+                        "description": "GPS"
+                    },
+                    {
+                        "value": 4,
+                        "description": "Beacon"
+                    },
+                    {
+                        "value": 6,
+                        "description": "External Nav"
+                    }
+                ]
+            },
+            {
+                "param_id": "EK3_SRC2_VELXY",
+                "type": "select",
+                "value": 3,
+                "selection": [
+                    {
+                        "value": 0,
+                        "description": "None"
+                    },
+                    {
+                        "value": 3,
+                        "description": "GPS"
+                    },
+                    {
+                        "value": 4,
+                        "description": "Beacon"
+                    },
+                    {
+                        "value": 5,
+                        "description": "Optical Flow"
+                    },
+                    {
+                        "value": 6,
+                        "description": "External Nav"
+                    },
+                    {
+                        "value": 7,
+                        "description": "Wheel Encoder"
+                    },
+                ]
+            },
+            {
+                "param_id": "EK3_SRC2_POSZ",
+                "type": "select",
+                "value": 1,
+                "selection": [
+                    {
+                        "value": 0,
+                        "description": "None"
+                    },
+                    {
+                        "value": 1,
+                        "description": "Baro"
+                    },
+                    {
+                        "value": 2,
+                        "description": "Range Finder"
+                    },
+                    {
+                        "value": 3,
+                        "description": "GPS"
+                    },
+                    {
+                        "value": 4,
+                        "description": "Beacon"
+                    },
+                    {
+                        "value": 6,
+                        "description": "External Nav"
+                    }
+                ]
+            },
+            {
+                "param_id": "EK3_SRC2_VELZ",
+                "type": "select",
+                "value": 1,
+                "selection": [
+                    {
+                        "value": 0,
+                        "description": "None"
+                    },
+                    {
+                        "value": 3,
+                        "description": "GPS"
+                    },
+                    {
+                        "value": 4,
+                        "description": "Beacon"
+                    },
+                    {
+                        "value": 6,
+                        "description": "External Nav"
+                    }
+                ]
+            },
+            {
+                "param_id": "EK3_SRC2_YAW",
+                "type": "select",
+                "value": 1,
+                "selection": [
+                    {
+                        "value": 0,
+                        "description": "None"
+                    },
+                    {
+                        "value": 1,
+                        "description": "Compass"
+                    },
+                    {
+                        "value": 2,
+                        "description": "GPS"
+                    },
+                    {
+                        "value": 3,
+                        "description": "GPS with Compass Fallback"
+                    },
+                    {
+                        "value": 6,
+                        "description": "External Nav"
+                    },
+                    {
+                        "value": 8,
+                        "description": "GSF (Gaussian Sum Filter)"
+                    }
+                ]
+            },
+            {
+                "param_id": "EK3_SRC3_POSXY",
+                "type": "select",
+                "value": 3,
+                "selection": [
+                    {
+                        "value": 0,
+                        "description": "None"
+                    },
+                    {
+                        "value": 3,
+                        "description": "GPS"
+                    },
+                    {
+                        "value": 4,
+                        "description": "Beacon"
+                    },
+                    {
+                        "value": 6,
+                        "description": "External Nav"
+                    }
+                ]
+            },
+            {
+                "param_id": "EK3_SRC3_VELXY",
+                "type": "select",
+                "value": 3,
+                "selection": [
+                    {
+                        "value": 0,
+                        "description": "None"
+                    },
+                    {
+                        "value": 3,
+                        "description": "GPS"
+                    },
+                    {
+                        "value": 4,
+                        "description": "Beacon"
+                    },
+                    {
+                        "value": 5,
+                        "description": "Optical Flow"
+                    },
+                    {
+                        "value": 6,
+                        "description": "External Nav"
+                    },
+                    {
+                        "value": 7,
+                        "description": "Wheel Encoder"
+                    },
+                ]
+            },
+            {
+                "param_id": "EK3_SRC3_POSZ",
+                "type": "select",
+                "value": 1,
+                "selection": [
+                    {
+                        "value": 0,
+                        "description": "None"
+                    },
+                    {
+                        "value": 1,
+                        "description": "Baro"
+                    },
+                    {
+                        "value": 2,
+                        "description": "Range Finder"
+                    },
+                    {
+                        "value": 3,
+                        "description": "GPS"
+                    },
+                    {
+                        "value": 4,
+                        "description": "Beacon"
+                    },
+                    {
+                        "value": 6,
+                        "description": "External Nav"
+                    }
+                ]
+            },
+            {
+                "param_id": "EK3_SRC3_VELZ",
+                "type": "select",
+                "value": 1,
+                "selection": [
+                    {
+                        "value": 0,
+                        "description": "None"
+                    },
+                    {
+                        "value": 3,
+                        "description": "GPS"
+                    },
+                    {
+                        "value": 4,
+                        "description": "Beacon"
+                    },
+                    {
+                        "value": 6,
+                        "description": "External Nav"
+                    }
+                ]
+            },
+            {
+                "param_id": "EK3_SRC3_YAW",
+                "type": "select",
+                "value": 1,
+                "selection": [
+                    {
+                        "value": 0,
+                        "description": "None"
+                    },
+                    {
+                        "value": 1,
+                        "description": "Compass"
+                    },
+                    {
+                        "value": 2,
+                        "description": "GPS"
+                    },
+                    {
+                        "value": 3,
+                        "description": "GPS with Compass Fallback"
+                    },
+                    {
+                        "value": 6,
+                        "description": "External Nav"
+                    },
+                    {
+                        "value": 8,
+                        "description": "GSF (Gaussian Sum Filter)"
+                    }
+                ]
+            },
+            {
                 "param_id": "RC5_MIN",
                 "type": "int",
                 "value": 1000,
