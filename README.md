@@ -20,3 +20,10 @@ EMIRO is EEPIS Multirotor Research team that work under the auspices of Dirganta
 5. [JSON C++](https://github.com/open-source-parsers/jsoncpp) (jsoncpp)
 6. Curses
 7. [Curl](https://www.cyberciti.biz/faq/how-to-install-curl-command-on-a-ubuntu-linux)
+
+## Install
+```
+cd ~/catkin_ws/src
+git clone https://github.com/Balisa16/EMIRO.git emiro
+catkin build emiro
+```
