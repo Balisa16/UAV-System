@@ -16,7 +16,7 @@ namespace EMIRO{
 
 	void load()
 	{
-
+		log->write_show(LogLevel::INFO, "Load Parameter Service");
 	}
 
 	Param::~Param(){}
