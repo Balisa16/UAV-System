@@ -34,10 +34,10 @@
 
 #include <cinttypes>
 #include <cstdio>
-#include "pin.hpp"
-#include "logger.hpp"
-#include "enum.hpp"
-#include "param.hpp"
+#include <param.hpp>
+#include <pin.hpp>
+#include <logger.hpp>
+#include <enum.hpp>
 
 namespace EMIRO {
   class Copter {
@@ -74,10 +74,10 @@ namespace EMIRO {
     Mode misi_mode;
 
     // Logger
-    EMIRO::Logger copter_logger;
+    Logger copter_logger;
 
     // Parameter settings
-    EMIRO::Param copter_param;
+    Param copter_param;
 
     // Initialize frame
     bool is_init_pubs_subs = false, is_init_frame = false;
