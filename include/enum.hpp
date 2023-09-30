@@ -182,6 +182,10 @@ namespace EMIRO{
     ParamB EK2_ENABLE;
     ParamI AHRS_EKF_TYPE;
 
+    // Basic Param
+    ParamI LAND_SPEED; // 30 to 200
+    ParamI LAND_SPEED_HIGH; // 0 to 2500
+
     // RC Option
     ParamB RC1_OPTION;
     ParamB RC2_OPTION;
@@ -192,7 +196,16 @@ namespace EMIRO{
     ParamB RC7_OPTION;
     ParamB RC8_OPTION;
 
+    // CAN Bus
+    ParamI CAN_P1_DRIVER;
+    ParamI CAN_P2_DRIVER;
+    ParamI CAN_D1_PROTOCOL;
+    ParamI CAN_D2_PROTOCOL;
+
+
     ParamB EK3_SRC_OPTIONS;
+    ParamF EK3_GLITCH_RAD;
+    ParamI EK3_RNG_USE_HGT;
     // EKF Source
     ParamI EK3_SRC1_POSXY;
     ParamI EK3_SRC1_VELXY;
@@ -206,6 +219,10 @@ namespace EMIRO{
     ParamI EK3_SRC3_VELXY;
     ParamI EK3_SRC3_POSZ;
     ParamI EK3_SRC3_YAW;
+
+    // GPS Parameters
+    ParamI GPS_TYPE;
+    ParamI GPS_TYPE2;
   }ArduParam;
 }
 
