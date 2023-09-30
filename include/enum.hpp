@@ -12,6 +12,7 @@
 #include <iostream>
 
 namespace EMIRO{
+
   enum class Mode{
     Indoor,
     Outdoor
@@ -151,7 +152,34 @@ namespace EMIRO{
     float left;
     float right;
   }Axis;
+
+  typedef struct{
+    bool value;
+    bool is_set;
+    ParamB(bool init_value = false, bool init_is_set = false) : value(init_value), is_set(init_is_set) {}
+  }ParamB;
   
+  typedef struct{
+    bool is_set;
+    int value;
+    int min;
+    int maks;
+    ParamI(bool init_is_set = false, int init_value = 0, int init_min = 0, int init_maks = 0) : 
+      is_set(init_is_set), value(init_value), min(init_min), maks(init_maks) {}
+  }ParamI;
+
+  typedef struct{
+    bool is_set;
+    int value;
+    int min;
+    int maks;
+    ParamF(bool init_is_set = false, float init_value = 0.0f, float init_min = 0.0f, float init_maks = 0.0f) : 
+      is_set(init_is_set), value(init_value), min(init_min), maks(init_maks) {}
+  }ParamF;
+
+  typedef struct{
+
+  }ArduParam;
 }
 
 
