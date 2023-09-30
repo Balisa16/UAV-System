@@ -8,8 +8,8 @@ Open Source Library for Autonomous Drone.
 
 ## About
 EMIRO is EEPIS Multirotor Research team that work under the auspices of Dirgantara [PENS](https://www.pens.ac.id/). This research team mainly focused on Vertical Take Off Landing research. EMIRO active following some VTOL competition especially KRTI (Kontes Robot Terbang Indonesia).</br>
-### More : 
-[![LinkedIn](https://img.shields.io/badge/LinkedIn-%230077B5.svg?logo=linkedin&logoColor=white)](https://id.linkedin.com/company/emiro-pens) 
+**More :**</br> 
+> [![LinkedIn](https://img.shields.io/badge/LinkedIn-%230077B5.svg?logo=linkedin&logoColor=white)](https://id.linkedin.com/company/emiro-pens) 
 
 
 ## Dependencies
