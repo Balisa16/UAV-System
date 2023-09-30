@@ -176,7 +176,11 @@ namespace EMIRO{
   typedef struct{
     int option_int;
     std::string option_desc;
-    Option(int id, std::string desc) : option_int(id), option_desc(desc){}
+    Option(int id, std::string desc)
+    {
+      option_int = id;
+      option_desc = desc;
+    }
   }Option;
 
   typedef struct{

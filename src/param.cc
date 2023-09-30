@@ -41,7 +41,7 @@ namespace EMIRO{
 		        if(_param_type.c_str() == "select")
 		        {
 		        	int _value = stoi(item["type"].asString());
-		        	ParamS _new_param(_param_id, _param_type, _value);
+		        	ParamS _new_param = ParamS(_param_id, _param_type, _value);
 		        	for (const auto& _selection : item["selection"])
 		        	{
 		        		Option _option(
@@ -50,7 +50,7 @@ namespace EMIRO{
 		        		_new_param.add(_option);
 		        	}
 		        	selection_param.push_back(_new_param);
-		        	
+
 		        	/*for (int i = 0; i < item["selection"].size(); i++)
 			        {
 			            int _int_id = item["selectio"][i]["name"].asString();
