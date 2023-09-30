@@ -14,7 +14,7 @@ namespace EMIRO{
 	{
 	private:
 		ros::NodeHandle node;
-		Logger log;
+		std::shared_ptr<Logger> log;
 		ros::ServiceClient param_set_client;
 		ros::ServiceClient param_get_client;
 	public:
