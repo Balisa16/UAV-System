@@ -1,7 +1,7 @@
 # EMIRO Autonomous Copter
 
 Open Source Library for Autonomous Drone.</br></br>
-**Created**&nbsp;: 30 September 2023 </br>
+**Created**&emsp;: 30 September 2023 </br>
 **Finished**&emsp;: - </br>
 
 ## About
