@@ -19,7 +19,7 @@ namespace EMIRO{
 		ros::ServiceClient param_get_client;
 	public:
 		Param();
-		void init(ros::NodeHandle& nh, Logger& logger);
+		void init(ros::NodeHandle *nh, Logger *logger);
 		void load();
 		~Param();
 		
