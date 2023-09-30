@@ -178,7 +178,34 @@ namespace EMIRO{
   }ParamF;
 
   typedef struct{
+    ParamB EK3_ENABLE;
+    ParamB EK2_ENABLE;
+    ParamI AHRS_EKF_TYPE;
 
+    // RC Option
+    ParamB RC1_OPTION;
+    ParamB RC2_OPTION;
+    ParamB RC3_OPTION;
+    ParamB RC4_OPTION;
+    ParamB RC5_OPTION;
+    ParamB RC6_OPTION;
+    ParamB RC7_OPTION;
+    ParamB RC8_OPTION;
+
+    ParamB EK3_SRC_OPTIONS;
+    // EKF Source
+    ParamI EK3_SRC1_POSXY;
+    ParamI EK3_SRC1_VELXY;
+    ParamI EK3_SRC1_POSZ;
+    ParamI EK3_SRC1_YAW;
+    ParamI EK3_SRC2_POSXY;
+    ParamI EK3_SRC2_VELXY;
+    ParamI EK3_SRC2_POSZ;
+    ParamI EK3_SRC2_YAW;
+    ParamI EK3_SRC3_POSXY;
+    ParamI EK3_SRC3_VELXY;
+    ParamI EK3_SRC3_POSZ;
+    ParamI EK3_SRC3_YAW;
   }ArduParam;
 }
 
