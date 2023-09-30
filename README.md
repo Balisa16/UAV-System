@@ -1,10 +1,10 @@
 # EMIRO Autonomous Copter
 
 Open Source Library for Autonomous Drone.</br></br>
- | 
-------------- | -------------
-Created  | 30 September 2023
-Finished  | - </br>
+| | |
+| ------------- | ------------- |
+| Created  | 30 September 2023 |
+| Finished  | - | </br>
 
 ## About
 EMIRO is EEPIS Multirotor Research team that work under the auspices of Dirgantara [PENS](https://www.pens.ac.id/). This research team mainly focused on Vertical Take Off Landing research. EMIRO active following some VTOL competition especially KRTI (Kontes Robot Terbang Indonesia).</br>
