@@ -5,6 +5,196 @@
         "pass": "1",
         "param": [
             {
+                "param_id": "AHRS_GPS_USE",
+                "type": "select",
+                "value": 1,
+                "selection": [
+                    {
+                        "value": 0,
+                        "description": "Disabled"
+                    },
+                    {
+                        "value": 1,
+                        "description": "Use GPS for DCM position"
+                    },
+                    {
+                        "value": 2,
+                        "description": "Use GPS for DCM position and height"
+                    }
+                ]
+            },
+            {
+                "param_id": "AHRS_EKF_TYPE",
+                "type": "select",
+                "value": 1,
+                "selection": [
+                    {
+                        "value": 0,
+                        "description": "Disabled"
+                    },
+                    {
+                        "value": 2,
+                        "description": "Enable EKF2"
+                    },
+                    {
+                        "value": 3,
+                        "description": "Enable EKF3"
+                    },
+                    {
+                        "value": 11,
+                        "description": "External AHRS"
+                    }
+                ]
+            },
+            {
+                "param_id": "CAN_D1_PROTOCOL",
+                "type": "select",
+                "value": 0,
+                "selection": [
+                    {
+                        "value": 0,
+                        "description": "Disabled"
+                    },
+                    {
+                        "value": 1,
+                        "description": "Drone CAN"
+                    },
+                    {
+                        "value": 4,
+                        "description": "Piccolo CAN"
+                    },
+                    {
+                        "value": 6,
+                        "description": "EFI NWPMU"
+                    },
+                    {
+                        "value": 7,
+                        "description": "USD1"
+                    },
+                    {
+                        "value": 8,
+                        "description": "KDECAN"
+                    },
+                    {
+                        "value": 10,
+                        "description": "Scripting"
+                    },
+                    {
+                        "value": 11,
+                        "description": "Benewake"
+                    },
+                    {
+                        "value": 12,
+                        "description": "Scripting2"
+                    },
+                    {
+                        "value": 13,
+                        "description": "TOFSenseP"
+                    },
+                    {
+                        "value": 14,
+                        "description": "NanoRadar NRA24"
+                    }
+                ]
+            },
+            {
+                "param_id": "CAN_D2_PROTOCOL",
+                "type": "select",
+                "value": 0,
+                "selection": [
+                    {
+                        "value": 0,
+                        "description": "Disabled"
+                    },
+                    {
+                        "value": 1,
+                        "description": "Drone CAN"
+                    },
+                    {
+                        "value": 4,
+                        "description": "Piccolo CAN"
+                    },
+                    {
+                        "value": 6,
+                        "description": "EFI NWPMU"
+                    },
+                    {
+                        "value": 7,
+                        "description": "USD1"
+                    },
+                    {
+                        "value": 8,
+                        "description": "KDECAN"
+                    },
+                    {
+                        "value": 10,
+                        "description": "Scripting"
+                    },
+                    {
+                        "value": 11,
+                        "description": "Benewake"
+                    },
+                    {
+                        "value": 12,
+                        "description": "Scripting2"
+                    },
+                    {
+                        "value": 13,
+                        "description": "TOFSenseP"
+                    },
+                    {
+                        "value": 14,
+                        "description": "NanoRadar NRA24"
+                    }
+                ]
+            },
+            {
+                "param_id": "CAN_P1_DRIVER",
+                "type": "select",
+                "value": 0,
+                "selection": [
+                    {
+                        "value": 0,
+                        "description": "Disabled"
+                    },
+                    {
+                        "value": 1,
+                        "description": "First Driver"
+                    },
+                    {
+                        "value": 2,
+                        "description": "Second Driver"
+                    },
+                    {
+                        "value": 3,
+                        "description": "Third Driver"
+                    }
+                ]
+            },
+            {
+                "param_id": "CAN_P2_DRIVER",
+                "type": "select",
+                "value": 0,
+                "selection": [
+                    {
+                        "value": 0,
+                        "description": "Disabled"
+                    },
+                    {
+                        "value": 1,
+                        "description": "First Driver"
+                    },
+                    {
+                        "value": 2,
+                        "description": "Second Driver"
+                    },
+                    {
+                        "value": 3,
+                        "description": "Third Driver"
+                    }
+                ]
+            },
+            {
                 "param_id": "VISO_TYPE",
                 "type": "select",
                 "value": 2,
