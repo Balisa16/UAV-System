@@ -223,6 +223,12 @@ namespace EMIRO{
     // GPS Parameters
     ParamI GPS_TYPE;
     ParamI GPS_TYPE2;
+
+    // Viso Parameters
+    ParamI VISO_TYPE;
+    ParamF VISO_POS_X;
+    ParamF VISO_POS_Y;
+    ParamF VISO_POS_Z;
   }ArduParam;
 }
 
