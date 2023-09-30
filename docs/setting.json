@@ -195,6 +195,125 @@
                 ]
             },
             {
+                "param_id": "RC5_MIN",
+                "type": "int",
+                "value": 1000,
+                "min": 800,
+                "max": 2200,
+            },
+            {
+                "param_id": "RC5_TRIM",
+                "type": "int",
+                "value": 1500,
+                "min": 800,
+                "max": 2200,
+            },
+            {
+                "param_id": "RC5_MIN",
+                "type": "int",
+                "value": 1500,
+                "min": 800,
+                "max": 2200,
+            },
+            {
+                "param_id": "RC5_REVERSED",
+                "type": "select",
+                "value": 0,
+                "selection": [
+                    {
+                        "value": 0,
+                        "description": "Normal"
+                    },
+                    {
+                        "value": 1,
+                        "description": "Reversed"
+                    }
+                ]
+            },
+            {
+                "param_id": "RC5_OPTION",
+                "type": "select",
+                "value": 0,
+                "selection": [
+                    {
+                        "value": 0,
+                        "description": "Do Nothing"
+                    },
+                    {
+                        "value": 2,
+                        "description": "Flip Mode"
+                    },
+                    {
+                        "value": 3,
+                        "description": "Simple Mode"
+                    },
+                    {
+                        "value": 4,
+                        "description": "RTL"
+                    },
+                    {
+                        "value": 10,
+                        "description": "RangeFinder Enable"
+                    },
+                    {
+                        "value": 13,
+                        "description": "Super Simple Mode"
+                    },
+                    {
+                        "value": 16,
+                        "description": "AUTO Mode"
+                    },
+                    {
+                        "value": 17,
+                        "description": "AUTOTUNE Mode"
+                    },
+                    {
+                        "value": 18,
+                        "description": "LAND Mode"
+                    },
+                    {
+                        "value": 55,
+                        "description": "GUIDED Mode"
+                    },
+                    {
+                        "value": 56,
+                        "description": "LOITER Mode"
+                    },
+                    {
+                        "value": 57,
+                        "description": "FOLLOW Mode"
+                    },
+                    {
+                        "value": 68,
+                        "description": "STABILIZE Mode"
+                    },
+                    {
+                        "value": 69,
+                        "description": "POSHOLD Mode"
+                    },
+                    {
+                        "value": 70,
+                        "description": "ALTHOLD Mode"
+                    },
+                    {
+                        "value": 71,
+                        "description": "FLOWHOLD Mode"
+                    },
+                    {
+                        "value": 80,
+                        "description": "VisOdom Align"
+                    },
+                    {
+                        "value": 81,
+                        "description": "Disarm"
+                    },
+                    {
+                        "value": 90,
+                        "description": "EKF Pos Source"
+                    }
+                ]
+            },
+            {
                 "param_id": "VISO_TYPE",
                 "type": "select",
                 "value": 2,
@@ -222,7 +341,7 @@
                 "type": "float",
                 "value": 0,
                 "min": -5,
-                "maks": 5,
+                "max": 5,
                 "selection": []
             },
             {
@@ -230,7 +349,7 @@
                 "type": "float",
                 "value": 0,
                 "min": -5,
-                "maks": 5,
+                "max": 5,
                 "selection": []
             },
             {
@@ -238,7 +357,7 @@
                 "type": "float",
                 "value": 0,
                 "min": -5,
-                "maks": 5,
+                "max": 5,
                 "selection": []
             },
             {
@@ -271,17 +390,6 @@
                         "description": "Down"
                     }
                 ]
-            }
-        ]
-    },
-    {
-        "host": "odroid",
-        "ip": "192.168.0.102",
-        "pass": "odroid",
-        "commands": [
-            {
-                "name": "Stream Video",
-                "command": "./send.sh"
             }
         ]
     }
