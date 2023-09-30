@@ -33,6 +33,7 @@ namespace EMIRO{
 		    Json::parseFromStream(_reader_builder, reader, &_json_data, &errs);
 
 		    // Read from stream
+		    std::vector<ParamS> selection_param;
 		    for (const auto& item : _json_data)
 		    {
 		        std::string _param_id = item["param_id"].asString();
@@ -40,12 +41,16 @@ namespace EMIRO{
 		        if(_param_type.c_str() == "select")
 		        {
 		        	int _value = stoi(item["type"].asString());
+		        	ParamS _new_param(_param_id, _param_type, _value);
 		        	for (const auto& _selection : item["selection"])
 		        	{
 		        		Option _option(
 		        			stoi(_selection["value"].asString()), 
 		        			_selection["description"].asString());
+		        		_new_param.add(_option);
 		        	}
+		        	selection_param.push_back(_new_param);
+		        	
 		        	/*for (int i = 0; i < item["selection"].size(); i++)
 			        {
 			            int _int_id = item["selectio"][i]["name"].asString();

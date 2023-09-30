@@ -183,8 +183,12 @@ namespace EMIRO{
     std::string param_id;
     std::string param_type;
     int value;
-    Option option;
-    ParamS(std::string param_id, std::string param_type, std::string value)
+    std::vector<Option> options;
+    ParamS(std::string param_id, std::string param_type, int value):
+      param_id(param_id), param_type(param_type), value(value){}
+    void add(Option op){
+      options.push_back(op);
+    }
   }ParamS;
 
   typedef struct{
