@@ -19,6 +19,9 @@ namespace EMIRO{
 	{
 		log->write_show(LogLevel::INFO, "Load Parameter Service");
 
+		if(reader.is_open())
+			reader.close();
+		
 		reader.open(filename);
 	    if (reader.is_open())
 			log->write_show(LogLevel::ERROR, "Failed Load JSON File");
