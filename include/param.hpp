@@ -2,14 +2,17 @@
 #define PARAM_H
 
 #include <iostream>
+#include <memory>
+#include <copter.hpp>
 
 namespace EMIRO{
 	class Param
 	{
+	private:
+		std::shared_ptr<EMIRO::Copter> copter;
 	public:
 		Param();
-		float RNGFND1_MIN;
-		float RNGFND1_MAX;
+		void init(std::shared_ptr<EMIRO::Copter> copter);
 		~Param();
 		
 	};

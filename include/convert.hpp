@@ -3,7 +3,7 @@
 
 #include <iostream>
 #include <cmath>
-#include "enum.hpp"
+#include <enum.hpp>
 
 namespace EMIRO{
     
@@ -29,9 +29,9 @@ namespace EMIRO{
          * @param show          Showing Conversion result ?
          * @return GlobalPos    Global position target ({m, m})
          */
-        WayPoint convert(WayPoint need_pos, bool show = false);
+        WayPoint convert(WayPoint need_pos);
 
-        WayPoint2 convert(WayPoint2 need_pos, bool show = false);
+        WayPoint2 convert(WayPoint2 need_pos);
 
         /**
          * @brief Get the Copter pre-arm degree value

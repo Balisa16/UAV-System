@@ -70,12 +70,12 @@ namespace EMIRO{
     DropLoad
   };
 
-  typedef struct VCoordinate
+  typedef struct
   {
     bool is_detect;
     int x_pixel;
     int y_pixel; 
-  };
+  }VCoordinate;
 
   typedef struct{
     float w;
@@ -156,7 +156,6 @@ namespace EMIRO{
   typedef struct{
     bool value;
     bool is_set;
-    ParamB(bool init_value = false, bool init_is_set = false) : value(init_value), is_set(init_is_set) {}
   }ParamB;
   
   typedef struct{
@@ -164,8 +163,6 @@ namespace EMIRO{
     int value;
     int min;
     int maks;
-    ParamI(bool init_is_set = false, int init_value = 0, int init_min = 0, int init_maks = 0) : 
-      is_set(init_is_set), value(init_value), min(init_min), maks(init_maks) {}
   }ParamI;
 
   typedef struct{
@@ -173,8 +170,6 @@ namespace EMIRO{
     int value;
     int min;
     int maks;
-    ParamF(bool init_is_set = false, float init_value = 0.0f, float init_min = 0.0f, float init_maks = 0.0f) : 
-      is_set(init_is_set), value(init_value), min(init_min), maks(init_maks) {}
   }ParamF;
 
   typedef struct{
