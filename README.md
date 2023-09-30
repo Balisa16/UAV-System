@@ -15,7 +15,7 @@ EMIRO is EEPIS Multirotor Research team that work under the auspices of Dirganta
 ## Dependencies
 1. [Ardupilot & MAVProxy](https://github.com/Intelligent-Quads/iq_tutorials)
 2. [Gazebo & ArduPilot Plugin](https://github.com/Intelligent-Quads/iq_tutorials/blob/master/docs/installing_gazebo_arduplugin.md) (*OPTIONAL*)
-3. ROS [Melodic](http://wiki.ros.org/melodic/Installation/Ubuntu)(*recommended*) / [Neotic](http://wiki.ros.org/noetic/Installation/Ubuntu) & [MAVROS] (https://github.com/Intelligent-Quads/iq_tutorials/blob/master/docs/installing_ros.md)
+3. ROS [Melodic](http://wiki.ros.org/melodic/Installation/Ubuntu)(*recommended*) / [Neotic](http://wiki.ros.org/noetic/Installation/Ubuntu) & [MAVROS](https://github.com/Intelligent-Quads/iq_tutorials/blob/master/docs/installing_ros.md)
 4. [OpenCV](https://github.com/opencv/opencv/tree/5.x)
 . [JetsonGPIO](https://github.com/pjueon/JetsonGPIO) (Jetson) or [WiringPI](https://www.digikey.com/en/maker/blogs/2019/how-to-use-gpio-on-the-raspberry-pi-with-c) (Rasberry Pi)
 5. [Boost](https://stackoverflow.com/questions/12578499/how-to-install-boost-on-ubuntu)
