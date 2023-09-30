@@ -17,24 +17,20 @@ namespace EMIRO
         printf("Lock copter degree : % .2f° or % .4f rad\n", init_deg, radians);
     }
     
-    WayPoint Nav_Convert::convert(WayPoint need_pos, bool show)
+    WayPoint Nav_Convert::convert(WayPoint need_pos)
     {
         double x = need_pos.x * cos(radians) - need_pos.y * sin(radians);
         double y = need_pos.x * sin(radians) + need_pos.y * cos(radians);
-        if(show)
-            printf("Convert position : % .2f, % .2f\tto\t% .2f, % .2f\n", need_pos.x, need_pos.y, x, y);
         need_pos.x = x;
         need_pos.y = y;
         need_pos.yaw = init_deg;
         return need_pos;
     }
 
-    WayPoint2 Nav_Convert::convert(WayPoint2 need_pos, bool show)
+    WayPoint2 Nav_Convert::convert(WayPoint2 need_pos)
     {
         double x = need_pos.x * cos(radians) - need_pos.y * sin(radians);
         double y = need_pos.x * sin(radians) + need_pos.y * cos(radians);
-        if(show)
-            printf("Convert position : % .2f, % .2f\tto\t% .2f, % .2f\n", need_pos.x, need_pos.y, x, y);
         need_pos.x = x;
         need_pos.y = y;
         need_pos.yaw = init_deg;
