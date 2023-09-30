@@ -10,6 +10,7 @@
 #define DS2_RIGHT 2000
 
 #include <iostream>
+#include <string>
 
 namespace EMIRO{
 
@@ -171,6 +172,20 @@ namespace EMIRO{
     int min;
     int maks;
   }ParamF;
+
+  typedef struct{
+    int option_int;
+    std::string option_desc;
+    Option(int id, std::string desc) : option_int(id), option_desc(desc){}
+  }Option;
+
+  typedef struct{
+    std::string param_id;
+    std::string param_type;
+    int value;
+    Option option;
+    ParamS(std::string param_id, std::string param_type, std::string value)
+  }ParamS;
 
   typedef struct{
     ParamB EK3_ENABLE;

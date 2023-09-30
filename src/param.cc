@@ -32,24 +32,38 @@ namespace EMIRO{
 		    JSONCPP_STRING errs;
 		    Json::parseFromStream(_reader_builder, reader, &_json_data, &errs);
 
-		    std::vector<JSONData> data;
-		    for (const auto& item : _json_data) {
-		        CommandItem first_command = {
-		            item["commands"][0]["name"].asString(),
-		            item["commands"][0]["command"].asString()
-		        };
-		        JSONData data_json = JSONData(
-		            item["host"].asString(),
-		            item["ip"].asString(),
-		            item["pass"].asString(),
-		            first_command
-		        );
-		        for (int i = 1; i < item["commands"].size(); i++)
+		    // Read from stream
+		    for (const auto& item : _json_data)
+		    {
+		        std::string _param_id = item["param_id"].asString();
+		        std::string _param_type = item["type"].asString();
+		        if(_param_type.c_str() == "select")
 		        {
-		            CommandItem cmd_item = {item["commands"][i]["name"].asString(), item["commands"][i]["command"].asString()};
-		            data_json.add_item(cmd_item);
+		        	int _value = stoi(item["type"].asString());
+		        	for (const auto& _selection : item["selection"])
+		        	{
+		        		Option _option(
+		        			stoi(_selection["value"].asString()), 
+		        			_selection["description"].asString());
+		        	}
+		        	/*for (int i = 0; i < item["selection"].size(); i++)
+			        {
+			            int _int_id = item["selectio"][i]["name"].asString();
+			            std::string _descr = ;
+			        }*/
 		        }
-		        data.push_back(data_json);
+		        else if(_param_type.c_str() == "float")
+		        {
+
+		        }
+		        else if(_param_type.c_str() == "bool")
+		        {
+
+		        }
+		        else
+		        {
+		        	log->write_show(LogLevel::WARNING, "Unknown type of %s", _param_id.c_str());
+		        }
 		    }
 	    	enable_use = true;
 	    }
