@@ -69,5 +69,6 @@ else()
     ${CURSES_LIBRARIES}
     JetsonGPIO 
     Boost::system 
-    Boost::filesystem)
+    Boost::filesystem
+    jsoncpp)
 endif()
