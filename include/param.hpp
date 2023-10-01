@@ -16,6 +16,7 @@
 #include <jsoncpp/json/json.h>
 #include <vector>
 #include <cmath>
+#include <enum.hpp>
 
 namespace EMIRO{
 	class Param

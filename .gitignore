@@ -1,3 +1,4 @@
 *.mkv
 build
 .vscode
+lib

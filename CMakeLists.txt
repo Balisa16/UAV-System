@@ -36,7 +36,7 @@ else()
 
   add_definitions(${OpenCV_DEFENITIONS})
 
-  set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/lib)
+  # set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/lib)
 
   add_library(${PROJECT_NAME} SHARED
     include/param.hpp
@@ -60,7 +60,7 @@ else()
     src/pin.cc
     src/servo.cc)
 
-  set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/example/test1)
+  set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/example)
 
   add_executable(test1 example/test1.cc)
   target_link_libraries(test1 ${PROJECT_NAME} 

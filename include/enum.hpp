@@ -180,7 +180,8 @@ namespace EMIRO{
     Option(int id, std::string desc) : option_int(id), option_desc(desc) {}
   };
 
-  struct ParamS {
+  class ParamS {
+  public:
       std::string param_id;
       std::string param_type;
       int value;
