@@ -11,6 +11,7 @@
 
 #include <iostream>
 #include <string>
+#include <vector>
 
 namespace EMIRO{
 
@@ -173,27 +174,25 @@ namespace EMIRO{
     int maks;
   }ParamF;
 
-  typedef struct{
+  struct Option {
     int option_int;
     std::string option_desc;
-    Option(int id, std::string desc)
-    {
-      option_int = id;
-      option_desc = desc;
-    }
-  }Option;
+    Option(int id, std::string desc) : option_int(id), option_desc(desc) {}
+  };
 
-  typedef struct{
-    std::string param_id;
-    std::string param_type;
-    int value;
-    std::vector<Option> options;
-    ParamS(std::string param_id, std::string param_type, int value):
-      param_id(param_id), param_type(param_type), value(value){}
-    void add(Option op){
-      options.push_back(op);
-    }
-  }ParamS;
+  struct ParamS {
+      std::string param_id;
+      std::string param_type;
+      int value;
+      std::vector<Option> options;
+
+      ParamS(std::string param_id, std::string param_type, int value):
+          param_id(param_id), param_type(param_type), value(value) {}
+
+      void add(Option op) {
+          options.push_back(op);
+      }
+  };
 
   typedef struct{
     ParamB EK3_ENABLE;
