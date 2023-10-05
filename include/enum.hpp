@@ -57,13 +57,6 @@ namespace EMIRO{
     Close
   };
 
-  enum class LidarType
-  {
-    Simulator,
-    A1,
-    S1
-  };
-
   enum class Movement
   {
     Forward,

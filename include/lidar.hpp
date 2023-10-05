@@ -12,7 +12,22 @@
 
 namespace EMIRO{
   std::mutex lidar_proc_mtx;
-  int range_size;
+
+  enum class LidarType
+  {
+    Simulator,
+    A1,
+    S1
+  };
+
+  enum class LidarStatus
+  {
+    None,
+    Init,
+    Start,
+    Run,
+    Stop
+  };
 
   typedef struct {
     float margin_left_2;
@@ -23,6 +38,8 @@ namespace EMIRO{
   }SideRange;
 
   typedef struct{
+    LidarType type;
+    LidarStatus status;
     sensor_msgs::LaserScan in_data;
     bool out_is_valid;
     int out_size;
@@ -36,8 +53,6 @@ namespace EMIRO{
   {
   private:
     ros::Subscriber lidar_sub;
-    sensor_msgs::LaserScan scan2D;
-    LidarType lidar_type;
 
     const std::string sim_lidar_path = "/spur/laser/scan";
     const std::string a1_lidar_path = "/scan";
@@ -45,10 +60,7 @@ namespace EMIRO{
 
     const float lidar_tolerance_1 = 0.9f;
     const float lidar_tolerance_2 = 1.5f;
-    int idx_front[3], idx_right[3], idx_back[3], idx_left[3];
 
-    bool lidar_init = false;
-    void stop();
     void scan(const sensor_msgs::LaserScan::ConstPtr& input);
     std::shared_ptr<EMIRO::Copter> copter;
 
@@ -57,10 +69,10 @@ namespace EMIRO{
     LidarRef lidar_data;
 
   public:
-    Lidar(){}
+    Lidar();
     void init(std::shared_ptr<EMIRO::Copter> copter);
     void start(ros::NodeHandle *nh, LidarType lidar);
-    std::tuple<bool, Lidar_Scan> check();
+    LidarStatus check();
     float get_front(int idx);
     float max_front();
     float get_left(int idx);
@@ -68,6 +80,7 @@ namespace EMIRO{
     float get_back(int idx);
     void axis(Axis& axis, int idx = 1);
     sensor_msgs::LaserScan get_raw();
+    void stop();
     ~Lidar(){}
   };
 }

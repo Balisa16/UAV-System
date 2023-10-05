@@ -356,8 +356,7 @@ namespace EMIRO{
         ros::Rate _lidar_wait(2);
         while(ros::ok() && !_is_lidar_ready)
         {
-            std::tuple<bool, Lidar_Scan> lidar_temp = lidar_dev.check();
-            if(std::get<0>(lidar_temp))
+            if(lidar_dev.check() == LidarStatus::Run)
             {
                 std::cout << "\n";
                 _is_lidar_ready = true;
