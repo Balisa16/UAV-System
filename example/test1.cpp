@@ -347,8 +347,8 @@ namespace EMIRO{
 
         // Initialize lidar
         this->lidar_dev.init(copter);
-        this->lidar_dev.start(&nh, LidarType::S1);
-        // this->lidar_dev.start(&nh, LidarType::Simulator);
+        // this->lidar_dev.start(&nh, LidarType::S1);
+        this->lidar_dev.start(&nh, LidarType::Simulator);
 
         
         bool _is_lidar_ready = false;
@@ -365,7 +365,7 @@ namespace EMIRO{
             {
                 if(first_lidar_check)
                 {
-                    std::cout << "Waiting lidar ";
+                    std::cout << "Waiting Lidar ";
                     std::cout.flush();
                     first_lidar_check = false;
                 }
