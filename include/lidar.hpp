@@ -3,12 +3,35 @@
 
 #include <sensor_msgs/LaserScan.h>
 #include <ros/ros.h>
+#include <mutex>
 #include "enum.hpp"
 #include "copter.hpp"
 #include <tuple>
 #include <memory>
+#include <thread>
 
 namespace EMIRO{
+  std::mutex lidar_proc_mtx;
+  int range_size;
+
+  typedef struct {
+    float margin_left_2;
+    float margin_left_1;
+    float center;
+    float margin_right_1;
+    float margin_right_2;
+  }SideRange;
+
+  typedef struct{
+    sensor_msgs::LaserScan in_data;
+    bool out_is_valid;
+    int out_size;
+    SideRange out_left_rng;
+    SideRange out_right_rng;
+    SideRange out_front_rng;
+    SideRange out_back_rng;
+  }LidarRef;
+
   class Lidar
   {
   private:
@@ -30,6 +53,8 @@ namespace EMIRO{
     std::shared_ptr<EMIRO::Copter> copter;
 
     float _temp1, _temp2, _temp3, _max_temp, _min_temp;
+
+    LidarRef lidar_data;
 
   public:
     Lidar(){}

@@ -62,7 +62,7 @@ else()
 
   set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/example)
 
-  add_executable(test1 example/test1.cc)
+  add_executable(test1 example/test1.cpp)
   target_link_libraries(test1 ${PROJECT_NAME} 
     ${catkin_LIBRARIES} 
     ${OpenCV_LIBRARIES} 
