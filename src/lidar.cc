@@ -45,46 +45,62 @@ void lidar_proc(LidarRef& data_ref)
 
     case LidarType::A1:
       // Back
-      idx_back[0] = step_12*11;
-      idx_back[1] = 0;
-      idx_back[2] = step_12;
+      out_back_rng.margin_left_2 = data_ref.in_data.ranges[(int)(step_20*18)];
+      out_back_rng.margin_left_1 = data_ref.in_data.ranges[(int)(step_20*19)];
+      out_back_rng.center = data_ref.in_data.ranges[0];
+      out_back_rng.margin_right_1 = data_ref.in_data.ranges[(int)(step_20*1)];
+      out_back_rng.margin_right_2 = data_ref.in_data.ranges[(int)(step_20*2)];
 
       // Right
-      idx_right[0] = step_12*2;
-      idx_right[1] = step_12*3;
-      idx_right[2] = step_12*4;
+      out_right_rng.margin_left_2 = data_ref.in_data.ranges[(int)(step_20*3)];
+      out_right_rng.margin_left_1 = data_ref.in_data.ranges[(int)(step_20*4)];
+      out_right_rng.center = data_ref.in_data.ranges[(int)(step_20*5)];
+      out_right_rng.margin_right_1 = data_ref.in_data.ranges[(int)(step_20*6)];
+      out_right_rng.margin_right_2 = data_ref.in_data.ranges[(int)(step_20*7)];
 
       // Front
-      idx_front[0] = step_12*5;
-      idx_front[1] = step_12*6;
-      idx_front[2] = step_12*7;
+      out_front_rng.margin_left_2 = data_ref.in_data.ranges[(int)(step_20*8)];
+      out_front_rng.margin_left_1 = data_ref.in_data.ranges[(int)(step_20*9)];
+      out_front_rng.center = data_ref.in_data.ranges[(int)(step_20*10)];
+      out_front_rng.margin_right_1 = data_ref.in_data.ranges[(int)(step_20*11)];
+      out_front_rng.margin_right_2 = data_ref.in_data.ranges[(int)(step_20*12)];
 
       // Left
-      idx_left[0] = step_12*8;
-      idx_left[1] = step_12*9;
-      idx_left[2] = step_12*10;
+      out_left_rng.margin_left_2 = data_ref.in_data.ranges[(int)(step_20*13)];
+      out_left_rng.margin_left_1 = data_ref.in_data.ranges[(int)(step_20*14)];
+      out_left_rng.center = data_ref.in_data.ranges[(int)(step_20*15)];
+      out_left_rng.margin_right_1 = data_ref.in_data.ranges[(int)(step_20*16)];
+      out_left_rng.margin_right_2 = data_ref.in_data.ranges[(int)(step_20*17)];
       break;
 
     case LidarType::S1:
       // Back
-      idx_back[0] = step_12*11;
-      idx_back[1] = 0;
-      idx_back[2] = step_12;
+      out_back_rng.margin_left_2 = data_ref.in_data.ranges[(int)(step_20*18)];
+      out_back_rng.margin_left_1 = data_ref.in_data.ranges[(int)(step_20*19)];
+      out_back_rng.center = data_ref.in_data.ranges[0];
+      out_back_rng.margin_right_1 = data_ref.in_data.ranges[(int)(step_20*1)];
+      out_back_rng.margin_right_2 = data_ref.in_data.ranges[(int)(step_20*2)];
 
       // Right
-      idx_right[0] = step_12*2;
-      idx_right[1] = step_12*3;
-      idx_right[2] = step_12*4;
+      out_right_rng.margin_left_2 = data_ref.in_data.ranges[(int)(step_20*3)];
+      out_right_rng.margin_left_1 = data_ref.in_data.ranges[(int)(step_20*4)];
+      out_right_rng.center = data_ref.in_data.ranges[(int)(step_20*5)];
+      out_right_rng.margin_right_1 = data_ref.in_data.ranges[(int)(step_20*6)];
+      out_right_rng.margin_right_2 = data_ref.in_data.ranges[(int)(step_20*7)];
 
       // Front
-      idx_front[0] = step_12*5;
-      idx_front[1] = step_12*6;
-      idx_front[2] = step_12*7;
+      out_front_rng.margin_left_2 = data_ref.in_data.ranges[(int)(step_20*8)];
+      out_front_rng.margin_left_1 = data_ref.in_data.ranges[(int)(step_20*9)];
+      out_front_rng.center = data_ref.in_data.ranges[(int)(step_20*10)];
+      out_front_rng.margin_right_1 = data_ref.in_data.ranges[(int)(step_20*11)];
+      out_front_rng.margin_right_2 = data_ref.in_data.ranges[(int)(step_20*12)];
 
       // Left
-      idx_left[0] = step_12*8;
-      idx_left[1] = step_12*9;
-      idx_left[2] = step_12*10;
+      out_left_rng.margin_left_2 = data_ref.in_data.ranges[(int)(step_20*13)];
+      out_left_rng.margin_left_1 = data_ref.in_data.ranges[(int)(step_20*14)];
+      out_left_rng.center = data_ref.in_data.ranges[(int)(step_20*15)];
+      out_left_rng.margin_right_1 = data_ref.in_data.ranges[(int)(step_20*16)];
+      out_left_rng.margin_right_2 = data_ref.in_data.ranges[(int)(step_20*17)];
       break;
 
     default:
