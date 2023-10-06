@@ -1,9 +1,15 @@
 #include <copter.hpp>
 
 namespace EMIRO {
+    Copter::Copter()
+    {
+        is_init_pubs_subs = false;
+        is_init_frame = false;
+    }
+
     void Copter::init(ros::NodeHandle *nh)
     {
-        if(!is_init_pubs_subs)
+        if(!this->is_init_pubs_subs)
         {
             copter_logger.init("Copter", EMIRO::FileType::CSV);
             //ROS Service Client
@@ -34,7 +40,9 @@ namespace EMIRO {
             copter_logger.write_show(LogLevel::INFO, "Publisher and Subscriber initialized");
         }
         else
+        {
             copter_logger.write_show(LogLevel::WARNING, "Publisher and Subscriber already initialized");
+        }
     }
 
     bool Copter::FCUconnect(float timeout_s){

@@ -80,8 +80,8 @@ namespace EMIRO {
     Param copter_param;
 
     // Initialize frame
-    bool is_init_pubs_subs = false, is_init_frame = false;
     WayPoint local_frame;
+    bool is_init_pubs_subs, is_init_frame;
 
     // System variable
     float local_offset_g;
@@ -108,7 +108,7 @@ namespace EMIRO {
   public:
     ros::ServiceClient command_client;
 
-    Copter(){}
+    Copter();
 
     /**
      * @brief     This function initializes all service clients, publishers, and

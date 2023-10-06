@@ -343,8 +343,10 @@ namespace EMIRO{
         mul_back = atof(argv[11]);
         _indoor_speed_2 = _indoor_speed*0.75;
 
+        copter = std::make_shared<Copter>();
         copter->init(&this->nh);
 
+        std::cout << "Lidar init" << std::endl;
         // Initialize lidar
         this->lidar_dev.init(copter);
         // this->lidar_dev.start(&nh, LidarType::S1);

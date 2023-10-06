@@ -4,13 +4,18 @@
 namespace EMIRO{
   void lidar_proc(LidarRef data_ref)
   {
+    printf("Scan\n");
     std::lock_guard<std::mutex> lg(lidar_proc_mtx);
     data_ref.out_size = data_ref.in_data.ranges.size();
     
     float step_20 = data_ref.out_size/20;
     data_ref.out_is_valid = false;
 
-    if(data_ref.status != LidarStatus::Run && data_ref.out_size > 0)
+    if(data_ref.out_size > 0)
+      data_ref.status =  LidarStatus::Run;
+
+
+    if(data_ref.status == LidarStatus::Run)
     {
       data_ref.out_is_valid = true;
       switch (data_ref.type)
@@ -109,8 +114,6 @@ namespace EMIRO{
         break;
       }
     }
-    else if(data_ref.out_size > 0)
-      data_ref.status = LidarStatus::Run;
   }
 
   Lidar::Lidar()
