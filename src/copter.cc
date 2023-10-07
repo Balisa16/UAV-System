@@ -37,12 +37,10 @@ namespace EMIRO {
                 });
 
             cmd_vel_pub = (*nh).advertise<geometry_msgs::Twist>("/mavros/setpoint_velocity/cmd_vel_unstamped", 10);
-            logger.write_show(LogLevel::INFO, "Publisher and Subscriber initialized");
+            logger->write_show(LogLevel::INFO, "Publisher and Subscriber initialized");
         }
         else
-        {
-            logger.write_show(LogLevel::WARNING, "Publisher and Subscriber already initialized");
-        }
+            logger->write_show(LogLevel::WARNING, "Publisher and Subscriber already initialized");
     }
 
     bool Copter::FCUconnect(float timeout_s){
@@ -104,7 +102,7 @@ namespace EMIRO {
 
             this->local_frame = this->get_current_position();
             if(local_frame.x == 0.000f && local_frame.y == 0.000f && local_frame.z == 0.000f)
-                copter_logger.write_show(LogLevel::WARNING, "Local Frame looks unreasonable");
+                logger->write_show(LogLevel::WARNING, "Local Frame looks unreasonable");
         }
         
     }
@@ -184,11 +182,11 @@ namespace EMIRO {
         // srv_setMode.request.base_mode = 0;
         srv_setMode.request.custom_mode = mode_str.c_str();
         if (set_mode_client.call(srv_setMode) && srv_setMode.response.mode_sent) {
-            copter_logger.write_show(LogLevel::INFO, "Set Mode %s", mode_str.c_str());
+            logger->write_show(LogLevel::INFO, "Set Mode %s", mode_str.c_str());
             return 1;
         } else {
             
-        ROS_ERROR("Failed Set Mode");
+        logger->write_show(LogLevel::ERROR, "Failed Set Mode");
         return 0;
         }
     }
@@ -259,11 +257,11 @@ namespace EMIRO {
         if(arm_request.response.success)
         {
             std::cout << " (OK)\n";
-            copter_logger.write_show(LogLevel::INFO, "Drone armed successfully.") ; 
+            logger->write_show(LogLevel::INFO, "Drone armed successfully.") ; 
             return true;
         }
         std::cout << " (FAILED)\n";
-        copter_logger.write_show(LogLevel::ERROR, "FAILED to arming drone. Code : %d", arm_request.response.success);
+        logger->write_show(LogLevel::ERROR, "FAILED to arming drone. Code : %d", arm_request.response.success);
         return false;
     }
 
@@ -277,7 +275,7 @@ namespace EMIRO {
             ros::Duration(0.01).sleep();
         }
         // arming
-        ROS_INFO("Arming drone");
+        logger->write_show(LogLevel::INFO, "Arming drone");
         mavros_msgs::CommandBool arm_request;
         arm_request.request.value = true;
         while (!current_state_g.armed && !arm_request.response.success && ros::ok())
@@ -288,9 +286,9 @@ namespace EMIRO {
         }
 
         if(arm_request.response.success)
-            ROS_INFO("Arming Successful");  
+            logger->write_show(LogLevel::INFO, "Arming Successful");  
         else{
-            ROS_ERROR("Arming FAILED : %d", arm_request.response.success);
+            logger->write_show(LogLevel::ERROR, "Arming FAILED : %d", arm_request.response.success);
             return -1;  
         }
 
@@ -298,9 +296,9 @@ namespace EMIRO {
         mavros_msgs::CommandTOL srv_takeoff;
         srv_takeoff.request.altitude = takeoff_alt;
         if(takeoff_client.call(srv_takeoff))
-            ROS_INFO("Success Takeoff");
+            logger->write_show(LogLevel::INFO, "Success Takeoff");
         else{
-            ROS_ERROR("Failed Takeoff");
+            logger->write_show(LogLevel::ERROR, "Failed Takeoff");
             return -2;
         }
 
@@ -330,30 +328,31 @@ namespace EMIRO {
         }
 
         // Arming drone
-        ROS_INFO("Arming drone");
+        logger->write_show(LogLevel::INFO, "Arming drone");
         mavros_msgs::CommandBool arm_request;
         arm_request.request.value = true;
         while (!current_state_g.armed && !arm_request.response.success && ros::ok())
         {
-        ros::Duration(.1).sleep();
-        arming_client.call(arm_request);
-        cmd_pos_pub.publish(pose_stamped);
+            ros::Duration(.1).sleep();
+            arming_client.call(arm_request);
+            cmd_pos_pub.publish(pose_stamped);
         }
+
         if(arm_request.response.success)
-        ROS_INFO("Arming Successful");  
+            logger->write_show(LogLevel::INFO, "Arming Successful");  
         else{
-        ROS_ERROR("Arming FAILED : %d", arm_request.response.success);
-        return -1;  
+            logger->write_show(LogLevel::ERROR, "Arming FAILED : %d", arm_request.response.success);
+            return -1;  
         }
 
         //Takeoff drone
         mavros_msgs::CommandTOL srv_takeoff;
         srv_takeoff.request.altitude = takeoff_alt;
         if(takeoff_client.call(srv_takeoff))
-        ROS_INFO("Success Takeoff");
+        logger->write_show(LogLevel::INFO, "Success Takeoff");
         else{
-        ROS_ERROR("Failed Takeoff");
-        return -2;
+            logger->write_show(LogLevel::ERROR, "Failed Takeoff");
+            return -2;
         }
 
         return 0;
@@ -369,7 +368,7 @@ namespace EMIRO {
             ros::Duration(0.01).sleep();
         }
         // arming
-        ROS_INFO("Arming drone");
+        logger->write_show(LogLevel::INFO, "Arming drone");
         mavros_msgs::CommandBool arm_request;
         arm_request.request.value = true;
         while (!current_state_g.armed && !arm_request.response.success && ros::ok())
@@ -380,9 +379,9 @@ namespace EMIRO {
         }
         if(arm_request.response.success)
         {
-            ROS_INFO("Arming Successful");  
+            logger->write_show(LogLevel::INFO, "Arming Successful");  
         }else{
-            ROS_INFO("Arming FAILED : %d", arm_request.response.success);
+            logger->write_show(LogLevel::INFO, "Arming FAILED : %d", arm_request.response.success);
             return -1;  
         }
 
@@ -390,9 +389,9 @@ namespace EMIRO {
         mavros_msgs::CommandTOL srv_takeoff;
         srv_takeoff.request.altitude = wp.z;
         if(takeoff_client.call(srv_takeoff)){
-            ROS_INFO("Success Takeoff");
+            logger->write_show(LogLevel::INFO, "Success Takeoff");
         }else{
-            ROS_ERROR("Takeoff FAILED");
+            logger->write_show(LogLevel::ERROR, "Takeoff FAILED");
             return -2;
         }
 
@@ -404,10 +403,10 @@ namespace EMIRO {
         mavros_msgs::CommandTOL srv_land;
         if(land_client.call(srv_land) && srv_land.response.success)
         {
-        ROS_INFO("Success Land");
+        logger->write_show(LogLevel::INFO, "Success Land");
         return 0;
         }else{
-        ROS_ERROR("Land FAILED : %d", srv_land.response.success);
+        logger->write_show(LogLevel::ERROR, "Land FAILED : %d", srv_land.response.success);
         return -1;
         }
     }
@@ -421,12 +420,12 @@ namespace EMIRO {
         speed_cmd.request.param2 = speed_mps;
         speed_cmd.request.param3 = -1; // no throttle change
         speed_cmd.request.param4 = 0; // absolute speed
-        ROS_INFO("Set Speed : %.2f m/s", speed_mps);
+        logger->write_show(LogLevel::INFO, "Set Speed : %.2f m/s", speed_mps);
         if(command_client.call(speed_cmd))
         return 0;
         else{
-        ROS_ERROR("Change speed command failed %d", speed_cmd.response.success);
-        ROS_ERROR("Change speed result was %d ", speed_cmd.response.result);
+        logger->write_show(LogLevel::ERROR, "Change speed command failed %d", speed_cmd.response.success);
+        logger->write_show(LogLevel::ERROR, "Change speed result was %d ", speed_cmd.response.result);
         return -1;
         }
         return 0;
@@ -440,15 +439,15 @@ namespace EMIRO {
         {
         case EKF_Source::GPS_BARO:
         data = 1000;
-        ROS_INFO("EKF Source : GPS-Baro (%d)", data);
+        logger->write_show(LogLevel::INFO, "EKF Source : GPS-Baro (%d)", data);
         break;
         case EKF_Source::GPS_GY:
         data = 1500;
-        ROS_INFO("EKF Source : GPS-GY (%d)", data);
+        logger->write_show(LogLevel::INFO, "EKF Source : GPS-GY (%d)", data);
         break;
         case EKF_Source::T265_GY:
         data = 2000;
-        ROS_INFO("EKF Source : T265-GY (%d)", data);
+        logger->write_show(LogLevel::INFO, "EKF Source : T265-GY (%d)", data);
         break;
         }
 
@@ -495,7 +494,7 @@ namespace EMIRO {
         rc7_pwm, 
         UINT16_MAX};
         cmd_rc_pub.publish(rc2);
-        ROS_INFO("Realign viso");
+        logger->write_show(LogLevel::INFO, "Realign viso");
     }
 
     // -7.276604973504977, 112.79385479212844
@@ -506,7 +505,7 @@ namespace EMIRO {
     origin.pose.position.longitude = lnt;
     origin.pose.position.altitude = alt;
     gps_pos_pub.publish(origin);
-    ROS_INFO("Set Origin EKF on PENS");
+    logger->write_show(LogLevel::INFO, "Set Origin EKF on PENS");
     }
 
     int Copter::set_home(float lat, float lnt, float alt)
@@ -520,11 +519,11 @@ namespace EMIRO {
         home_cmd.request.param5 = lat;
         home_cmd.request.param6 = lnt;
         home_cmd.request.param7 = alt;
-        ROS_INFO("Set home : %f, %f at %f m", lat, lnt, alt);
+        logger->write_show(LogLevel::INFO, "Set home : %f, %f at %f m", lat, lnt, alt);
         if(!command_client.call(home_cmd))
         {
-            ROS_ERROR("Change home FAILED %d", home_cmd.response.success);
-            ROS_ERROR("Change home result was %d ", home_cmd.response.result);
+            logger->write_show(LogLevel::ERROR, "Change home FAILED %d", home_cmd.response.success);
+            logger->write_show(LogLevel::ERROR, "Change home result was %d ", home_cmd.response.result);
             return -1;
         }
         return 0;
@@ -582,10 +581,10 @@ namespace EMIRO {
     Mode Copter::get_current_mission() { return this->misi_mode; }
 
     void Copter::Go_Land(WayPoint wp) {
-        ROS_INFO("System Go to Land");
+        logger->write_show(LogLevel::INFO, "System Go to Land");
         Go(wp);
         ros::Duration(4).sleep();
-        ROS_INFO("System Land");
+        logger->write_show(LogLevel::INFO, "System Land");
         land();
     }
 
@@ -603,7 +602,7 @@ namespace EMIRO {
     }
 
     void Copter::Land() {
-        ROS_INFO("System Land");
+        logger->write_show(LogLevel::INFO, "System Land");
         land();
     }
 
@@ -646,7 +645,7 @@ namespace EMIRO {
         float _curr_alt = pose_data_local.pose.position.z;
         if(_curr_alt > dist_alt - tolerance && _curr_alt < dist_alt + tolerance)
         {
-            ROS_INFO("Reached %.2f m target on %.2f m", dist_alt, _curr_alt);
+            logger->write_show(LogLevel::INFO, "Reached %.2f m target on %.2f m", dist_alt, _curr_alt);
             return true;
         }
         return false;

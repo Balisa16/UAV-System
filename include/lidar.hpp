@@ -9,6 +9,7 @@
 #include <tuple>
 #include <memory>
 #include <thread>
+#include <logger.hpp>
 
 namespace EMIRO{
   std::mutex lidar_proc_mtx;
@@ -53,6 +54,7 @@ namespace EMIRO{
   {
   private:
     ros::Subscriber lidar_sub;
+    std::shared_ptr<EMIRO::Logger> logger;
 
     const std::string sim_lidar_path = "/spur/laser/scan";
     const std::string a1_lidar_path = "/scan";

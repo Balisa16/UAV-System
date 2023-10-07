@@ -408,7 +408,7 @@ namespace EMIRO{
 
     inline void Misi2::match_load()
     {
-        ROS_INFO("Match Payload");
+        logger->write_show(LogLevel::INFO, "Match Payload");
         ros::Rate rr(8);
         float match_speed = 0.20f;
         while(ros::ok())
@@ -490,9 +490,9 @@ namespace EMIRO{
                     if(!go_forward(_axis_temp, _diff_yaw))
                     {
                         if(left_mission)
-                            ROS_INFO("Go to Left");
+                            logger->write_show(LogLevel::INFO, "Go to Left");
                         else
-                            ROS_INFO("Go to Right");
+                            logger->write_show(LogLevel::INFO, "Go to Right");
                         _indoor_movement = Movement::Left_Right;
                     }
                     break;
@@ -505,7 +505,7 @@ namespace EMIRO{
                         take_load = true;
                         alt_correction(0.58f);
                         yaw_maks = 20.0f;
-                        ROS_INFO("Go to Forward again");
+                        logger->write_show(LogLevel::INFO, "Go to Forward again");
                         _indoor_movement = Movement::Forward;
                     }
                     break;
@@ -515,13 +515,13 @@ namespace EMIRO{
                     {
                         if(!go_left(_axis_temp, _diff_yaw))
                         {
-                            ROS_INFO("Droping Payload");
+                            logger->write_show(LogLevel::INFO, "Droping Payload");
                             _indoor_movement = Movement::DropLoad;
                         }
                     }
                     else if(!go_right(_axis_temp, _diff_yaw))
                     {
-                        ROS_INFO("Droping Payload");
+                        logger->write_show(LogLevel::INFO, "Droping Payload");
                         _indoor_movement = Movement::DropLoad;
                     }
                     break;
@@ -556,7 +556,7 @@ namespace EMIRO{
         ros::Duration(3).sleep();
         this->ser.custom_pwm(9, 1450);
 
-        ROS_INFO("Finished Indoor Mission");
+        logger->write_show(LogLevel::INFO, "Finished Indoor Mission");
     }
 
     inline bool Misi2::is_start()
@@ -780,7 +780,7 @@ namespace EMIRO{
         _alt_high.z = _outdoor_alt;
         _alt_high.yaw = 360.0f - _start_pos.yaw;
         copter->Go(_alt_high);
-        ROS_INFO("Waiting to reached altitude %.1f m.", _outdoor_alt);
+        logger->write_show(LogLevel::INFO, "Waiting to reached altitude %.1f m.", _outdoor_alt);
         while(ros::ok() && !copter->check_alt(_outdoor_alt, 2.0f))
         {
             ros::spinOnce();
@@ -807,7 +807,7 @@ namespace EMIRO{
                 cntr++;
                 if(cntr < 5)
                 {
-                    ROS_INFO("Dropping payload %d", cntr);
+                    logger->write_show(LogLevel::INFO, "Dropping payload %d", cntr);
                     this->ser.custom_pwm(10, 1800);
                     ros::Duration(0.53f).sleep();
                     this->ser.custom_pwm(10, 1500);
@@ -832,14 +832,14 @@ namespace EMIRO{
         }
 
         // Waiting for the last position is reached;
-        ROS_INFO("Waiting to LAND ");
+        logger->write_show(LogLevel::INFO, "Waiting to LAND ");
         while(ros::ok() && !copter->check_alt(3.0f, 2.0f))
         {
             ros::spinOnce();
             out_rate.sleep();
         }
 
-        ROS_INFO("Finished Outdoor Mission");
+        logger->write_show(LogLevel::INFO, "Finished Outdoor Mission");
     }
 
     Misi2::~Misi2()

@@ -123,7 +123,7 @@ namespace EMIRO{
     lidar_data.status = LidarStatus::Init;
     this->copter = copter;
     this->logger = logger;
-    ROS_INFO("Lidar initialized");
+    logger->write_show(LogLevel::INFO, "Lidar initialized");
   }
 
   void Lidar::stop()
@@ -151,21 +151,21 @@ namespace EMIRO{
     {
     case LidarType::Simulator:
       lidar_path = sim_lidar_path;
-      ROS_WARN("Using simulator lidar configuration");
+      logger->write_show(LogLevel::WARNING, "Using simulator lidar configuration");
       break;
 
     case LidarType::A1:
       lidar_path = a1_lidar_path;
-      ROS_INFO("Using A1 lidar configuration");
+      logger->write_show(LogLevel::WARNING, "Using A1 lidar configuration");
       break;
 
     case LidarType::S1:
       lidar_path = s1_lidar_path;
-      ROS_INFO("Using S1 lidar configuration");
+      logger->write_show(LogLevel::WARNING, "Using S1 lidar configuration");
       break;
     
     default:
-      ROS_ERROR("Unknown Lidar Type. Failed config lidar");
+      logger->write_show(LogLevel::ERROR, "Unknown Lidar Type. Failed config lidar");
       break;
     }
 
