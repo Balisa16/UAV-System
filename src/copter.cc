@@ -7,11 +7,12 @@ namespace EMIRO {
         is_init_frame = false;
     }
 
-    void Copter::init(ros::NodeHandle *nh)
+    void Copter::init(ros::NodeHandle *nh, EMIRO::Logger *logger)
     {
         if(!this->is_init_pubs_subs)
         {
-            copter_logger.init("Copter", EMIRO::FileType::CSV);
+            logger->init("Copter", EMIRO::FileType::CSV);
+            logger->start();
             //ROS Service Client
             command_client = (*nh).serviceClient<mavros_msgs::CommandLong>("/mavros/cmd/command");
             set_mode_client = (*nh).serviceClient<mavros_msgs::SetMode>("/mavros/set_mode");
@@ -37,11 +38,11 @@ namespace EMIRO {
                 });
 
             cmd_vel_pub = (*nh).advertise<geometry_msgs::Twist>("/mavros/setpoint_velocity/cmd_vel_unstamped", 10);
-            copter_logger.write_show(LogLevel::INFO, "Publisher and Subscriber initialized");
+            logger->write_show(LogLevel::INFO, "Publisher and Subscriber initialized");
         }
         else
         {
-            copter_logger.write_show(LogLevel::WARNING, "Publisher and Subscriber already initialized");
+            logger->write_show(LogLevel::WARNING, "Publisher and Subscriber already initialized");
         }
     }
 
@@ -104,7 +105,7 @@ namespace EMIRO {
 
             this->local_frame = this->get_current_position();
             if(local_frame.x == 0.000f && local_frame.y == 0.000f && local_frame.z == 0.000f)
-                copter_logger.write_show(LogLevel::WARNING, "Local Frame looks unreasonable");
+                logger->write_show(LogLevel::WARNING, "Local Frame looks unreasonable");
         }
         
     }
@@ -184,7 +185,7 @@ namespace EMIRO {
         // srv_setMode.request.base_mode = 0;
         srv_setMode.request.custom_mode = mode_str.c_str();
         if (set_mode_client.call(srv_setMode) && srv_setMode.response.mode_sent) {
-            copter_logger.write_show(LogLevel::INFO, "Set Mode %s", mode_str.c_str());
+            logger->write_show(LogLevel::INFO, "Set Mode %s", mode_str.c_str());
             return 1;
         } else {
             
@@ -259,11 +260,11 @@ namespace EMIRO {
         if(arm_request.response.success)
         {
             std::cout << " (OK)\n";
-            copter_logger.write_show(LogLevel::INFO, "Drone armed successfully.") ; 
+            logger->write_show(LogLevel::INFO, "Drone armed successfully.") ; 
             return true;
         }
         std::cout << " (FAILED)\n";
-        copter_logger.write_show(LogLevel::ERROR, "FAILED to arming drone. Code : %d", arm_request.response.success);
+        logger->write_show(LogLevel::ERROR, "FAILED to arming drone. Code : %d", arm_request.response.success);
         return false;
     }
 
@@ -558,7 +559,7 @@ namespace EMIRO {
         float vision_alt = pose_data_local.pose.position.z;
 
         if (sensor_alt < copter_param.RNGFND1_MIN) {
-            copter_logger.write_show("Sensor value below minimum value. (REJECTED)");
+            logger->write_show("Sensor value below minimum value. (REJECTED)");
             return vision_alt;
         }
 

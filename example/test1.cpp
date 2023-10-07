@@ -29,6 +29,7 @@ namespace EMIRO{
     private:
         ros::NodeHandle nh;
         std::shared_ptr<EMIRO::Copter> copter;
+        std::shared_ptr<EMIRO::Logger> logger;
         EMIRO::Servo ser;
         EMIRO::Nav_Convert converter;
         EMIRO::GlobalNav global_nav;
@@ -346,6 +347,7 @@ namespace EMIRO{
         _indoor_speed_2 = _indoor_speed*0.75;
 
         copter = std::make_shared<Copter>();
+        logger = std::make_shared<Logger>();
         copter->init(&this->nh);
 
         std::cout << "Lidar init" << std::endl;

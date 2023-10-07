@@ -73,10 +73,8 @@ namespace EMIRO {
     ros::ServiceClient land_client;
     Mode misi_mode;
 
-    // Logger
-    Logger copter_logger;
-
     // Parameter settings
+    std::shared_ptr<EMIRO::Logger> logger;
     Param copter_param;
 
     // Initialize frame
