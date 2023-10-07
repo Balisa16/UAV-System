@@ -347,8 +347,8 @@ namespace EMIRO{
         mul_back = atof(argv[11]);
         _indoor_speed_2 = _indoor_speed*0.75;
 
-        copter = std::make_shared<Copter>();
         logger = std::make_shared<Logger>();
+        copter = std::make_shared<Copter>();
         logger->init("Copter", FileType::CSV);
         logger->start(true);
         copter->init(&this->nh, logger);
@@ -360,25 +360,14 @@ namespace EMIRO{
         this->lidar_dev.start(&nh, LidarType::Simulator);
 
         
-        bool first_lidar_check = true;
+        logger.wait("Waiting Lidar");
         ros::Rate _lidar_wait(2);
         while(ros::ok() && lidar_dev.check() != LidarStatus::Run)
         {
-            if(first_lidar_check)
-            {
-                std::cout << "Waiting Lidar ";
-                std::cout.flush();
-                first_lidar_check = false;
-            }
-            else
-            {
-                std::cout << ".";
-                std::cout.flush();
-            }
             ros::spinOnce();
             _lidar_wait.sleep();
         }
-        std::cout << "\n";
+        logger.wait_stop();
 
         // Get lidar pos
         lidar_lock(_load_lidar_front, _load_lidar_left, _load_lidar_right);
@@ -561,6 +550,7 @@ namespace EMIRO{
 
     inline bool Misi2::is_start()
     {
+        pre_arm();
         char ch;
         std::cout << "Start Mission ? (y/n)" << std::endl; 
         std::cin >> ch;

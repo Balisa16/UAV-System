@@ -63,17 +63,14 @@ namespace EMIRO {
         ros::Rate _timeout_rate(20);
         int _timeout_int = timeout_s < 0.2f ? 4 : timeout_s * 20;
 
-        std::cout << "Waiting for GUIDED ";
-        std::cout.flush();
+        logger->wait("Waiting for GUIDED");
         while(ros::ok() && current_state_g.mode != "GUIDED" && _timeout_int)
         {
             _timeout_int--;
-            std::cout << ".";
-            std::cout.flush();
             ros::spinOnce();
             _timeout_rate.sleep();
         }
-        std::cout << '\n';
+        logger.wait_stop();
 
         if(current_state_g.mode == "GUIDED")
             return true;
