@@ -1,3 +1,5 @@
+// rosrun emiro test1 1 0 1 0.5 5 0.3 8 1 1 1 1
+
 
 #include <convert.hpp>
 #include <enum.hpp>
@@ -353,33 +355,25 @@ namespace EMIRO{
         this->lidar_dev.start(&nh, LidarType::Simulator);
 
         
-        bool _is_lidar_ready = false;
         bool first_lidar_check = true;
         ros::Rate _lidar_wait(2);
-        while(ros::ok() && !_is_lidar_ready)
+        while(ros::ok() && lidar_dev.check() != LidarStatus::Run)
         {
-            if(lidar_dev.check() == LidarStatus::Run)
+            if(first_lidar_check)
             {
-                std::cout << "\n";
-                _is_lidar_ready = true;
+                std::cout << "Waiting Lidar ";
+                std::cout.flush();
+                first_lidar_check = false;
             }
             else
             {
-                if(first_lidar_check)
-                {
-                    std::cout << "Waiting Lidar ";
-                    std::cout.flush();
-                    first_lidar_check = false;
-                }
-                else
-                {
-                    std::cout << ".";
-                    std::cout.flush();
-                }
+                std::cout << ".";
+                std::cout.flush();
             }
             ros::spinOnce();
             _lidar_wait.sleep();
         }
+        std::cout << "\n";
 
         // Get lidar pos
         lidar_lock(_load_lidar_front, _load_lidar_left, _load_lidar_right);

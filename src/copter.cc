@@ -523,18 +523,17 @@ namespace EMIRO {
         ROS_INFO("Set home : %f, %f at %f m", lat, lnt, alt);
         if(!command_client.call(home_cmd))
         {
-        ROS_ERROR("Change home FAILED %d", home_cmd.response.success);
-        ROS_ERROR("Change home result was %d ", home_cmd.response.result);
-        return -1;
+            ROS_ERROR("Change home FAILED %d", home_cmd.response.success);
+            ROS_ERROR("Change home result was %d ", home_cmd.response.result);
+            return -1;
         }
         return 0;
     }
 
     bool Copter::is_reached(WayPoint dest, float tolerance) {
         geometry_msgs::Point cur_pos = get_hexa_point();
-        return (std::fabs(std::fabs(cur_pos.x) - std::fabs(dest.x)) < tolerance &&
-                std::fabs(std::fabs(cur_pos.y) - std::fabs(dest.y)) < tolerance &&
-                std::fabs(std::fabs(cur_pos.z) - std::fabs(dest.z)) < tolerance);
+        return (std::fabs(cur_pos.x - dest.x) < tolerance &&
+                std::fabs(cur_pos.y - dest.y) < tolerance);
     }
 
     void Copter::Go(WayPoint& wp)

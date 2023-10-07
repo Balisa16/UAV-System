@@ -1,113 +1,110 @@
 #include <lidar.hpp>
 
-
 namespace EMIRO{
-  void lidar_proc(LidarRef data_ref)
+  void lidar_proc(LidarRef *data_ref)
   {
-    printf("Scan\n");
     std::lock_guard<std::mutex> lg(lidar_proc_mtx);
-    data_ref.out_size = data_ref.in_data.ranges.size();
+    (*data_ref).out_size = (*data_ref).in_data.ranges.size();
     
-    float step_20 = data_ref.out_size/20;
-    data_ref.out_is_valid = false;
+    float step_20 = (*data_ref).out_size/20;
+    (*data_ref).out_is_valid = false;
 
-    if(data_ref.out_size > 0)
-      data_ref.status =  LidarStatus::Run;
+    if((*data_ref).out_size > 0)
+      (*data_ref).status =  LidarStatus::Run;
 
-
-    if(data_ref.status == LidarStatus::Run)
+    if((*data_ref).status == LidarStatus::Run)
     {
-      data_ref.out_is_valid = true;
-      switch (data_ref.type)
+      (*data_ref).out_is_valid = true;
+      switch ((*data_ref).type)
       {
       case LidarType::Simulator:
         // Right
-        data_ref.out_right_rng.margin_left_2 = data_ref.in_data.ranges[(int)(step_20*18)];
-        data_ref.out_right_rng.margin_left_1 = data_ref.in_data.ranges[(int)(step_20*19)];
-        data_ref.out_right_rng.center = data_ref.in_data.ranges[0];
-        data_ref.out_right_rng.margin_right_1 = data_ref.in_data.ranges[(int)(step_20*1)];
-        data_ref.out_right_rng.margin_right_2 = data_ref.in_data.ranges[(int)(step_20*2)];
+        (*data_ref).out_right_rng.margin_left_2 = (*data_ref).in_data.ranges[(int)(step_20*18)];
+        (*data_ref).out_right_rng.margin_left_1 = (*data_ref).in_data.ranges[(int)(step_20*19)];
+        (*data_ref).out_right_rng.center = (*data_ref).in_data.ranges[0];
+        (*data_ref).out_right_rng.margin_right_1 = (*data_ref).in_data.ranges[(int)(step_20*1)];
+        (*data_ref).out_right_rng.margin_right_2 = (*data_ref).in_data.ranges[(int)(step_20*2)];
 
         // Front
-        data_ref.out_front_rng.margin_left_2 = data_ref.in_data.ranges[(int)(step_20*3)];
-        data_ref.out_front_rng.margin_left_1 = data_ref.in_data.ranges[(int)(step_20*4)];
-        data_ref.out_front_rng.center = data_ref.in_data.ranges[(int)(step_20*5)];
-        data_ref.out_front_rng.margin_right_1 = data_ref.in_data.ranges[(int)(step_20*6)];
-        data_ref.out_front_rng.margin_right_2 = data_ref.in_data.ranges[(int)(step_20*7)];
+        (*data_ref).out_front_rng.margin_left_2 = (*data_ref).in_data.ranges[(int)(step_20*3)];
+        (*data_ref).out_front_rng.margin_left_1 = (*data_ref).in_data.ranges[(int)(step_20*4)];
+        (*data_ref).out_front_rng.center = (*data_ref).in_data.ranges[(int)(step_20*5)];
+        (*data_ref).out_front_rng.margin_right_1 = (*data_ref).in_data.ranges[(int)(step_20*6)];
+        (*data_ref).out_front_rng.margin_right_2 = (*data_ref).in_data.ranges[(int)(step_20*7)];
 
         // Left
-        data_ref.out_left_rng.margin_left_2 = data_ref.in_data.ranges[(int)(step_20*8)];
-        data_ref.out_left_rng.margin_left_1 = data_ref.in_data.ranges[(int)(step_20*9)];
-        data_ref.out_left_rng.center = data_ref.in_data.ranges[(int)(step_20*10)];
-        data_ref.out_left_rng.margin_right_1 = data_ref.in_data.ranges[(int)(step_20*11)];
-        data_ref.out_left_rng.margin_right_2 = data_ref.in_data.ranges[(int)(step_20*12)];
+        (*data_ref).out_left_rng.margin_left_2 = (*data_ref).in_data.ranges[(int)(step_20*8)];
+        (*data_ref).out_left_rng.margin_left_1 = (*data_ref).in_data.ranges[(int)(step_20*9)];
+        (*data_ref).out_left_rng.center = (*data_ref).in_data.ranges[(int)(step_20*10)];
+        (*data_ref).out_left_rng.margin_right_1 = (*data_ref).in_data.ranges[(int)(step_20*11)];
+        (*data_ref).out_left_rng.margin_right_2 = (*data_ref).in_data.ranges[(int)(step_20*12)];
 
         // Back
-        data_ref.out_back_rng.margin_left_2 = data_ref.in_data.ranges[(int)(step_20*13)];
-        data_ref.out_back_rng.margin_left_1 = data_ref.in_data.ranges[(int)(step_20*14)];
-        data_ref.out_back_rng.center = data_ref.in_data.ranges[(int)(step_20*15)];
-        data_ref.out_back_rng.margin_right_1 = data_ref.in_data.ranges[(int)(step_20*16)];
-        data_ref.out_back_rng.margin_right_2 = data_ref.in_data.ranges[(int)(step_20*17)];
+        (*data_ref).out_back_rng.margin_left_2 = (*data_ref).in_data.ranges[(int)(step_20*13)];
+        (*data_ref).out_back_rng.margin_left_1 = (*data_ref).in_data.ranges[(int)(step_20*14)];
+        (*data_ref).out_back_rng.center = (*data_ref).in_data.ranges[(int)(step_20*15)];
+        (*data_ref).out_back_rng.margin_right_1 = (*data_ref).in_data.ranges[(int)(step_20*16)];
+        (*data_ref).out_back_rng.margin_right_2 = (*data_ref).in_data.ranges[(int)(step_20*17)];
         break;
 
       case LidarType::A1:
         // Back
-        data_ref.out_back_rng.margin_left_2 = data_ref.in_data.ranges[(int)(step_20*18)];
-        data_ref.out_back_rng.margin_left_1 = data_ref.in_data.ranges[(int)(step_20*19)];
-        data_ref.out_back_rng.center = data_ref.in_data.ranges[0];
-        data_ref.out_back_rng.margin_right_1 = data_ref.in_data.ranges[(int)(step_20*1)];
-        data_ref.out_back_rng.margin_right_2 = data_ref.in_data.ranges[(int)(step_20*2)];
+        (*data_ref).out_back_rng.margin_left_2 = (*data_ref).in_data.ranges[(int)(step_20*18)];
+        (*data_ref).out_back_rng.margin_left_1 = (*data_ref).in_data.ranges[(int)(step_20*19)];
+        (*data_ref).out_back_rng.center = (*data_ref).in_data.ranges[0];
+        (*data_ref).out_back_rng.margin_right_1 = (*data_ref).in_data.ranges[(int)(step_20*1)];
+        (*data_ref).out_back_rng.margin_right_2 = (*data_ref).in_data.ranges[(int)(step_20*2)];
 
         // Right
-        data_ref.out_right_rng.margin_left_2 = data_ref.in_data.ranges[(int)(step_20*3)];
-        data_ref.out_right_rng.margin_left_1 = data_ref.in_data.ranges[(int)(step_20*4)];
-        data_ref.out_right_rng.center = data_ref.in_data.ranges[(int)(step_20*5)];
-        data_ref.out_right_rng.margin_right_1 = data_ref.in_data.ranges[(int)(step_20*6)];
-        data_ref.out_right_rng.margin_right_2 = data_ref.in_data.ranges[(int)(step_20*7)];
+        (*data_ref).out_right_rng.margin_left_2 = (*data_ref).in_data.ranges[(int)(step_20*3)];
+        (*data_ref).out_right_rng.margin_left_1 = (*data_ref).in_data.ranges[(int)(step_20*4)];
+        (*data_ref).out_right_rng.center = (*data_ref).in_data.ranges[(int)(step_20*5)];
+        (*data_ref).out_right_rng.margin_right_1 = (*data_ref).in_data.ranges[(int)(step_20*6)];
+        (*data_ref).out_right_rng.margin_right_2 = (*data_ref).in_data.ranges[(int)(step_20*7)];
 
         // Front
-        data_ref.out_front_rng.margin_left_2 = data_ref.in_data.ranges[(int)(step_20*8)];
-        data_ref.out_front_rng.margin_left_1 = data_ref.in_data.ranges[(int)(step_20*9)];
-        data_ref.out_front_rng.center = data_ref.in_data.ranges[(int)(step_20*10)];
-        data_ref.out_front_rng.margin_right_1 = data_ref.in_data.ranges[(int)(step_20*11)];
-        data_ref.out_front_rng.margin_right_2 = data_ref.in_data.ranges[(int)(step_20*12)];
+        (*data_ref).out_front_rng.margin_left_2 = (*data_ref).in_data.ranges[(int)(step_20*8)];
+        (*data_ref).out_front_rng.margin_left_1 = (*data_ref).in_data.ranges[(int)(step_20*9)];
+        (*data_ref).out_front_rng.center = (*data_ref).in_data.ranges[(int)(step_20*10)];
+        (*data_ref).out_front_rng.margin_right_1 = (*data_ref).in_data.ranges[(int)(step_20*11)];
+        (*data_ref).out_front_rng.margin_right_2 = (*data_ref).in_data.ranges[(int)(step_20*12)];
 
         // Left
-        data_ref.out_left_rng.margin_left_2 = data_ref.in_data.ranges[(int)(step_20*13)];
-        data_ref.out_left_rng.margin_left_1 = data_ref.in_data.ranges[(int)(step_20*14)];
-        data_ref.out_left_rng.center = data_ref.in_data.ranges[(int)(step_20*15)];
-        data_ref.out_left_rng.margin_right_1 = data_ref.in_data.ranges[(int)(step_20*16)];
-        data_ref.out_left_rng.margin_right_2 = data_ref.in_data.ranges[(int)(step_20*17)];
+        (*data_ref).out_left_rng.margin_left_2 = (*data_ref).in_data.ranges[(int)(step_20*13)];
+        (*data_ref).out_left_rng.margin_left_1 = (*data_ref).in_data.ranges[(int)(step_20*14)];
+        (*data_ref).out_left_rng.center = (*data_ref).in_data.ranges[(int)(step_20*15)];
+        (*data_ref).out_left_rng.margin_right_1 = (*data_ref).in_data.ranges[(int)(step_20*16)];
+        (*data_ref).out_left_rng.margin_right_2 = (*data_ref).in_data.ranges[(int)(step_20*17)];
         break;
 
       case LidarType::S1:
         // Back
-        data_ref.out_back_rng.margin_left_2 = data_ref.in_data.ranges[(int)(step_20*18)];
-        data_ref.out_back_rng.margin_left_1 = data_ref.in_data.ranges[(int)(step_20*19)];
-        data_ref.out_back_rng.center = data_ref.in_data.ranges[0];
-        data_ref.out_back_rng.margin_right_1 = data_ref.in_data.ranges[(int)(step_20*1)];
-        data_ref.out_back_rng.margin_right_2 = data_ref.in_data.ranges[(int)(step_20*2)];
+        (*data_ref).out_back_rng.margin_left_2 = (*data_ref).in_data.ranges[(int)(step_20*18)];
+        (*data_ref).out_back_rng.margin_left_1 = (*data_ref).in_data.ranges[(int)(step_20*19)];
+        (*data_ref).out_back_rng.center = (*data_ref).in_data.ranges[0];
+        (*data_ref).out_back_rng.margin_right_1 = (*data_ref).in_data.ranges[(int)(step_20*1)];
+        (*data_ref).out_back_rng.margin_right_2 = (*data_ref).in_data.ranges[(int)(step_20*2)];
 
         // Right
-        data_ref.out_right_rng.margin_left_2 = data_ref.in_data.ranges[(int)(step_20*3)];
-        data_ref.out_right_rng.margin_left_1 = data_ref.in_data.ranges[(int)(step_20*4)];
-        data_ref.out_right_rng.center = data_ref.in_data.ranges[(int)(step_20*5)];
-        data_ref.out_right_rng.margin_right_1 = data_ref.in_data.ranges[(int)(step_20*6)];
-        data_ref.out_right_rng.margin_right_2 = data_ref.in_data.ranges[(int)(step_20*7)];
+        (*data_ref).out_right_rng.margin_left_2 = (*data_ref).in_data.ranges[(int)(step_20*3)];
+        (*data_ref).out_right_rng.margin_left_1 = (*data_ref).in_data.ranges[(int)(step_20*4)];
+        (*data_ref).out_right_rng.center = (*data_ref).in_data.ranges[(int)(step_20*5)];
+        (*data_ref).out_right_rng.margin_right_1 = (*data_ref).in_data.ranges[(int)(step_20*6)];
+        (*data_ref).out_right_rng.margin_right_2 = (*data_ref).in_data.ranges[(int)(step_20*7)];
 
         // Front
-        data_ref.out_front_rng.margin_left_2 = data_ref.in_data.ranges[(int)(step_20*8)];
-        data_ref.out_front_rng.margin_left_1 = data_ref.in_data.ranges[(int)(step_20*9)];
-        data_ref.out_front_rng.center = data_ref.in_data.ranges[(int)(step_20*10)];
-        data_ref.out_front_rng.margin_right_1 = data_ref.in_data.ranges[(int)(step_20*11)];
-        data_ref.out_front_rng.margin_right_2 = data_ref.in_data.ranges[(int)(step_20*12)];
+        (*data_ref).out_front_rng.margin_left_2 = (*data_ref).in_data.ranges[(int)(step_20*8)];
+        (*data_ref).out_front_rng.margin_left_1 = (*data_ref).in_data.ranges[(int)(step_20*9)];
+        (*data_ref).out_front_rng.center = (*data_ref).in_data.ranges[(int)(step_20*10)];
+        (*data_ref).out_front_rng.margin_right_1 = (*data_ref).in_data.ranges[(int)(step_20*11)];
+        (*data_ref).out_front_rng.margin_right_2 = (*data_ref).in_data.ranges[(int)(step_20*12)];
 
         // Left
-        data_ref.out_left_rng.margin_left_2 = data_ref.in_data.ranges[(int)(step_20*13)];
-        data_ref.out_left_rng.margin_left_1 = data_ref.in_data.ranges[(int)(step_20*14)];
-        data_ref.out_left_rng.center = data_ref.in_data.ranges[(int)(step_20*15)];
-        data_ref.out_left_rng.margin_right_1 = data_ref.in_data.ranges[(int)(step_20*16)];
-        data_ref.out_left_rng.margin_right_2 = data_ref.in_data.ranges[(int)(step_20*17)];
+        (*data_ref).out_left_rng.margin_left_2 = (*data_ref).in_data.ranges[(int)(step_20*13)];
+        (*data_ref).out_left_rng.margin_left_1 = (*data_ref).in_data.ranges[(int)(step_20*14)];
+        (*data_ref).out_left_rng.center = (*data_ref).in_data.ranges[(int)(step_20*15)];
+        (*data_ref).out_left_rng.margin_right_1 = (*data_ref).in_data.ranges[(int)(step_20*16)];
+        (*data_ref).out_left_rng.margin_right_2 = (*data_ref).in_data.ranges[(int)(step_20*17)];
         break;
 
       default:
@@ -137,7 +134,7 @@ namespace EMIRO{
   void Lidar::scan(const sensor_msgs::LaserScan::ConstPtr& input)
   {
     lidar_data.in_data = *input;
-    std::thread th(lidar_proc, lidar_data);
+    std::thread th(lidar_proc, &lidar_data);
     th.join();
   }
 

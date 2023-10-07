@@ -11,8 +11,10 @@
 #include <boost/filesystem.hpp>
 #include <stdio.h>
 #include <stdarg.h>
+#include <mutex>
 
-namespace EMIRO{
+namespace EMIRO
+{   
     enum class LogLevel {
         INFO,
         WARNING,
@@ -24,26 +26,41 @@ namespace EMIRO{
         CSV
     };
 
+    enum class LoggerStatus {
+        None,
+        Init,
+        Run,
+        Wait,
+        Stop,
+    };
+
     class Logger
     {
     private:
         std::chrono::_V2::system_clock::time_point start_time, stop_time;
         std::string full_filename;
         uint64_t line_counter;
+
         LogLevel level;
         FileType type;
+        LoggerStatus status = LoggerStatus::None;
+
         std::ofstream writer;
         uint16_t info_msg, warn_msg, err_msg;
+
         bool combo_msg;
         void resume();
-        std::string getLvl(LogLevel lvl = LogLevel::INFO);
+        std::string getLvl(LogLevel lvl = LogLevel::INFO, bool no_color = false);
         std::string cust_printf(const char *format, va_list args);
+        void unavailable_msg();
+
+        std::mutex mtx;
+        bool is_init = false, is_start = false;
+
     public:
-        Logger(std::string filename, FileType type = FileType::TXT)
-        {
-            init(filename, type);
-        }
-        Logger(){};
+        Logger();
+        
+        Logger(std::string filename, FileType type = FileType::TXT);
 
         /**
          * @brief Initialize filename and type of file
@@ -57,7 +74,7 @@ namespace EMIRO{
          * @brief Starting Logger System
          * 
          */
-        void start();
+        void start(bool reset_prev_counter = false);
 
         /**
          * @brief Write message into file without showing message into terminal
@@ -97,9 +114,16 @@ namespace EMIRO{
          * 
          */
         void finish();
-        
-        ~Logger(){};
+
+        LoggerStatus get_status();
+
+        Logger& wait(std::string wait_msg);
+
+        Logger& wait_stop();
+
+        ~Logger();
     };
 }
+
 
 #endif
