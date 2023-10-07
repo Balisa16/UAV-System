@@ -3,18 +3,19 @@
 namespace EMIRO{
 	Servo::Servo()
 	{
+	}
+	
+	void Servo::init(std::shared_ptr<EMIRO::Copter> copter, std::shared_ptr<EMIRO::Logger> logger)
+	{
+		this->logger = logger;
+		this->copter = copter;
 		servo_list.push_back({5, 1000, 2000});
 		servo_list.push_back({6, 1000, 2000});
 		servo_list.push_back({3, 1000, 2000});
 		servo_list.push_back({4, 1000, 2000});
 		servo_ds_list.push_back({1, 1000, 1500, 2000});
 		servo_ds_list.push_back({2, 1000, 1500, 2000});
-		std::cout << "Servo registered" << std::endl;
-	}
-	
-	void Servo::init(std::shared_ptr<EMIRO::Copter> copter)
-	{
-		this->copter = copter;
+		logger->write_show(LogLevel::INFO, "Servo registered");
 	}
 
 	bool Servo::custom_pwm(int aux_idx, int ms)
@@ -29,7 +30,7 @@ namespace EMIRO{
 	{
 		if(aux_idx > 6 || aux_idx < 1)
 		{
-			std::cout << "Invalid Auxiliary Index.\nAccepted index\t: 1 - 6\nYour index\t: " << aux_idx << '\n';
+			logger->write_show(LogLevel::ERROR, "Servo %d invalid. Please use index 1 - 6", aux_idx);
 			return false;
 		}
 		
@@ -50,7 +51,7 @@ namespace EMIRO{
 	{
 		if(aux_idx > 6 || aux_idx < 1)
 		{
-			std::cout << "Invalid Auxiliary Index.\nAccepted index\t: 1 - 6\nYour index\t: " << aux_idx << '\n';
+			logger->write_show(LogLevel::ERROR, "Servo %d invalid. Please use index 1 - 6", aux_idx);
 			return false;
 		}
 		

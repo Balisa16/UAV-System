@@ -393,7 +393,7 @@ namespace EMIRO{
         _finish_pos.x += (left_mission ? -3.15 : 3.15);
 
         // Initialize servo
-        this->ser.init(copter);
+        this->ser.init(copter, logger);
         this->ser.custom_pwm(9, 1400);
         this->ser.custom_pwm(10, 1500);
 

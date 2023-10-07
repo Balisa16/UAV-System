@@ -66,8 +66,6 @@ namespace EMIRO{
     void scan(const sensor_msgs::LaserScan::ConstPtr& input);
     std::shared_ptr<EMIRO::Copter> copter;
 
-    float _temp1, _temp2, _temp3, _max_temp, _min_temp;
-
     LidarRef lidar_data;
 
   public:
