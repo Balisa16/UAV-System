@@ -115,7 +115,7 @@ namespace EMIRO {
      * @param nh  A reference to the Node Handle that manages services,
      * publishers, and clients
      */
-    void init(ros::NodeHandle *nh);
+    void init(ros::NodeHandle *nh, std::shared_ptr<EMIRO::Logger> logger);
 
     /**
      * @brief           Waiting for FCU to connect

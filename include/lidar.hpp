@@ -70,7 +70,7 @@ namespace EMIRO{
 
   public:
     Lidar();
-    void init(std::shared_ptr<EMIRO::Copter> copter);
+    void init(std::shared_ptr<EMIRO::Copter> copter, std::shared_ptr<EMIRO::Logger> logger);
     void start(ros::NodeHandle *nh, LidarType lidar);
     LidarStatus check();
     float get_front(int idx);

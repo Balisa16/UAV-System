@@ -330,6 +330,7 @@ namespace EMIRO{
 
     Misi2::Misi2(int argc, char **argv)
     {
+
         // Init Variable
         this->left_mission = atoi(argv[1]) > 0;
         _multiply = this->left_mission ? -1.0f : 1.0f;
@@ -348,11 +349,13 @@ namespace EMIRO{
 
         copter = std::make_shared<Copter>();
         logger = std::make_shared<Logger>();
-        copter->init(&this->nh);
+        logger->init("Copter", FileType::CSV);
+        logger->start(true);
+        copter->init(&this->nh, logger);
 
         std::cout << "Lidar init" << std::endl;
         // Initialize lidar
-        this->lidar_dev.init(copter);
+        this->lidar_dev.init(copter, logger);
         // this->lidar_dev.start(&nh, LidarType::S1);
         this->lidar_dev.start(&nh, LidarType::Simulator);
 

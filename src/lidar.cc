@@ -122,6 +122,7 @@ namespace EMIRO{
   {
     lidar_data.status = LidarStatus::Init;
     this->copter = copter;
+    this->logger = logger;
     ROS_INFO("Lidar initialized");
   }
 
