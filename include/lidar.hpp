@@ -9,7 +9,7 @@
 #include <tuple>
 #include <memory>
 #include <thread>
-#include <logger.hpp>
+#include <Logger.hpp>
 
 namespace EMIRO{
   std::mutex lidar_proc_mtx;

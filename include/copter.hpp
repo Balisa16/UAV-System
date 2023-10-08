@@ -36,7 +36,7 @@
 #include <cstdio>
 #include <param.hpp>
 #include <pin.hpp>
-#include <logger.hpp>
+#include <Logger.hpp>
 #include <enum.hpp>
 
 namespace EMIRO {
@@ -180,11 +180,7 @@ namespace EMIRO {
      *
      * @param wp  Target point
      */
-    void Go(WayPoint &wp);
-
-    void Go2(WayPoint &wp);
-
-    void Go_Out(WayPoint& wp);
+    void Go(WayPoint &wp, bool show = true);
 
     float get_alt();
     
@@ -303,7 +299,7 @@ namespace EMIRO {
      */
     void get_position(WayPoint &wp, int counter = 5);
 
-    ~Copter(){}
+    ~Copter();
   };
 
 }

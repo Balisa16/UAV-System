@@ -7,7 +7,7 @@
 #include <mavros_msgs/ParamSet.h>
 #include <mavros_msgs/ParamGet.h>
 #include <mavros_msgs/ParamValue.h>
-#include <logger.hpp>
+#include <Logger.hpp>
 
 #include <string>
 #include <termios.h>

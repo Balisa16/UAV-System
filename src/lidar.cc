@@ -136,7 +136,8 @@ namespace EMIRO{
   {
     lidar_data.in_data = *input;
     std::thread th(lidar_proc, &lidar_data);
-    th.join();
+    // th.join();
+    th.detach(); // Not waiting thread
   }
 
   void Lidar::start(ros::NodeHandle *nh, LidarType lidar)

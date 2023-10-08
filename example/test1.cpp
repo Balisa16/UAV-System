@@ -187,12 +187,9 @@ namespace EMIRO{
         copter->set_vel(0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f);
         ros::Rate _internal_rate(5);
         float yaw_thresh = 15.0f;
-        std::cout << "Yaw Correction ";
-        std::cout.flush();
+        logger->wait("Yaw Correction");
         while(ros::ok())
         {
-            std::cout << ".";
-            std::cout.flush();
             float _diff_deg = get_diff_yaw();
             if(std::abs(_diff_deg) < yaw_thresh)
                 break;
@@ -209,7 +206,7 @@ namespace EMIRO{
             ros::spinOnce();
             _internal_rate.sleep();
         }
-        std::cout << " (OK)" << std::endl;
+        logger->wait_success();
         copter->set_vel(0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f);
         ros::Duration(0.5f).sleep();
     }
@@ -218,12 +215,9 @@ namespace EMIRO{
     {
         copter->set_vel(0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f);
         ros::Rate _internal_rate(3);
-        std::cout << "Altitude Correction ";
-        std::cout.flush();
+        logger->wait("Altitude Correction");
         while(ros::ok())
         {
-            std::cout << ".";
-            std::cout.flush();
             float _curr_alt = this->rangefinder.get_range();
             if(_curr_alt < 2.0f && _curr_alt > 0.0f)
             {
@@ -233,14 +227,13 @@ namespace EMIRO{
                     copter->set_vel(0.0f, 0.0f, 0.2f, 0.0f, 0.0f, 0.0f);
                 else
                 {
-                    std::cout << " (OK)" << std::endl;
+                    logger->wait_success();
                     break;
                 }
             }
             else
             {
-                std::cout << std::fixed << std::setprecision(2);
-                std::cout << " (Failed) -> Range : " << _curr_alt << " m." << std::endl;
+                logger->wait_failed();
                 break;
             }
         
@@ -279,6 +272,7 @@ namespace EMIRO{
         std::cout << std::fixed << std::setprecision(2);
         bool _btn_trigger = false;
         int _btn_trigger_counter = 1;
+        
         while(ros::ok())
         {
             temp_wp = copter->get_current_position();
@@ -353,21 +347,20 @@ namespace EMIRO{
         logger->start(true);
         copter->init(&this->nh, logger);
 
-        std::cout << "Lidar init" << std::endl;
         // Initialize lidar
         this->lidar_dev.init(copter, logger);
         // this->lidar_dev.start(&nh, LidarType::S1);
         this->lidar_dev.start(&nh, LidarType::Simulator);
 
         
-        logger.wait("Waiting Lidar");
+        logger->wait("Waiting Lidar");
         ros::Rate _lidar_wait(2);
         while(ros::ok() && lidar_dev.check() != LidarStatus::Run)
         {
             ros::spinOnce();
             _lidar_wait.sleep();
         }
-        logger.wait_stop();
+        logger->wait_success();
 
         // Get lidar pos
         lidar_lock(_load_lidar_front, _load_lidar_left, _load_lidar_right);
@@ -781,7 +774,7 @@ namespace EMIRO{
         WayPoint2 temp_pos2 = vect_target_pos.front();
         WayPoint temp_pos1 = {temp_pos2.x, temp_pos2.y, temp_pos2.z, temp_pos2.yaw};
         vect_target_pos.erase(vect_target_pos.begin());
-        copter->Go_Out(temp_pos1);
+        copter->Go(temp_pos1);
         copter->set_speed(temp_pos2.speed);
 
         // Check if target position vector is not null or zero
@@ -815,7 +808,7 @@ namespace EMIRO{
                 if(vect_target_pos.size() <= 0)
                     break;
             }else{
-                copter->Go2(temp_pos1);
+                copter->Go(temp_pos1, false);
             }
             ros::spinOnce();
             out_rate.sleep();

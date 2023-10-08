@@ -32,7 +32,10 @@ else()
     ${catkin_INCLUDE_DIRS}
     ${CURSES_INCLUDE_DIR}
     ${OpenCV_INCLUDE_DIRS}
+    /usr/local/include
     ${PROJECT_SOURCE_DIR}/include)
+
+  link_directories(/usr/local/lib)
 
   add_definitions(${OpenCV_DEFENITIONS})
 
@@ -45,7 +48,7 @@ else()
     include/enum.hpp
     include/GPSnav.hpp
     include/lidar.hpp
-    include/logger.hpp
+    # include/logger.hpp
     include/pin.hpp
     include/rangefinder.hpp
     include/servo.hpp
@@ -56,14 +59,15 @@ else()
     src/copter.cc
     src/GPSnav.cc
     src/lidar.cc
-    src/logger.cc
+    # src/logger.cc
     src/pin.cc
     src/servo.cc)
 
   set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/example)
 
   add_executable(test1 example/test1.cpp)
-  target_link_libraries(test1 ${PROJECT_NAME} 
+  target_link_libraries(test1 ${PROJECT_NAME}
+    Logger
     ${catkin_LIBRARIES} 
     ${OpenCV_LIBRARIES} 
     ${CURSES_LIBRARIES}
@@ -71,4 +75,9 @@ else()
     Boost::system 
     Boost::filesystem
     jsoncpp)
+  set_target_properties(test1 PROPERTIES 
+    INSTALL_RPATH "/usr/local/lib"
+    BUILD_WITH_INSTALL_RPATH ON
+  )
+
 endif()
