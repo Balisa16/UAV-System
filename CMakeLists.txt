@@ -48,6 +48,7 @@ else()
     include/enum.hpp
     include/GPSnav.hpp
     include/lidar.hpp
+    include/jsonread.hpp
     # include/logger.hpp
     include/pin.hpp
     include/rangefinder.hpp
@@ -59,6 +60,7 @@ else()
     src/copter.cc
     src/GPSnav.cc
     src/lidar.cc
+    src/jsonread.cc
     # src/logger.cc
     src/pin.cc
     src/servo.cc)

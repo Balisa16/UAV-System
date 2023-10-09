@@ -295,7 +295,7 @@ namespace EMIRO{
             in_rate.sleep();
         }
         endwin();
-        std::cout << "Last " << temp_wp << std::endl;
+        copter->print_wp("Start Position", temp_wp);
         std::cout << "Accept ? (y/n) " << std::endl;
         char choice;
         std::cin >> choice;

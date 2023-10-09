@@ -80,17 +80,16 @@ namespace EMIRO {
     void Copter::init_frame(float timeout_s){
         ros::Rate _timeout_rate(20);
         int _timeout_int = timeout_s < 0.2f ? 4 : timeout_s * 20;
-        std::cout << "Check 1" << std::endl;
 
         if(!is_init_frame)
         {
             ros::Rate _init_rate(5);
             logger->wait("Initialized Copter");
-            while(ros::ok() && _timeout_int-1)
+            while(ros::ok() && _timeout_int)
             {
-                _timeout_int--;
                 ros::spinOnce();
                 _timeout_rate.sleep();
+                _timeout_int--;
             }
             logger->wait_success();
 
@@ -98,7 +97,6 @@ namespace EMIRO {
             if(local_frame.x == 0.000f && local_frame.y == 0.000f && local_frame.z == 0.000f)
                 logger->write_show(LogLevel::WARNING, "Local Frame looks unreasonable");
         }
-        
     }
 
     Quaternion Copter::to_quaternion(float roll_rate, float pitch_rate,
@@ -385,7 +383,7 @@ namespace EMIRO {
             return -2;
         }
 
-    return 0;
+        return 0;
     }
 
     int Copter::land()
@@ -520,16 +518,20 @@ namespace EMIRO {
                 std::fabs(cur_pos.y - dest.y) < tolerance);
     }
 
+    void Copter::print_wp(std::string header, WayPoint& wp)
+    {
+        std::vector<ListItem<float>> it;
+        it.push_back({"x\t", wp.x, "m"});
+        it.push_back({"y\t", wp.y, "m"});
+        it.push_back({"z\t", wp.z, "m"});
+        it.push_back({"yaw", wp.yaw, "m"});
+        logger->list_show(header, it);
+    }
+
     void Copter::Go(WayPoint& wp, bool show)
     {
-        if(show){
-            std::vector<ListItem<float>> it;
-            it.push_back({"x\t", wp.x, "m"});
-            it.push_back({"y\t", wp.y, "m"});
-            it.push_back({"z\t", wp.z, "m"});
-            it.push_back({"yaw", wp.yaw, "m"});
-            logger->list_show("Go to", it);
-        }
+        if(show)
+            print_wp("Go to", wp);
         goto_xyz_rpy(wp.x, wp.y, wp.z, 0, 0, wp.yaw);
     }
 

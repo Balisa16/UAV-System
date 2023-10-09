@@ -38,6 +38,7 @@
 #include <pin.hpp>
 #include <Logger.hpp>
 #include <enum.hpp>
+#include <jsonread.hpp>
 
 namespace EMIRO {
   class Copter {
@@ -103,8 +104,10 @@ namespace EMIRO {
     void viso_align();
     int land();
 
+
   public:
     ros::ServiceClient command_client;
+    void print_wp(std::string header, WayPoint& wp);
 
     Copter();
 
