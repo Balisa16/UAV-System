@@ -41,6 +41,8 @@
 #include <jsonread.hpp>
 
 namespace EMIRO {
+  extern const std::string COPTER_DIR;
+  
   class Copter {
   private:
     geometry_msgs::PoseStamped pose_data_local;

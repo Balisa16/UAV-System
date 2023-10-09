@@ -1,6 +1,8 @@
 #include <copter.hpp>
 
 namespace EMIRO {
+    const std::string COPTER_DIR = std::getenv("EMIRO_PATH");
+
     Copter::Copter()
     {
         is_init_pubs_subs = false;
@@ -9,6 +11,7 @@ namespace EMIRO {
 
     void Copter::init(ros::NodeHandle *nh, std::shared_ptr<EMIRO::Logger> logger)
     {
+        std::cout << COPTER_DIR << std::endl;
         this->logger = logger;
         if(!this->is_init_pubs_subs)
         {
