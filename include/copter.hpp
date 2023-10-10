@@ -38,7 +38,6 @@
 #include <pin.hpp>
 #include <Logger.hpp>
 #include <enum.hpp>
-#include <jsonread.hpp>
 
 namespace EMIRO {
   extern const std::string COPTER_DIR;

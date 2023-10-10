@@ -7,4 +7,4 @@ if [ ! -z "$1" ]
   else
     git commit -m "Update"
 fi
-git push origin master
+git push origin FP
