@@ -11,7 +11,6 @@ namespace EMIRO {
 
     void Copter::init(ros::NodeHandle *nh, std::shared_ptr<EMIRO::Logger> logger)
     {
-        std::cout << COPTER_DIR << std::endl;
         this->logger = logger;
         if(!this->is_init_pubs_subs)
         {
@@ -40,10 +39,10 @@ namespace EMIRO {
                 });
 
             cmd_vel_pub = (*nh).advertise<geometry_msgs::Twist>("/mavros/setpoint_velocity/cmd_vel_unstamped", 10);
-            logger->write_show(LogLevel::INFO, "Publisher and Subscriber initialized");
+            logger->write_show(LogLevel::INFO, "Publisher and Subscriber Initialized");
         }
         else
-            logger->write_show(LogLevel::WARNING, "Publisher and Subscriber already initialized");
+            logger->write_show(LogLevel::WARNING, "Publisher and Subscriber Already Initialized");
     }
 
     bool Copter::FCUconnect(float timeout_s){

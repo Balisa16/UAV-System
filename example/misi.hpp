@@ -55,8 +55,7 @@ namespace EMIRO{
         logger->init("Copter", FileType::CSV);
         logger->start(true);
         copter->init(&this->nh, logger);
-        std::string plan = COPTER_DIR + "/docs/plan.json";
-        std::cout << plan << std::endl;
+        jsonreader.init(COPTER_DIR + "/docs/plan.json");
         // jsonreader.init(plan)
     }
 
@@ -70,22 +69,30 @@ namespace EMIRO{
     
     inline void Misi2::Run()
     {
-        /*ros::Rate out_rate(1);
-        while(ros::ok())
+        copter->takeoff(1.0f);
+        ros::Duration(6).sleep();
+
+        std::vector<JSONData> plan_point = jsonreader.get_data();
+        if(!plan_point.size()) return;
+
+        EMIRO::JSONData _data_temp;
+        _data_temp = plan_point.front();
+        plan_point.erase(plan_point.begin());
+
+        ros::Rate out_rate(1);
+        while(ros::ok() && (plan_point.size() || !copter->is_reached(_data_temp.wp, 0.2f)))
         {
+            if(copter->is_reached(_data_temp.wp, 0.2f))
+            {
+                _data_temp = plan_point.front();
+                plan_point.erase(plan_point.begin());
+                copter->Go(_data_temp.wp);
+            }
+            else
+                copter->Go(_data_temp.wp, false);
             ros::spinOnce();
             out_rate.sleep();
         }
-
-        // Waiting for the last position is reached;
-        logger->write_show(LogLevel::INFO, "Waiting to LAND ");
-        while(ros::ok() && !copter->check_alt(3.0f, 2.0f))
-        {
-            ros::spinOnce();
-            out_rate.sleep();
-        }
-
-        logger->write_show(LogLevel::INFO, "Finished Outdoor Mission");*/
     }
     
     inline void Misi2::Land()
