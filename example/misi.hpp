@@ -56,6 +56,7 @@ namespace EMIRO{
         logger->start(true);
         copter->init(&this->nh, logger);
         jsonreader.init(COPTER_DIR + "/docs/plan.json");
+        jsonreader.read();
         // jsonreader.init(plan)
     }
 
