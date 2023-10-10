@@ -73,6 +73,7 @@ namespace EMIRO{
         ros::Duration(6).sleep();
 
         std::vector<JSONData> plan_point = jsonreader.get_data();
+        std::cout << "Size : " << plan_point.size() << std::endl;
         if(!plan_point.size()) return;
 
         EMIRO::JSONData _data_temp;
