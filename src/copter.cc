@@ -518,8 +518,6 @@ namespace EMIRO {
 
     bool Copter::is_reached(WayPoint dest, float tolerance) {
         geometry_msgs::Point cur_pos = get_hexa_point();
-        float _deg = get_yaw();
-        _deg = dest.yaw < 360.0f ? 360 - dest.yaw
         return (std::fabs(cur_pos.x - dest.x) < tolerance &&
                 std::fabs(cur_pos.y - dest.y) < tolerance);
     }
