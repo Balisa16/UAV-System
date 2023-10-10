@@ -57,7 +57,6 @@ namespace EMIRO{
         copter->init(&this->nh, logger);
         jsonreader.init(COPTER_DIR + "/docs/plan.json");
         jsonreader.read();
-        // jsonreader.init(plan)
     }
 
     inline void Misi2::PreArm()
@@ -82,16 +81,18 @@ namespace EMIRO{
         plan_point.erase(plan_point.begin());
 
         ros::Rate out_rate(1);
+        copter->set_speed(1.0f);
         while(ros::ok() && (plan_point.size() || !copter->is_reached(_data_temp.wp, 0.2f)))
         {
             if(copter->is_reached(_data_temp.wp, 0.2f))
             {
                 _data_temp = plan_point.front();
                 plan_point.erase(plan_point.begin());
-                copter->Go(_data_temp.wp);
+                copter->Go(_data_temp.wp, true, "Go to " + _data_temp.header);
+                copter->set_speed(_data_temp.speed);
             }
             else
-                copter->Go(_data_temp.wp, false);
+                copter->Go(_data_temp.wp);
             ros::spinOnce();
             out_rate.sleep();
         }

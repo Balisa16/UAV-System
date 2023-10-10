@@ -184,7 +184,7 @@ namespace EMIRO {
      *
      * @param wp  Target point
      */
-    void Go(WayPoint &wp, bool show = true);
+    void Go(WayPoint &wp, bool show = false, std::string header = "Go to");
 
     float get_alt();
     

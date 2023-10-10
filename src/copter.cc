@@ -530,10 +530,10 @@ namespace EMIRO {
         logger->list_show(header, it);
     }
 
-    void Copter::Go(WayPoint& wp, bool show)
+    void Copter::Go(WayPoint& wp, bool show, std::string header)
     {
         if(show)
-            print_wp("Go to", wp);
+            print_wp(header, wp);
         goto_xyz_rpy(wp.x, wp.y, wp.z, 0, 0, wp.yaw);
     }
 
