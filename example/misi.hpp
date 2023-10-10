@@ -91,8 +91,8 @@ namespace EMIRO{
                 copter->Go(_data_temp.wp, true, "Go to " + _data_temp.header);
                 copter->set_speed(_data_temp.speed);
             }
-            else
-                copter->Go(_data_temp.wp);
+            // else
+            //     copter->Go(_data_temp.wp);
             ros::spinOnce();
             out_rate.sleep();
         }

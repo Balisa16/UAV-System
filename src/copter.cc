@@ -150,7 +150,9 @@ namespace EMIRO {
         float x = pose_data_local.pose.orientation.x;
         float y = pose_data_local.pose.orientation.y;
         float z = pose_data_local.pose.orientation.z;
-        return 360.0f - (atan2(2.0f * (w * z + x * y), 1.0f - 2.0f * (y * y + z * z)) * 180.0f / M_PI);
+        float _deg = atan2(2.0f * (w * z + x * y), 1.0f - 2.0f * (y * y + z * z)) * 180.0f / M_PI;
+        _deg = _deg > 0.0f ? 360.0f -_deg : _deg;
+        return _deg;
     }
 
     int Copter::set_mode(CopterMode mode) {
@@ -516,6 +518,8 @@ namespace EMIRO {
 
     bool Copter::is_reached(WayPoint dest, float tolerance) {
         geometry_msgs::Point cur_pos = get_hexa_point();
+        float _deg = get_yaw();
+        _deg = dest.yaw < 360.0f ? 360 - dest.yaw
         return (std::fabs(cur_pos.x - dest.x) < tolerance &&
                 std::fabs(cur_pos.y - dest.y) < tolerance);
     }
