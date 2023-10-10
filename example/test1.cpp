@@ -35,6 +35,7 @@ namespace EMIRO{
         EMIRO::GlobalNav global_nav;
         EMIRO::Lidar lidar_dev;
         EMIRO::RangeFinder rangefinder;
+        EMIRO::JSONReader jsondata;
 
         // Constant param
         const Color_Range _drop_color = {{10, 0, 0}, {180, 255, 255}};
