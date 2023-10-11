@@ -155,13 +155,14 @@ namespace EMIRO {
         current_state_g = *msg;
     }
 
-    float Copter::get_yaw() {
+    float Copter::get_yaw(bool use360 = false) {
         float w = pose_data_local.pose.orientation.w;
         float x = pose_data_local.pose.orientation.x;
         float y = pose_data_local.pose.orientation.y;
         float z = pose_data_local.pose.orientation.z;
         float _deg = atan2(2.0f * (w * z + x * y), 1.0f - 2.0f * (y * y + z * z)) * 180.0f / M_PI;
-        // _deg = _deg > 0.0f ? 360.0f -_deg : _deg;
+        if(use360)
+            _deg = _deg > 0.0f ? 360.0f -_deg : _deg;
         return _deg;
     }
 
@@ -528,9 +529,13 @@ namespace EMIRO {
 
     bool Copter::is_reached(WayPoint dest, float tolerance) {
         geometry_msgs::Point cur_pos = get_hexa_point();
+        float _yaw_value = get_yaw();
+        float _yaw_diff = _yaw_value - dest.yaw;
+        if(std::fabs(dest.yaw) > 175.0f || std::fabs(dest.yaw) < 5.0f)
+            _yaw_diff = std::fabs(_yaw_value) - std::fabs(dest.yaw);
         return (std::fabs(cur_pos.x - dest.x) < tolerance &&
                 std::fabs(cur_pos.y - dest.y) < tolerance &&
-                std::fabs(get_yaw() - dest.yaw) < 5.0f);
+                std::fabs(_yaw_diff) < 5.0f);
     }
 
     void Copter::print_wp(std::string header, WayPoint& wp)
