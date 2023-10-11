@@ -11,7 +11,6 @@ namespace EMIRO {
 
     void Copter::init(ros::NodeHandle *nh, std::shared_ptr<EMIRO::Logger> logger)
     {
-        std::cout << COPTER_DIR << std::endl;
         this->logger = logger;
         if(!this->is_init_pubs_subs)
         {
@@ -40,10 +39,10 @@ namespace EMIRO {
                 });
 
             cmd_vel_pub = (*nh).advertise<geometry_msgs::Twist>("/mavros/setpoint_velocity/cmd_vel_unstamped", 10);
-            logger->write_show(LogLevel::INFO, "Publisher and Subscriber initialized");
+            logger->write_show(LogLevel::INFO, "Publisher and Subscriber Initialized");
         }
         else
-            logger->write_show(LogLevel::WARNING, "Publisher and Subscriber already initialized");
+            logger->write_show(LogLevel::WARNING, "Publisher and Subscriber Already Initialized");
     }
 
     bool Copter::FCUconnect(float timeout_s){
@@ -151,7 +150,9 @@ namespace EMIRO {
         float x = pose_data_local.pose.orientation.x;
         float y = pose_data_local.pose.orientation.y;
         float z = pose_data_local.pose.orientation.z;
-        return 360.0f - (atan2(2.0f * (w * z + x * y), 1.0f - 2.0f * (y * y + z * z)) * 180.0f / M_PI);
+        float _deg = atan2(2.0f * (w * z + x * y), 1.0f - 2.0f * (y * y + z * z)) * 180.0f / M_PI;
+        _deg = _deg > 0.0f ? 360.0f -_deg : _deg;
+        return _deg;
     }
 
     int Copter::set_mode(CopterMode mode) {
@@ -531,10 +532,10 @@ namespace EMIRO {
         logger->list_show(header, it);
     }
 
-    void Copter::Go(WayPoint& wp, bool show)
+    void Copter::Go(WayPoint& wp, bool show, std::string header)
     {
         if(show)
-            print_wp("Go to", wp);
+            print_wp(header, wp);
         goto_xyz_rpy(wp.x, wp.y, wp.z, 0, 0, wp.yaw);
     }
 

@@ -38,7 +38,6 @@
 #include <pin.hpp>
 #include <Logger.hpp>
 #include <enum.hpp>
-#include <jsonread.hpp>
 
 namespace EMIRO {
   extern const std::string COPTER_DIR;
@@ -185,7 +184,7 @@ namespace EMIRO {
      *
      * @param wp  Target point
      */
-    void Go(WayPoint &wp, bool show = true);
+    void Go(WayPoint &wp, bool show = false, std::string header = "Go to");
 
     float get_alt();
     
