@@ -273,7 +273,7 @@ namespace EMIRO {
      *
      * @return float  Degree of drone's yaw
      */
-    float get_yaw();
+    float get_yaw(bool use360 = false);
 
     /**
      * @brief Get the current local pose of drones

@@ -155,7 +155,7 @@ namespace EMIRO {
         current_state_g = *msg;
     }
 
-    float Copter::get_yaw(bool use360 = false) {
+    float Copter::get_yaw(bool use360) {
         float w = pose_data_local.pose.orientation.w;
         float x = pose_data_local.pose.orientation.x;
         float y = pose_data_local.pose.orientation.y;
