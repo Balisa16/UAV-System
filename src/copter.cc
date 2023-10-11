@@ -140,7 +140,7 @@ namespace EMIRO {
 
     void Copter::pose_cb_local(const geometry_msgs::PoseStamped::ConstPtr &msg) {
         pose_data_local = *msg;
-        traj_logger.write_show(LogLevel::INFO, "%f,%f,%f,%f,%f,%f,%f", 
+        traj_logger.write(LogLevel::INFO, "%f,%f,%f,%f,%f,%f,%f", 
             pose_data_local.pose.position.x,
             pose_data_local.pose.position.y,
             pose_data_local.pose.position.z,

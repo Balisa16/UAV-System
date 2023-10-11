@@ -87,7 +87,7 @@ namespace EMIRO{
             {
                 _data_temp = plan_point.front();
                 plan_point.erase(plan_point.begin());
-                logger->write_show(LogLevel::INFO, "Yaw %f", copter->get_yaw());
+                // logger->write_show(LogLevel::INFO, "Yaw %f", copter->get_yaw());
                 copter->Go(_data_temp.wp, true, "Go to " + _data_temp.header);
                 copter->set_speed(_data_temp.speed);
             }
