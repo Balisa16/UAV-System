@@ -7,6 +7,8 @@ namespace EMIRO {
     {
         is_init_pubs_subs = false;
         is_init_frame = false;
+        traj_logger.init("Track", FileType::CSV, "x pos(m),y pos(m),z pos(m),w orient(rad),x orient(rad),y orient(rad),z orient(rad)");
+        traj_logger.start(true);
     }
 
     void Copter::init(ros::NodeHandle *nh, std::shared_ptr<EMIRO::Logger> logger)
@@ -138,6 +140,14 @@ namespace EMIRO {
 
     void Copter::pose_cb_local(const geometry_msgs::PoseStamped::ConstPtr &msg) {
         pose_data_local = *msg;
+        traj_logger.write_show(LogLevel::INFO, "%f,%f,%f,%f,%f,%f,%f", 
+            pose_data_local.pose.pose.x,
+            pose_data_local.pose.pose.y,
+            pose_data_local.pose.pose.z,
+            pose_data_local.pose.orientation.w,
+            pose_data_local.pose.orientation.x,
+            pose_data_local.pose.orientation.y,
+            pose_data_local.pose.orientation.z);
         timestamp = pose_data_local.header.stamp;
     }
 

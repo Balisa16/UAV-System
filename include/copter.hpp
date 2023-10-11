@@ -77,6 +77,7 @@ namespace EMIRO {
 
     // Parameter settings
     std::shared_ptr<EMIRO::Logger> logger;
+    EMIRO::Logger traj_logger;
     Param copter_param;
 
     // Initialize frame
