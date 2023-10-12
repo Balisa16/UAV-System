@@ -45,6 +45,7 @@ namespace EMIRO {
   class Copter {
   private:
     geometry_msgs::PoseStamped pose_data_local;
+    geometry_msgs::PoseStamped pose_data_global;
     geometry_msgs::PoseStamped pose_stamped;
     geometry_msgs::PoseStamped copter_orientation;
     geometry_msgs::Pose pose_data2;
@@ -59,6 +60,7 @@ namespace EMIRO {
 
     // Subscriber
     ros::Subscriber cmd_pos_sub_local;
+    ros::Subscriber cmd_pos_sub_global;
     ros::Subscriber state_sub;
 
     // Publisher
@@ -99,6 +101,7 @@ namespace EMIRO {
     Quaternion to_quaternion(float roll_rate, float pitch_rate, float yaw_rate);
     geometry_msgs::Point enu_2_local(nav_msgs::Odometry current_pose_enu);
     void pose_cb_local(const geometry_msgs::PoseStamped::ConstPtr& msg);
+    void pose_cb_global(const geometry_msgs::PoseStamped::ConstPtr& msg);
     void state_cb(const mavros_msgs::State::ConstPtr& msg);
     geometry_msgs::Point get_hexa_point();
     void go_to(geometry_msgs::Pose pose);
@@ -194,7 +197,7 @@ namespace EMIRO {
      *
      * @param wp
      */
-    void Go_Land(WayPoint wp);
+    void Go_Land(WayPoint wp, float tolerance = 0.15f);
 
     /**
      * @brief Just Send Land Command
@@ -218,19 +221,6 @@ namespace EMIRO {
      * @param source      EKF Source Type
      */
     void set_ekf_source(EKF_Source source);
-
-    /**
-     * @brief             Correction of altitude using TF-Mini Sensor
-     *
-     * @param wp          Desire waypoint location
-     * @param target_alt  Altitude target (m)
-     * @param tolerance   Altitude tolerance (m)
-     *
-     * @note tolerance parameter value must less than target_alt parameter.
-     *
-     * @return float      Current Altitude after correction by tf-mini
-     */
-    /*float alt_correction(const float sensor_alt, float target_alt, float tolerance);*/
 
     /**
      * @brief       Set the EKF Origin for the desired GPS global.
@@ -268,6 +258,13 @@ namespace EMIRO {
 
     bool check_alt(float dist_alt, float tolerance);
 
+    WayPoint calc_transition(WayPoint start_point, WayPoint stop_point, float copter_deg, float copter_alt = 0.8f);
+
+    // Setter
+    void set_rc(int channel, int pwm);
+
+    // Getter
+
     /**
      * @brief         Get current drone's yaw
      *
@@ -275,34 +272,20 @@ namespace EMIRO {
      */
     float get_yaw(bool use360 = false);
 
-    /**
-     * @brief Get the current local pose of drones
-     *
-     * @return geometry_msgs::Pose Pose of drones {position{x, y, y},
-     * orientation{w, x, y, z}}
-     */
-    geometry_msgs::Pose get_local_pose();
+    geometry_msgs::Pose get_position(bool local = true);
 
-    /**
-     * @brief Get the current mission type
-     * 
-     * @return Mode Current mission (Indoor / Outdoor)
-     */
+    WayPoint get_position(bool local = true);
+
     Mode get_current_mission();
 
-    void rc_override(int channel, int pwm);
-
-    WayPoint calc_transition(WayPoint start_point, WayPoint stop_point, float copter_deg, float copter_alt = 0.8f);
-
-    WayPoint get_current_position();
 
     /**
-     * @brief Get the position object but give update time to make sure current position is up to date
+     * @brief Get the position object but give update time to make sure current position is up to date.
      * 
      * @param wp      Waypoint referencee
      * @param counter Counter duration to update (1 counter == 0.2 sec). Must greather than 1.
      */
-    void get_position(WayPoint &wp, int counter = 5);
+    void get_position(WayPoint &wp, bool local = true, int counter = 5);
 
     ~Copter();
   };

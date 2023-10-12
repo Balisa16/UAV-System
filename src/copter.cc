@@ -151,6 +151,10 @@ namespace EMIRO {
         timestamp = pose_data_local.header.stamp;
     }
 
+    void Copter::pose_cb_global(const geometry_msgs::PoseStamped::ConstPtr &msg) {
+        pose_data_global = *msg;
+    }
+
     void Copter::state_cb(const mavros_msgs::State::ConstPtr &msg) {
         current_state_g = *msg;
     }
@@ -583,10 +587,17 @@ namespace EMIRO {
 
     Mode Copter::get_current_mission() { return this->misi_mode; }
 
-    void Copter::Go_Land(WayPoint wp) {
-        logger->write_show(LogLevel::INFO, "System Go to Land");
-        Go(wp);
-        ros::Duration(4).sleep();
+    void Copter::Go_Land(WayPoint wp, float tolerance) {
+        logger->wait(LogLevel::INFO, "Go to Land Position");
+        ros::rate wait_land(2);
+        while(ros::ok() && !copter->is_reached(_data_temp.wp, 0.2f))
+        {
+            Go(wp);
+            ros::spinOnce();
+            wait_land.sleep();
+        }
+
+        ros::Duration(1).sleep();
         logger->write_show(LogLevel::INFO, "System Land");
         land();
     }
@@ -609,16 +620,26 @@ namespace EMIRO {
         land();
     }
 
-    geometry_msgs::Pose Copter::get_local_pose() {
-        return pose_data_local.pose;
+    geometry_msgs::Pose Copter::get_local_pose(bool local) {
+        if(local)
+            return pose_data_local.pose;
+        else
+            return pose_data_global.pose;
     }
 
-    EMIRO::WayPoint Copter::get_current_position(){
-        float x_ = pose_data_local.pose.position.x;
-        float y_ = pose_data_local.pose.position.y;
-        float z_ = pose_data_local.pose.position.z;
-        EMIRO::WayPoint _temp_ = {x_, y_, z_, get_yaw()};
-        return _temp_;
+    EMIRO::WayPoint Copter::get_position(bool local){
+        float x_, y_, z_;
+        if(local){
+            x_ = pose_data_local.pose.position.x;
+            y_ = pose_data_local.pose.position.y;
+            z_ = pose_data_local.pose.position.z;
+        }
+        else{
+            x_ = pose_data_global.pose.position.x;
+            y_ = pose_data_global.pose.position.y;
+            z_ = pose_data_global.pose.position.z;
+        }
+        return {x_, y_, z_, get_yaw()};
     }
 
     WayPoint Copter::calc_transition(WayPoint start_point, WayPoint stop_point, float copter_deg, float copter_alt)
