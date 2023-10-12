@@ -151,7 +151,7 @@ namespace EMIRO {
         timestamp = pose_data_local.header.stamp;
     }
 
-    void Copter::pose_cb_global(const geometry_msgs::PoseStamped::ConstPtr &msg) {
+    void Copter::pose_cb_global(const geographic_msgs::GeoPoseStamped::ConstPtr &msg) {
         pose_data_global = *msg;
     }
 

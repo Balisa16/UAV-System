@@ -44,8 +44,8 @@ namespace EMIRO {
   
   class Copter {
   private:
+    geographic_msgs::GeoPoseStamped pose_data_global;
     geometry_msgs::PoseStamped pose_data_local;
-    geometry_msgs::PoseStamped pose_data_global;
     geometry_msgs::PoseStamped pose_stamped;
     geometry_msgs::PoseStamped copter_orientation;
     geometry_msgs::Pose pose_data2;
@@ -101,7 +101,7 @@ namespace EMIRO {
     Quaternion to_quaternion(float roll_rate, float pitch_rate, float yaw_rate);
     geometry_msgs::Point enu_2_local(nav_msgs::Odometry current_pose_enu);
     void pose_cb_local(const geometry_msgs::PoseStamped::ConstPtr& msg);
-    void pose_cb_global(const geometry_msgs::PoseStamped::ConstPtr& msg);
+    void pose_cb_global(const geographic_msgs::GeoPoseStamped::ConstPtr& msg);
     void state_cb(const mavros_msgs::State::ConstPtr& msg);
     geometry_msgs::Point get_hexa_point();
     void go_to(geometry_msgs::Pose pose);
