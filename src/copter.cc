@@ -620,13 +620,15 @@ namespace EMIRO {
         land();
     }
 
-    geometry_msgs::Pose Copter::get_local_pose(bool local) {
+    template <typename T>
+    T Copter::get_local_pose(bool local) {
         if(local)
             return pose_data_local.pose;
         else
             return pose_data_global.pose;
     }
 
+    /*
     EMIRO::WayPoint Copter::get_position(bool local){
         float x_, y_, z_;
         if(local){
@@ -640,7 +642,7 @@ namespace EMIRO {
             z_ = pose_data_global.pose.position.z;
         }
         return {x_, y_, z_, get_yaw()};
-    }
+    }*/
 
     WayPoint Copter::calc_transition(WayPoint start_point, WayPoint stop_point, float copter_deg, float copter_alt)
     {
