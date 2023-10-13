@@ -34,6 +34,7 @@
 
 #include <cinttypes>
 #include <cstdio>
+#include <type_traits>
 #include <param.hpp>
 #include <pin.hpp>
 #include <Logger.hpp>
@@ -272,20 +273,11 @@ namespace EMIRO {
      */
     float get_yaw(bool use360 = false);
 
-    // geometry_msgs::Pose and WayPoint
+    // WayPoint and WayPointG
     template <typename T>
-    T get_position(bool local = true);
+    void get_position(T& pose_ref);
 
     Mode get_current_mission();
-
-
-    /**
-     * @brief Get the position object but give update time to make sure current position is up to date.
-     * 
-     * @param wp      Waypoint referencee
-     * @param counter Counter duration to update (1 counter == 0.2 sec). Must greather than 1.
-     */
-    void get_position(WayPoint &wp, int counter = 5);
 
     ~Copter();
   };

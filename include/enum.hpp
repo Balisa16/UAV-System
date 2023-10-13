@@ -86,6 +86,13 @@ namespace EMIRO{
     float yaw;
   }WayPoint;
 
+  typedef struct{
+    float lat;
+    float lng;
+    float alt;
+    float yaw;
+  }WayPointG;
+
 
   typedef struct{
     float x;

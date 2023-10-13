@@ -621,11 +621,23 @@ namespace EMIRO {
     }
 
     template <typename T>
-    T Copter::get_local_pose(bool local) {
-        if(local)
-            return pose_data_local.pose;
+    void Copter::get_position(T& pose_ref) {
+        if (std::is_same<T, WayPoint>::value)
+            pose_ref = {
+                pose_data_local.pose.position.x,
+                pose_data_local.pose.position.y,
+                pose_data_local.pose.position.z,
+                get_yaw();
+            };
+        else if(std::is_same<T, WayPointG>::value)
+            pose_ref = {
+                pose_data_global.pose.position.latitude,
+                pose_data_local.pose.position.longitude,
+                pose_data_local.pose.position.altitude,
+                get_yaw();
+            };
         else
-            return pose_data_global.pose;
+            std::cerr << "Get Position : Unknown TYPE" << std::endl;
     }
 
     /*
