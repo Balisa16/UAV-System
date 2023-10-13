@@ -96,8 +96,8 @@ namespace EMIRO {
                 _timeout_int--;
             }
             logger->wait_success();
-
-            this->local_frame = this->get_current_position();
+            
+            this->get_position(this->local_frame);
             if(local_frame.x == 0.000f && local_frame.y == 0.000f && local_frame.z == 0.000f)
                 logger->write_show(LogLevel::WARNING, "Local Frame looks unreasonable");
         }
@@ -326,7 +326,8 @@ namespace EMIRO {
         }
 
         // Get latest position data
-        WayPoint _wp = get_current_position();
+        WayPoint _wp;
+        get_position(_wp);
         goto_xyz_rpy(_wp.x, _wp.y, takeoff_alt, 0, 0, _yaw);
         for(int i=0; i<10; i++)
         {
@@ -588,9 +589,9 @@ namespace EMIRO {
     Mode Copter::get_current_mission() { return this->misi_mode; }
 
     void Copter::Go_Land(WayPoint wp, float tolerance) {
-        logger->wait(LogLevel::INFO, "Go to Land Position");
-        ros::rate wait_land(2);
-        while(ros::ok() && !copter->is_reached(_data_temp.wp, 0.2f))
+        logger->wait("Go to Land Position");
+        ros::Rate wait_land(2);
+        while(ros::ok() && !is_reached(wp, 0.2f))
         {
             Go(wp);
             ros::spinOnce();
@@ -602,7 +603,7 @@ namespace EMIRO {
         land();
     }
 
-    void Copter::rc_override(int channel, int pwm)
+    void Copter::set_rc(int channel, int pwm)
     {
         mavros_msgs::OverrideRCIn rc_override;
         for (int i = 0; i < 18; i++)
@@ -624,17 +625,17 @@ namespace EMIRO {
     void Copter::get_position(T& pose_ref) {
         if (std::is_same<T, WayPoint>::value)
             pose_ref = {
-                pose_data_local.pose.position.x,
-                pose_data_local.pose.position.y,
-                pose_data_local.pose.position.z,
-                get_yaw();
+                (float)pose_data_local.pose.position.x,
+                (float)pose_data_local.pose.position.y,
+                (float)pose_data_local.pose.position.z,
+                get_yaw()
             };
         else if(std::is_same<T, WayPointG>::value)
             pose_ref = {
-                pose_data_global.pose.position.latitude,
-                pose_data_local.pose.position.longitude,
-                pose_data_local.pose.position.altitude,
-                get_yaw();
+                (float)pose_data_global.pose.position.latitude,
+                (float)pose_data_global.pose.position.longitude,
+                (float)pose_data_global.pose.position.altitude,
+                get_yaw()
             };
         else
             std::cerr << "Get Position : Unknown TYPE" << std::endl;
@@ -692,21 +693,6 @@ namespace EMIRO {
     float Copter::get_alt()
     {
         return pose_data_local.pose.position.z;
-    }
-
-    void Copter::get_position(WayPoint &wp, int counter)
-    {
-        ros::Rate in_rate(5);
-        counter = counter < 2 ? 2 : counter;
-        while(ros::ok() && counter)
-        {
-            counter--;
-            ros::spinOnce();
-            in_rate.sleep();
-        }
-        wp.x = pose_data_local.pose.position.x;
-        wp.y = pose_data_local.pose.position.y;
-        wp.z = pose_data_local.pose.position.z;
     }
 
     Copter::~Copter(){
