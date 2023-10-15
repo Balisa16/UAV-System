@@ -28,6 +28,7 @@ namespace EMIRO{
          * @return float Measured distance (in meters)
          */
         float get_data();
+        
         ~TFMini();
     };
     
