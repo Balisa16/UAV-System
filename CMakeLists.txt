@@ -64,6 +64,10 @@ else()
     /usr/local/include
     ${PROJECT_SOURCE_DIR}/include)
 
+  if(IS_JETSON)
+    include_directories(${CMAKE_CURRENT_SOURCE_DIR}/platform/jetson)
+  endif()
+
   link_directories(/usr/local/lib)
 
   add_definitions(${OpenCV_DEFENITIONS})
