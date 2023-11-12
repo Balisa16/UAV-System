@@ -1,0 +1,3 @@
+[submodule "third-party/Logger"]
+	path = third-party/Logger
+	url = https://github.com/Balisa16/Logger.git
