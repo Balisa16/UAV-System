@@ -48,8 +48,14 @@ namespace EMIRO{
         ~Misi2();
     };
 
+    inline EMIRO::WayPoint Misi2::lock_pos(int min_counter, const char *title, bool nav_change)
+    {
+        return EMIRO::WayPoint();
+    }
+
     Misi2::Misi2(int argc, char **argv)
     {
+        std::cout << "Test\n";
         logger = std::make_shared<Logger>();
         copter = std::make_shared<Copter>();
         logger->init("Copter", FileType::CSV);

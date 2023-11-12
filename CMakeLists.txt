@@ -19,19 +19,19 @@ if(CMAKE_SYSTEM_PROCESSOR MATCHES "arm")
   message("ARM architecture detected")
 
   try_compile(IS_JETSON
-      ${CMAKE_BINARY_DIR}/pin
-      SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/pin.hpp.cpp
-      OUTPUT_VARIABLE OUTPUT_VAR
+    ${CMAKE_BINARY_DIR}/pin
+    SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/platform/jetson/pin.hpp
+    OUTPUT_VARIABLE OUTPUT_VAR
   )
 
   if(IS_JETSON)
-      message("Jetson platform detected")
-      add_definitions(-DJETSON)
+    message("Jetson platform detected")
+    add_definitions(-DJETSON)
   else()
-      message("Not a Jetson platform")
+    message("Not a Jetson platform")
   endif()
 else()
-    message("Not an ARM architecture")
+  message("Not an ARM architecture")
 endif()
 
 
