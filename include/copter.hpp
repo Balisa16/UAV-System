@@ -36,7 +36,11 @@
 #include <cstdio>
 #include <type_traits>
 #include <param.hpp>
-#include <pin.hpp>
+
+#ifdef IS_JETSON_PLATFORM
+  #include <pin.hpp>
+#endif
+
 #include <Logger.hpp>
 #include <enum.hpp>
 

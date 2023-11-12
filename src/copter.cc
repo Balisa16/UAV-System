@@ -7,7 +7,8 @@ namespace EMIRO {
     {
         is_init_pubs_subs = false;
         is_init_frame = false;
-        traj_logger.init("Track", FileType::CSV, "x pos(m),y pos(m),z pos(m),w orient(rad),x orient(rad),y orient(rad),z orient(rad)");
+        // traj_logger.init("Track", FileType::CSV, "x pos(m),y pos(m),z pos(m),w orient(rad),x orient(rad),y orient(rad),z orient(rad)");
+        traj_logger.init("Track", FileType::CSV);
         traj_logger.start(true);
     }
 
@@ -697,6 +698,6 @@ namespace EMIRO {
 
     Copter::~Copter(){
         logger->finish();
-        traj_logger.finish(false);
+        traj_logger.finish();
     }
 }

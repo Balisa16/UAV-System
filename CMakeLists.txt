@@ -108,17 +108,22 @@ else()
   set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/example)
 
   add_executable(test2 example/test1.cpp)
+
+  if(IS_JETSON)
+    target_link_libraries(test2 ${PROJECT_NAME}
+      JetsonGPIO
+    )
+  endif()
   
   target_link_libraries(test2 ${PROJECT_NAME}
     Logger
     ${catkin_LIBRARIES} 
     ${OpenCV_LIBRARIES} 
     ${CURSES_LIBRARIES}
-    JetsonGPIO 
     Boost::system 
     Boost::filesystem
     jsoncpp
-    $<$<BOOL:${IS_JETSON}>:IS_JETSON_PLATFORM)
+    $<$<BOOL:${IS_JETSON}>:IS_JETSON_PLATFORM>)
 
   set_target_properties(test1 PROPERTIES 
     INSTALL_RPATH "/usr/local/lib"
