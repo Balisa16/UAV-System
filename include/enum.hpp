@@ -72,12 +72,12 @@ namespace EMIRO{
     int y_pixel; 
   }VCoordinate;
 
+#ifndef QUATERNION_STRUCT
+#define QUATERNION_STRUCT
   typedef struct{
-    float w;
-    float x;
-    float y;
-    float z;
+    float w, x, y, z;
   } Quaternion;
+#endif
 
   typedef struct{
     float x;

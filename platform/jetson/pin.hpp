@@ -6,17 +6,12 @@
 namespace EMIRO{
 	class Pin
 	{
-	private:
-
 	public:
 		Pin();
 		void init_pin(int *pin, bool isOut);
 		void set_low(int *pinNum);
 		void set_high(int *pinNum);
-		~Pin()
-		{
-			GPIO::cleanup();
-		}
+		~Pin();
 	};
 }
 #endif // PIN_HEADER

@@ -81,6 +81,7 @@ add_library(${PROJECT_NAME} SHARED
   src/GPSnav.cc
   src/lidar.cc
   src/jsonread.cc
+  src/UART.cc
   src/servo.cc)
 
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/example)
@@ -104,6 +105,23 @@ target_link_libraries(test2 ${PROJECT_NAME}
   $<$<BOOL:${IS_JETSON}>:IS_JETSON_PLATFORM>)
 
 set_target_properties(test1 PROPERTIES 
+  INSTALL_RPATH "/usr/local/lib"
+  BUILD_WITH_INSTALL_RPATH ON
+)
+
+add_executable(combine example/combine.cpp)
+
+target_link_libraries(combine ${PROJECT_NAME}
+  Logger
+  ${catkin_LIBRARIES} 
+  ${OpenCV_LIBRARIES} 
+  ${CURSES_LIBRARIES}
+  Boost::system 
+  Boost::filesystem
+  jsoncpp
+  $<$<BOOL:${IS_JETSON}>:IS_JETSON_PLATFORM>)
+
+set_target_properties(combine PROPERTIES 
   INSTALL_RPATH "/usr/local/lib"
   BUILD_WITH_INSTALL_RPATH ON
 )

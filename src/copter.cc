@@ -12,36 +12,36 @@ namespace EMIRO {
         traj_logger.start(true);
     }
 
-    void Copter::init(ros::NodeHandle *nh, std::shared_ptr<EMIRO::Logger> logger)
+    void Copter::init(std::shared_ptr<ros::NodeHandle> nh, std::shared_ptr<EMIRO::Logger> logger)
     {
         this->logger = logger;
         if(!this->is_init_pubs_subs)
         {
             //ROS Service Client
-            command_client = (*nh).serviceClient<mavros_msgs::CommandLong>("/mavros/cmd/command");
-            set_mode_client = (*nh).serviceClient<mavros_msgs::SetMode>("/mavros/set_mode");
-            arming_client = (*nh).serviceClient<mavros_msgs::CommandBool>("/mavros/cmd/arming");
-            takeoff_client = (*nh).serviceClient<mavros_msgs::CommandTOL>("/mavros/cmd/takeoff");
-            land_client = (*nh).serviceClient<mavros_msgs::CommandTOL>("/mavros/cmd/land");
+            command_client = nh->serviceClient<mavros_msgs::CommandLong>("/mavros/cmd/command");
+            set_mode_client = nh->serviceClient<mavros_msgs::SetMode>("/mavros/set_mode");
+            arming_client = nh->serviceClient<mavros_msgs::CommandBool>("/mavros/cmd/arming");
+            takeoff_client = nh->serviceClient<mavros_msgs::CommandTOL>("/mavros/cmd/takeoff");
+            land_client = nh->serviceClient<mavros_msgs::CommandTOL>("/mavros/cmd/land");
 
             // RC (Remote Control) Publisher
-            cmd_rc_pub = (*nh).advertise<mavros_msgs::RCIn>("/mavros/rc/in", 2);
+            cmd_rc_pub = nh->advertise<mavros_msgs::RCIn>("/mavros/rc/in", 2);
 
-            cmd_rc_override_pub = (*nh).advertise<mavros_msgs::OverrideRCIn>("mavros/rc/override", 10);
+            cmd_rc_override_pub = nh->advertise<mavros_msgs::OverrideRCIn>("mavros/rc/override", 10);
 
             //ROS Subscriber/Publisher
-            cmd_pos_pub = (*nh).advertise<geometry_msgs::PoseStamped>("/mavros/setpoint_position/local", 20);
-            gps_pos_pub = (*nh).advertise<geographic_msgs::GeoPoseStamped>("/mavros/setpoint_position/global", 10);
-            state_sub = (*nh).subscribe<mavros_msgs::State>("/mavros/state", 10, 
+            cmd_pos_pub = nh->advertise<geometry_msgs::PoseStamped>("/mavros/setpoint_position/local", 20);
+            gps_pos_pub = nh->advertise<geographic_msgs::GeoPoseStamped>("/mavros/setpoint_position/global", 10);
+            state_sub = nh->subscribe<mavros_msgs::State>("/mavros/state", 10, 
                 [this](const mavros_msgs::State::ConstPtr& msg) {
                         this->state_cb(msg);
                     });
-            cmd_pos_sub_local = (*nh).subscribe<geometry_msgs::PoseStamped>("/mavros/local_position/pose", 2, 
+            cmd_pos_sub_local = nh->subscribe<geometry_msgs::PoseStamped>("/mavros/local_position/pose", 2, 
                 [this](const geometry_msgs::PoseStamped::ConstPtr& msg) {
                     this->pose_cb_local(msg);
                 });
 
-            cmd_vel_pub = (*nh).advertise<geometry_msgs::Twist>("/mavros/setpoint_velocity/cmd_vel_unstamped", 10);
+            cmd_vel_pub = nh->advertise<geometry_msgs::Twist>("/mavros/setpoint_velocity/cmd_vel_unstamped", 10);
             logger->write_show(LogLevel::INFO, "Publisher and Subscriber Initialized");
         }
         else

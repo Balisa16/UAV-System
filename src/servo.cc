@@ -3,7 +3,6 @@
 namespace EMIRO{
 	Servo::Servo()
 	{
-		std::cout << "Created servo\n";
 	}
 	
 	void Servo::init(std::shared_ptr<EMIRO::Copter> copter, std::shared_ptr<EMIRO::Logger> logger)

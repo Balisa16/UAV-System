@@ -20,15 +20,15 @@ namespace EMIRO{
     class Misi2
     {
     private:
-        ros::NodeHandle nh;
+        std::shared_ptr<ros::NodeHandle> nh;
         std::shared_ptr<EMIRO::Copter> copter;
         std::shared_ptr<EMIRO::Logger> logger;
-        EMIRO::Servo ser;
-        EMIRO::Nav_Convert converter;
-        EMIRO::GlobalNav global_nav;
-        EMIRO::Lidar lidar_dev;
-        EMIRO::RangeFinder rangefinder;
-        EMIRO::JSONReader jsonreader;
+        // EMIRO::Servo ser;
+        // EMIRO::Nav_Convert converter;
+        // EMIRO::GlobalNav global_nav;
+        // EMIRO::Lidar lidar_dev;
+        // EMIRO::RangeFinder rangefinder;
+        std::shared_ptr<EMIRO::JSONReader> jsonreader;
 
         EMIRO::WayPoint _start_pos;
 
@@ -37,7 +37,19 @@ namespace EMIRO{
 
     public:
 
-        Misi2(int argc, char **argv);
+        Misi2(std::shared_ptr<ros::NodeHandle> nh_ptr, int argc, char **argv):
+            nh(nh_ptr),
+            jsonreader(std::make_shared<JSONReader>()),
+            logger(std::make_shared<Logger>()),
+            copter(std::make_shared<Copter>())
+            {
+                std::cout << "Test\n";
+                logger->init("Copter", FileType::CSV);
+                logger->start(true);
+                copter->init(nh, logger);
+                jsonreader->init(COPTER_DIR + "/docs/plan.json");
+                jsonreader->read();
+            }
         
         void PreArm();
 
@@ -53,18 +65,6 @@ namespace EMIRO{
         return EMIRO::WayPoint();
     }
 
-    Misi2::Misi2(int argc, char **argv)
-    {
-        std::cout << "Test\n";
-        logger = std::make_shared<Logger>();
-        copter = std::make_shared<Copter>();
-        logger->init("Copter", FileType::CSV);
-        logger->start(true);
-        copter->init(&this->nh, logger);
-        jsonreader.init(COPTER_DIR + "/docs/plan.json");
-        jsonreader.read();
-    }
-
     inline void Misi2::PreArm()
     {
         copter->FCUconnect(2.0f);
@@ -78,7 +78,7 @@ namespace EMIRO{
         copter->takeoff(1.0f);
         ros::Duration(6).sleep();
 
-        std::vector<JSONData> plan_point = jsonreader.get_data();
+        std::vector<JSONData> plan_point = jsonreader->get_data();
         if(!plan_point.size()) return;
 
         EMIRO::JSONData _data_temp;
