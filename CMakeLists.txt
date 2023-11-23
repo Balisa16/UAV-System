@@ -84,7 +84,10 @@ add_library(${PROJECT_NAME} SHARED
   src/UART.cc
   src/servo.cc)
 
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/example)
+install(TARGETS ${PROJECT_NAME}
+  LIBRARY DESTINATION "/usr/local/lib")
+
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/release)
 
 add_executable(test2 example/test1.cpp)
 
@@ -123,6 +126,7 @@ target_link_libraries(comb ${PROJECT_NAME}
   $<$<BOOL:${IS_JETSON}>:IS_JETSON_PLATFORM>)
 
 set_target_properties(comb PROPERTIES 
-  INSTALL_RPATH "/usr/local/lib"
+  # INSTALL_RPATH "/usr/local/lib"
+  INSTALL_RPATH "~/catkin_ws/install"
   BUILD_WITH_INSTALL_RPATH ON
 )
