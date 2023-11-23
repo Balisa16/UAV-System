@@ -105,7 +105,8 @@ target_link_libraries(test2 ${PROJECT_NAME}
   $<$<BOOL:${IS_JETSON}>:IS_JETSON_PLATFORM>)
 
 set_target_properties(test2 PROPERTIES 
-  INSTALL_RPATH "/usr/local/lib"
+  # INSTALL_RPATH "/usr/local/lib"
+  INSTALL_RPATH "~/catkin_ws/install"
   BUILD_WITH_INSTALL_RPATH ON
 )
 
