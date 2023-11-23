@@ -622,6 +622,18 @@ namespace EMIRO {
         land();
     }
 
+    void Copter::get_pose(Position* pos, Quaternion* quat)
+    {
+        pos->x = pose_data_local.pose.position.x;
+        pos->y = pose_data_local.pose.position.y;
+        pos->z = pose_data_local.pose.position.z;
+
+        quat->w = pose_data_local.pose.orientation.w;
+        quat->x = pose_data_local.pose.orientation.x;
+        quat->y = pose_data_local.pose.orientation.y;
+        quat->z = pose_data_local.pose.orientation.z;
+    }
+
     template <typename T>
     void Copter::get_position(T& pose_ref) {
         if (std::is_same<T, WayPoint>::value)

@@ -5,9 +5,9 @@
 int main()
 {
 	std::shared_ptr<ros::NodeHandle> nh = std::make_shared<ros::NodeHandle>();
-	std::shared_ptr<ros::NodeHandle> logger;
+	std::shared_ptr<EMIRO::Logger> logger;
 	logger = std::make_shared<EMIRO::Logger>();
-	logger->init("Copter", FileType::CSV);
+	logger->init("Copter", EMIRO::FileType::CSV);
 	logger->start(true);
 
 	EMIRO::Copter copter;
@@ -16,17 +16,27 @@ int main()
 	EMIRO::UART master_uart;
 	master_uart.init("/dev/ttyTHS1", B9600);
 
-	int counter = 4;
+	int cnt = 4;
+	int sub_cnt = 3;
 	EMIRO::Position pos;
 	EMIRO::Quaternion quat;
 	
-	while(true)
+	ros::Rate rate(1);
+	while(ros::ok() && cnt)
 	{
-		// Read current position
+		if(sub_cnt)
+		{
+			// Read current position
+			
+			// Send current position
+			master_uart.write_pose(&pos, &quat);
+			cnt--;
+			sub_cnt = 3;
+		}
 
-		// Send current position
-		master_uart.write_pose(&pos, &quat);
-		counter--;
+		ros::spinOnce();
+    	rate.sleep();
+		sub_cnt--;
 	}
 	return 0;
 }

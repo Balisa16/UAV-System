@@ -7,23 +7,10 @@
 #include <unistd.h>
 #include <string.h>
 #include <sstream>
+#include <enum.hpp>
 
 namespace EMIRO
 {
-#ifndef POSITION_HEADER
-#define  POSITION_HEADER
-    typedef struct{
-        float x, y, z;
-    }Position;
-#endif
-
-#ifndef QUATERNION_HEADER
-#define QUATERNION_HEADER
-    typedef struct{
-        float w, x, y, z;
-    }Quaternion;
-#endif
-
     class UART
     {
     private:

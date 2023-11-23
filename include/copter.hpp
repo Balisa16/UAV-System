@@ -47,20 +47,6 @@
 namespace EMIRO {
   extern const std::string COPTER_DIR;
 
-#ifndef POSITION_STRUCT
-#define POSITION_STRUCT
-	typedef struct{
-		float x, y, z;
-	}Position;
-#endif
-
-#ifndef QUATERNION_STRUCT
-#define QUATERNION_STRUCT
-	typedef struct{
-		float w, x, y, z;
-	}Quaternion;
-#endif
-
   class Copter {
   private:
     geographic_msgs::GeoPoseStamped pose_data_global;
@@ -282,7 +268,9 @@ namespace EMIRO {
     // Setter
     void set_rc(int channel, int pwm);
 
+
     // Getter
+    void get_pose(Position* pos, Quaternion* quat);
 
     /**
      * @brief         Get current drone's yaw
