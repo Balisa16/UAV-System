@@ -1,4 +1,5 @@
 *.mkv
 build
+release
 .vscode
 lib
