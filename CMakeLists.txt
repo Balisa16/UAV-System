@@ -104,14 +104,14 @@ target_link_libraries(test2 ${PROJECT_NAME}
   jsoncpp
   $<$<BOOL:${IS_JETSON}>:IS_JETSON_PLATFORM>)
 
-set_target_properties(test1 PROPERTIES 
+set_target_properties(test2 PROPERTIES 
   INSTALL_RPATH "/usr/local/lib"
   BUILD_WITH_INSTALL_RPATH ON
 )
 
-add_executable(combine example/combine.cpp)
+add_executable(comb example/combine.cpp)
 
-target_link_libraries(combine ${PROJECT_NAME}
+target_link_libraries(comb ${PROJECT_NAME}
   Logger
   ${catkin_LIBRARIES} 
   ${OpenCV_LIBRARIES} 
@@ -121,7 +121,7 @@ target_link_libraries(combine ${PROJECT_NAME}
   jsoncpp
   $<$<BOOL:${IS_JETSON}>:IS_JETSON_PLATFORM>)
 
-set_target_properties(combine PROPERTIES 
+set_target_properties(comb PROPERTIES 
   INSTALL_RPATH "/usr/local/lib"
   BUILD_WITH_INSTALL_RPATH ON
 )

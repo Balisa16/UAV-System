@@ -27,7 +27,8 @@ int main()
 		if(sub_cnt)
 		{
 			// Read current position
-			
+			copter.get_pose(&pos, &quat);
+
 			// Send current position
 			master_uart.write_pose(&pos, &quat);
 			cnt--;
