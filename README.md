@@ -23,6 +23,12 @@ EMIRO is EEPIS Multirotor Research team that work under the auspices of Dirganta
 8. Curses
 9. [Curl](https://www.cyberciti.biz/faq/how-to-install-curl-command-on-a-ubuntu-linux)
 
+## Preinstall
+```
+mkdir -p ~/copter
+echo "export EMIRO_PATH=$HOME/copter" >> ~/.bashrc
+```
+
 ## Install
 ```
 cd ~/catkin_ws/src

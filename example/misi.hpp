@@ -23,11 +23,11 @@ namespace EMIRO{
         std::shared_ptr<ros::NodeHandle> nh;
         std::shared_ptr<EMIRO::Copter> copter;
         std::shared_ptr<EMIRO::Logger> logger;
-        EMIRO::Servo ser;
-        EMIRO::Nav_Convert converter;
-        EMIRO::GlobalNav global_nav;
-        EMIRO::Lidar lidar_dev;
-        EMIRO::RangeFinder rangefinder;
+        // EMIRO::Servo ser;
+        // EMIRO::Nav_Convert converter;
+        // EMIRO::GlobalNav global_nav;
+        // EMIRO::Lidar lidar_dev;
+        // EMIRO::RangeFinder rangefinder;
         std::shared_ptr<EMIRO::JSONReader> jsonreader;
 
         EMIRO::WayPoint _start_pos;
@@ -43,7 +43,6 @@ namespace EMIRO{
             logger(std::make_shared<Logger>()),
             copter(std::make_shared<Copter>())
             {
-                std::cout << "Test\n";
                 logger->init("Copter", FileType::CSV);
                 logger->start(true);
                 copter->init(nh, logger);
