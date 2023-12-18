@@ -56,6 +56,9 @@ include_directories(
   ${PROJECT_SOURCE_DIR}/include
 )
 
+# set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/../../devel/share/emiro)
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/release)
+
 if(IS_JETSON)
   include_directories(${CMAKE_CURRENT_SOURCE_DIR}/platform/jetson)
 endif()
@@ -63,8 +66,6 @@ endif()
 link_directories(/usr/local/lib)
 
 add_definitions(${OpenCV_DEFENITIONS})
-
-# set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/lib)
 
 if(IS_JETSON)
   message("Adding JetsonGPIO in library")
@@ -85,19 +86,21 @@ add_library(${PROJECT_NAME} SHARED
   src/servo.cc)
 
 install(TARGETS ${PROJECT_NAME}
-  LIBRARY DESTINATION "/usr/local/lib")
+  LIBRARY DESTINATION "/usr/lib")
 
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/release)
 
 add_executable(test2 example/test1.cpp)
 
 if(IS_JETSON)
-  target_link_libraries(test2 ${PROJECT_NAME}
+  target_link_libraries(test2 PUBLIC
+    ${PROJECT_NAME}
     JetsonGPIO
   )
 endif()
 
-target_link_libraries(test2 ${PROJECT_NAME}
+target_link_libraries(test2 PUBLIC
+  ${PROJECT_NAME}
   Logger
   ${catkin_LIBRARIES} 
   ${OpenCV_LIBRARIES} 
@@ -115,7 +118,8 @@ set_target_properties(test2 PROPERTIES
 
 add_executable(comb example/combine.cpp)
 
-target_link_libraries(comb ${PROJECT_NAME}
+target_link_libraries(comb PUBLIC
+  ${PROJECT_NAME}
   Logger
   ${catkin_LIBRARIES} 
   ${OpenCV_LIBRARIES} 

@@ -4,6 +4,7 @@
 
 int main(int argc, char **argv)
 {
+    std::cout << "Sander" << std::endl;
     ros::init(argc, argv, "mavcon_node");
     std::shared_ptr<ros::NodeHandle> nh = std::make_shared<ros::NodeHandle>();
     ros::init(argc, argv, "mavcon_node");
@@ -15,3 +16,11 @@ int main(int argc, char **argv)
 
     return 0;
 }
+
+// #include <iostream>
+
+// int main()
+// {
+//     std::cout << "Sander\n";
+//     return 0;
+// }
