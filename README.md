@@ -26,6 +26,9 @@ EMIRO is EEPIS Multirotor Research team that work under the auspices of Dirganta
 ## Install
 ```
 cd ~/catkin_ws/src
+sudo apt install ncurses-dev
 git clone https://github.com/Balisa16/EMIRO.git emiro
+cd emiro
+git submodule update --init
 catkin build emiro
 ```
