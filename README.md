@@ -27,6 +27,7 @@ EMIRO is EEPIS Multirotor Research team that work under the auspices of Dirganta
 ```
 mkdir -p ~/copter
 echo "export EMIRO_PATH=$HOME/copter" >> ~/.bashrc
+source ~/.bashrc
 ```
 
 ## Install
