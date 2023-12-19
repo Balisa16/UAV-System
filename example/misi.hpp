@@ -4,7 +4,7 @@
 #include <copter.hpp>
 #include <servo.hpp>
 #include <lidar.hpp>
-#include <GPSnav.hpp>
+#include <gps.hpp>
 #include <rangefinder.hpp>
 
 #include <iostream>

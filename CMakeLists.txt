@@ -79,10 +79,10 @@ add_library(${PROJECT_NAME} SHARED
   src/param.cc
   src/convert.cc
   src/copter.cc
-  src/GPSnav.cc
+  src/gps.cc
   src/lidar.cc
   src/jsonread.cc
-  src/UART.cc
+  src/uart.cc
   src/servo.cc)
 
 install(TARGETS ${PROJECT_NAME}
@@ -90,47 +90,49 @@ install(TARGETS ${PROJECT_NAME}
 
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/release)
 
-add_executable(test2 example/test1.cpp)
+message("")
 
-if(IS_JETSON)
-  target_link_libraries(test2 PUBLIC
-    ${PROJECT_NAME}
-    JetsonGPIO
-  )
-endif()
+file(GLOB SRC_FILES example/*.cpp)
+foreach(SRC_FILE ${SRC_FILES})
+    get_filename_component(TARGET_NAME ${SRC_FILE} NAME_WE)
 
-target_link_libraries(test2 PUBLIC
-  ${PROJECT_NAME}
-  Logger
-  ${catkin_LIBRARIES} 
-  ${OpenCV_LIBRARIES} 
-  ${CURSES_LIBRARIES}
-  Boost::system 
-  Boost::filesystem
-  jsoncpp
-  $<$<BOOL:${IS_JETSON}>:IS_JETSON_PLATFORM>)
+    message("\tFound : ${TARGET_NAME}")
+    
+    add_executable(${TARGET_NAME} ${SRC_FILE})
 
-set_target_properties(test2 PROPERTIES 
-  # INSTALL_RPATH "/usr/local/lib"
-  INSTALL_RPATH "~/catkin_ws/install"
-  BUILD_WITH_INSTALL_RPATH ON
-)
+    if(IS_JETSON)
+      # message("Adding JetsonGPIO in executable")
+      target_link_libraries(${TARGET_NAME} PRIVATE
+        ${PROJECT_NAME}
+        JetsonGPIO
+        Logger
+        ${catkin_LIBRARIES} 
+        ${OpenCV_LIBRARIES} 
+        ${CURSES_LIBRARIES}
+        Boost::system 
+        Boost::filesystem
+        jsoncpp
+        $<$<BOOL:${IS_JETSON}>:IS_JETSON_PLATFORM>)
+    else()
+      # message("Not a Jetson platform")
+      target_link_libraries(${TARGET_NAME} PRIVATE
+        ${PROJECT_NAME}
+        Logger
+        ${catkin_LIBRARIES} 
+        ${OpenCV_LIBRARIES} 
+        ${CURSES_LIBRARIES}
+        Boost::system 
+        Boost::filesystem
+        jsoncpp
+        $<$<BOOL:${IS_JETSON}>:IS_JETSON_PLATFORM>)
+    endif()
+    
+    target_include_directories(${TARGET_NAME} PRIVATE
+        thirdparty/glfw/include)
 
-add_executable(comb example/combine.cpp)
-
-target_link_libraries(comb PUBLIC
-  ${PROJECT_NAME}
-  Logger
-  ${catkin_LIBRARIES} 
-  ${OpenCV_LIBRARIES} 
-  ${CURSES_LIBRARIES}
-  Boost::system 
-  Boost::filesystem
-  jsoncpp
-  $<$<BOOL:${IS_JETSON}>:IS_JETSON_PLATFORM>)
-
-set_target_properties(comb PROPERTIES 
-  # INSTALL_RPATH "/usr/local/lib"
-  INSTALL_RPATH "~/catkin_ws/install"
-  BUILD_WITH_INSTALL_RPATH ON
-)
+    set_target_properties(${TARGET_NAME} PROPERTIES 
+      INSTALL_RPATH "../../install"
+      BUILD_WITH_INSTALL_RPATH ON
+    )
+endforeach()
+message("")

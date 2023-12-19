@@ -1,4 +1,4 @@
-#include <GPSnav.hpp>
+#include <gps.hpp>
 
 namespace EMIRO{
     GlobalNav::GlobalNav(){}
@@ -10,7 +10,6 @@ namespace EMIRO{
             current_deg = (int)current_deg%360;
         init_deg = current_deg;
         radians = current_deg * M_PI / 180.0;
-        // std::cout << "Lock global degree\t: " << init_deg << "°" << std::endl; 
     }
 
     LinearSpeed GlobalNav::convert(LinearSpeed linear_speed, float limit_speed, bool show)

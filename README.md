@@ -39,3 +39,8 @@ cd emiro
 git submodule update --init
 catkin build emiro
 ```
+
+## Optional
+```
+pip3 install pyautogui
+```
