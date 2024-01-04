@@ -17,8 +17,8 @@ namespace EMIRO{
     class GPS
     {
     private:
-        std::shared_ptr<Copter> copter;
-        std::shared_ptr<Logger> log;
+        std::shared_ptr<EMIRO::Copter> copter;
+        std::shared_ptr<EMIRO::Logger> log;
         WayPoint start_point;
         float radians;
         float mul_x, mul_y;
@@ -27,7 +27,7 @@ namespace EMIRO{
     public:
         GPS(){}
 
-        void init(std::shared_ptr<Copter> copter, std::shared_ptr<Logger> logger);
+        void init(std::shared_ptr<EMIRO::Copter> copter, std::shared_ptr<EMIRO::Logger> logger);
 
         /**
          * @brief Lock GPS start position and orientation

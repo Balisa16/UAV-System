@@ -1,9 +1,10 @@
 #include <gps.hpp>
 
 namespace EMIRO{
-    void GPS::init(std::shared_ptr<Copter> copter, std::shared_ptr<Logger> logger)
+    void GPS::init(std::shared_ptr<EMIRO::Copter> cptr, std::shared_ptr<EMIRO::Logger> logger)
     {
-        this->copter = copter;
+        std::cout << "Sander\n";
+        this->copter = cptr;
         this->log = logger;
         log->write_show(LogLevel::INFO, "GPS initialized");
     }

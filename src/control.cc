@@ -1,14 +1,6 @@
 #include <control.hpp>
 
 namespace EMIRO{
-    void Control::init()
-    {
-        // this->copter = copter;
-        // this->logger = log;
-        logger->write_show(LogLevel::INFO, "Used Manual Control");
-        gps.init(copter, logger);
-        gps.lock_pos();
-    }
 
     void Control::reset_home()
     {
