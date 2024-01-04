@@ -106,6 +106,7 @@ namespace EMIRO{
   typedef struct{
     float linear_x;
     float linear_y;
+    float linear_z;
   }LinearSpeed;
 
   static std::ostream& operator<<(std::ostream& stream, WayPoint& data)

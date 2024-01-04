@@ -20,22 +20,22 @@ namespace EMIRO{
         std::shared_ptr<Copter> copter;
         std::shared_ptr<Logger> log;
         WayPoint start_point;
-        float init_deg;
         float radians;
         float mul_x, mul_y;
+        bool is_locked = false;
 
     public:
-        GPS(std::shared_ptr<Copter> copter, std::shared_ptr<Logger> logger):
-        copter(copter),
-        log(logger){}
+        GPS(){}
 
+        void init(std::shared_ptr<Copter> copter, std::shared_ptr<Logger> logger);
+
+        /**
+         * @brief Lock GPS start position and orientation
+         * 
+         */
         void lock_pos();
 
-        void init(float current_deg = 90.0f);
-
-        LinearSpeed convert(LinearSpeed &linear_speed);
-
-        float get_degree();
+        void convert(LinearSpeed &linear_speed);
 
         ~GPS(){}
     };
