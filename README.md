@@ -33,7 +33,8 @@ source ~/.bashrc
 ## Install
 ```
 cd ~/catkin_ws/src
-sudo apt install ncurses-dev
+sudo apt install ncurses-dev libnotify-dev
+
 git clone https://github.com/Balisa16/EMIRO.git emiro
 cd emiro
 git submodule update --init

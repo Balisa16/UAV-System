@@ -44,6 +44,8 @@ endif()
 find_package(Boost REQUIRED COMPONENTS system filesystem)
 find_package(Curses REQUIRED)
 find_package(CURL REQUIRED)
+find_package(PkgConfig REQUIRED)
+pkg_check_modules(LIBNOTIFY REQUIRED libnotify)
 
 add_subdirectory(thirdparty/jsoncpp)
 
@@ -56,6 +58,7 @@ include_directories(
   thirdparty/jsoncpp/include
   /usr/local/include
   ${PROJECT_SOURCE_DIR}/include
+  ${LIBNOTIFY_INCLUDE_DIRS}
 )
 
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/release)
@@ -114,6 +117,7 @@ foreach(SRC_FILE ${SRC_FILES})
         Boost::system 
         Boost::filesystem
         jsoncpp
+        ${LIBNOTIFY_LIBRARIES}
         $<$<BOOL:${IS_JETSON}>:IS_JETSON_PLATFORM>)
     else()
       # message("Not a Jetson platform")
@@ -126,6 +130,7 @@ foreach(SRC_FILE ${SRC_FILES})
         Boost::system 
         Boost::filesystem
         jsoncpp
+        ${LIBNOTIFY_LIBRARIES}
         $<$<BOOL:${IS_JETSON}>:IS_JETSON_PLATFORM>)
     endif()
     

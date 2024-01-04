@@ -4,6 +4,7 @@
 #include <copter.hpp>
 #include <Logger.hpp>
 #include <gps.hpp>
+#include <notification.hpp>
 
 namespace EMIRO
 {
@@ -12,16 +13,17 @@ namespace EMIRO
     private:
         std::shared_ptr<EMIRO::Copter> copter;
         std::shared_ptr<EMIRO::Logger> logger;
-        EMIRO::GPS gps;
+        std::shared_ptr<EMIRO::GPS> _gps = std::make_shared<EMIRO::GPS>();
         float speed_limit = 0.5f;
 
     public:
-        Control(std::shared_ptr<EMIRO::Copter> cptr, std::shared_ptr<EMIRO::Logger> log):
-        copter(cptr), logger(log)
+        Control(std::shared_ptr<EMIRO::Copter> cptr, 
+            std::shared_ptr<EMIRO::Logger> log,
+            std::shared_ptr<EMIRO::GPS> gps):
+        copter(cptr), logger(log), _gps(gps)
         {
             logger->write_show(LogLevel::INFO, "Used Manual Control");
-            gps.init(copter, logger);
-            // gps.lock_pos();
+            _gps->lock_pos();
         }
 
         float vx = 0.0f, vy = 0.0f, vz = 0.0f;
