@@ -44,7 +44,6 @@ endif()
 find_package(Boost REQUIRED COMPONENTS system filesystem)
 find_package(Curses REQUIRED)
 find_package(CURL REQUIRED)
-# find_package(jsoncpp REQUIRED)
 
 add_subdirectory(thirdparty/jsoncpp)
 
@@ -59,7 +58,6 @@ include_directories(
   ${PROJECT_SOURCE_DIR}/include
 )
 
-# set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/../../devel/share/emiro)
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/release)
 
 if(IS_JETSON)

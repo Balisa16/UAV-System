@@ -1,13 +1,12 @@
 #include <control.hpp>
 
 namespace EMIRO{
-    void Control::init(std::shared_ptr<EMIRO::Copter> copter, std::shared_ptr<Logger> log)
+    void Control::init()
     {
-        this->copter = copter;
-        this->logger = log;
+        // this->copter = copter;
+        // this->logger = log;
         logger->write_show(LogLevel::INFO, "Used Manual Control");
-#define MANUAL_CONTROL
-        gps.init(this->copter, this->logger);
+        gps.init(copter, logger);
         gps.lock_pos();
     }
 
@@ -16,25 +15,10 @@ namespace EMIRO{
         gps.lock_pos();
     }
 
-    void Control::setspeed_x()
-    {
-
-    }
-
-    void Control::setspeed_y()
-    {
-
-    }
-
-    void Control::setspeed_z()
-    {
-
-    }
-
     void Control::go()
     {
-        LinearSpeed speed = {speed_x, speed_y, speed_z};
+        LinearSpeed speed = {vx, vy, vz};
         gps.convert(speed);
-        copter->set_vel(speed_x, speed_y, speed_z, 0.0f, 0.0f, 0.0f);
+        copter->set_vel(vx, vy, vz, 0.0f, 0.0f, 0.0f);
     }
 }
