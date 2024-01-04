@@ -11,7 +11,7 @@ find_package(catkin REQUIRED COMPONENTS
   tf
 )
 
-add_subdirectory(third-party/Logger)
+add_subdirectory(thirdparty/Logger)
 
 # Check Platform
 set(IS_JETSON OFF CACHE BOOL "Is Jetson platform")
@@ -44,14 +44,17 @@ endif()
 find_package(Boost REQUIRED COMPONENTS system filesystem)
 find_package(Curses REQUIRED)
 find_package(CURL REQUIRED)
-find_package(jsoncpp REQUIRED)
+# find_package(jsoncpp REQUIRED)
+
+add_subdirectory(thirdparty/jsoncpp)
 
 include_directories(
   ${CMAKE_CURRENT_SOURCE_DIR}/include
-  ${CMAKE_CURRENT_SOURCE_DIR}/third-party/Logger/include
+  ${CMAKE_CURRENT_SOURCE_DIR}/thirdparty/Logger/include
   ${catkin_INCLUDE_DIRS}
   ${CURSES_INCLUDE_DIR}
   ${OpenCV_INCLUDE_DIRS}
+  thirdparty/jsoncpp/include
   /usr/local/include
   ${PROJECT_SOURCE_DIR}/include
 )
@@ -81,6 +84,7 @@ add_library(${PROJECT_NAME} SHARED
   src/copter.cc
   src/gps.cc
   src/lidar.cc
+  src/control.cc
   src/jsonread.cc
   src/uart.cc
   src/servo.cc)

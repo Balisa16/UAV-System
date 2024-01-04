@@ -1,3 +1,6 @@
-[submodule "third-party/Logger"]
-	path = third-party/Logger
+[submodule "thirdparty/Logger"]
+	path = thirdparty/Logger
 	url = https://github.com/Balisa16/Logger.git
+[submodule "thirdparty/jsoncpp"]
+	path = thirdparty/jsoncpp
+	url = https://github.com/Balisa16/jsoncpp.git

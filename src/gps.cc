@@ -1,9 +1,8 @@
 #include <gps.hpp>
 
 namespace EMIRO{
-    GlobalNav::GlobalNav(){}
 
-    void GlobalNav::init(float current_deg)
+    void GPS::init(float current_deg)
     {
         current_deg += 90;
         if(current_deg >= 360.0f)
@@ -12,30 +11,41 @@ namespace EMIRO{
         radians = current_deg * M_PI / 180.0;
     }
 
-    LinearSpeed GlobalNav::convert(LinearSpeed linear_speed, float limit_speed, bool show)
+    void GPS::lock_pos()
     {
-        float x = linear_speed.linear_x * cos(radians) - linear_speed.linear_y * sin(radians);
-        float y = linear_speed.linear_x * sin(radians) + linear_speed.linear_y * cos(radians);   
+        try_flag:
+        log->wait("Lock GPS Position");
 
-        // Make sure limit_speed is above of zero value
-        limit_speed = std::abs(limit_speed);
+        ros::Duration(1).sleep();
+        ros::Rate in_rate(5);
 
-        if(x < -limit_speed)
-            x = -limit_speed;
-        else if(x > limit_speed)
-            x = limit_speed;
-        
-        if(y < -limit_speed)
-            y = -limit_speed;
-        else if(y > limit_speed)
-            y = limit_speed;
-        return {-x, y};
+        EMIRO::WayPoint temp_wp;
+        uint8_t count = 10;
+        while (ros::ok() && count)
+        {
+            copter->get_position(temp_wp);
+            ros::spinOnce();
+            in_rate.sleep();
+            count--;
+        }
+        std::cout << "Result : " << temp_wp << std::endl;
+        std::cout << "Accept ? (y/n) " << std::endl;
+        char choice;
+        std::cin >> choice;
+        if (!(choice == 'y' || choice == 'Y'))
+            goto try_flag;
+        start_point = temp_wp;
     }
 
-    float GlobalNav::get_degree()
+    LinearSpeed GPS::convert(LinearSpeed &linear_speed)
+    {
+        return {
+            -(linear_speed.linear_x * cos(radians) - linear_speed.linear_y * sin(radians)),
+            linear_speed.linear_x * sin(radians) + linear_speed.linear_y * cos(radians)};
+    }
+
+    float GPS::get_degree()
     {
         return init_deg;
     }
-
-    GlobalNav::~GlobalNav(){}
 }
