@@ -13,13 +13,13 @@ namespace EMIRO
     private:
         std::shared_ptr<EMIRO::Copter> copter;
         std::shared_ptr<EMIRO::Logger> logger;
-        std::shared_ptr<EMIRO::GPS> _gps = std::make_shared<EMIRO::GPS>();
+        EMIRO::GPS* _gps;
         float speed_limit = 0.5f;
 
     public:
         Control(std::shared_ptr<EMIRO::Copter> cptr, 
             std::shared_ptr<EMIRO::Logger> log,
-            std::shared_ptr<EMIRO::GPS> gps):
+            EMIRO::GPS *gps):
         copter(cptr), logger(log), _gps(gps)
         {
             logger->write_show(LogLevel::INFO, "Used Manual Control");
