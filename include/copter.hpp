@@ -117,6 +117,7 @@ namespace EMIRO {
 
   public:
     ros::ServiceClient command_client;
+    CopterStatus status = CopterStatus::None;
     void print_wp(std::string header, WayPoint& wp);
 
     Copter();

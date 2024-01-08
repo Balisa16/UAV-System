@@ -20,6 +20,15 @@ namespace EMIRO{
     Outdoor
   };
 
+  enum class CopterStatus{
+    None,
+    Armed,
+    Takeoff,
+    Flying,
+    Land,
+    Disarmed
+  };
+
   enum class CopterMode{
     LAND,
     GUIDED,

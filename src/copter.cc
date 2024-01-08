@@ -265,6 +265,7 @@ namespace EMIRO {
 
         if(arm_request.response.success)
         {
+            status = CopterStatus::Armed;
             logger->wait_success();
             logger->write_show(LogLevel::INFO, "Drone armed successfully.") ; 
             return true;
@@ -295,7 +296,10 @@ namespace EMIRO {
         }
 
         if(arm_request.response.success)
+        {
             logger->write_show(LogLevel::INFO, "Arming Successful");  
+            status = CopterStatus::Armed;
+        }
         else{
             logger->write_show(LogLevel::ERROR, "Arming Failed : %d", arm_request.response.success);
             return -1;  
@@ -305,7 +309,10 @@ namespace EMIRO {
         mavros_msgs::CommandTOL srv_takeoff;
         srv_takeoff.request.altitude = takeoff_alt;
         if(takeoff_client.call(srv_takeoff))
+        {
             logger->write_show(LogLevel::INFO, "Success Takeoff");
+            status = CopterStatus::Takeoff;
+        }
         else{
             logger->write_show(LogLevel::ERROR, "Failed Takeoff");
             return -2;
@@ -413,6 +420,7 @@ namespace EMIRO {
         if(land_client.call(srv_land) && srv_land.response.success)
         {
             logger->write_show(LogLevel::INFO, "Success Land");
+            status = CopterStatus::Land;
             return 0;
         }
         logger->write_show(LogLevel::ERROR, "Land Failed : %d", srv_land.response.success);
@@ -709,6 +717,8 @@ namespace EMIRO {
     }
 
     Copter::~Copter(){
+        if(status == CopterStatus::Flying || status == CopterStatus::Takeoff)
+            Land();
         logger->finish();
         traj_logger.finish();
     }
