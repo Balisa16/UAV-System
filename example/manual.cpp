@@ -16,15 +16,15 @@ int main(int argc, char **argv)
     gps->init(copter, logger);
     std::shared_ptr<EMIRO::Control> control = std::make_shared<EMIRO::Control>(copter, logger, gps);
 
-    ros::Duration(2).sleep();
 
     ros::Rate r(1);
     copter->takeoff(1);
+    ros::Duration(10).sleep();
     uint8_t cnt = 20;
     while (ros::ok() && cnt)
     {
-        // control->vy = 0.5f;
-        // control->go();
+        control->vy = 0.5f;
+        control->go();
         ros::spinOnce();
         r.sleep();
         cnt--;
