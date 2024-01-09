@@ -23,8 +23,8 @@ int main(int argc, char **argv)
     uint8_t cnt = 20;
     while (ros::ok() && cnt)
     {
-        control->vy = 0.5f;
-        control->go();
+        // control->vy = 0.5f;
+        // control->go();
         ros::spinOnce();
         r.sleep();
         cnt--;

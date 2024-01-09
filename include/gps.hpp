@@ -54,6 +54,8 @@ namespace EMIRO{
                 count--;
             }
 
+            log->wait_success();
+
             // Ask if position is accepted
             log->write_show(LogLevel::ASK, "Position => x : %.2f, y : %.2f, z : %.2f, yaw : %d. Lock Position ? (y/n) ",
                             temp_wp.x, temp_wp.y, temp_wp.z, (int)temp_wp.yaw);
