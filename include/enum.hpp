@@ -90,6 +90,10 @@ namespace EMIRO{
   }Quaternion;
 
   typedef struct{
+    float roll, pitch, yaw;
+  }Euler;
+
+  typedef struct{
     float x;
     float y;
     float z;
