@@ -13,8 +13,8 @@ int main(int argc, char **argv)
     std::shared_ptr<EMIRO::Copter> copter = std::make_shared<EMIRO::Copter>();
     copter->init(nh, logger);
     std::shared_ptr<EMIRO::GPS> gps = std::make_shared<EMIRO::GPS>();
-    // gps->init(copter, logger);
-    // std::shared_ptr<EMIRO::Control> control = std::make_shared<EMIRO::Control>(copter, logger, gps);
+    gps->init(copter, logger);
+    std::shared_ptr<EMIRO::Control> control = std::make_shared<EMIRO::Control>(copter, logger, gps);
 
     ros::Duration(2).sleep();
 
@@ -23,8 +23,8 @@ int main(int argc, char **argv)
     uint8_t cnt = 20;
     while (ros::ok() && cnt)
     {
-        // manual.vy = 0.5f;
-        // manual.go();
+        control->vy = 0.5f;
+        control->go();
         ros::spinOnce();
         r.sleep();
         cnt--;
