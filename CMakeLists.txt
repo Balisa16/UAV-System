@@ -57,7 +57,6 @@ include_directories(
   ${OpenCV_INCLUDE_DIRS}
   thirdparty/jsoncpp/include
   /usr/local/include
-  ${PROJECT_SOURCE_DIR}/include
   ${LIBNOTIFY_INCLUDE_DIRS}
 )
 
@@ -83,11 +82,10 @@ add_library(${PROJECT_NAME} SHARED
   src/param.cc
   src/convert.cc
   src/copter.cc
-  src/gps.cc
+  src/emiro.cc
   src/lidar.cc
   src/jsonread.cc
   src/uart.cc
-  src/control.cc
   src/servo.cc)
 
 install(TARGETS ${PROJECT_NAME}

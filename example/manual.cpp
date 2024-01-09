@@ -12,9 +12,9 @@ int main(int argc, char **argv)
 
     std::shared_ptr<EMIRO::Copter> copter = std::make_shared<EMIRO::Copter>();
     copter->init(nh, logger);
-    // EMIRO::GPS gps = EMIRO::GPS();
-    // gps.init(copter, logger);
-    std::shared_ptr<EMIRO::Control> control = std::make_shared<EMIRO::Control>(logger);
+    std::shared_ptr<EMIRO::GPS> gps = std::make_shared<EMIRO::GPS>();
+    // gps->init(copter, logger);
+    // std::shared_ptr<EMIRO::Control> control = std::make_shared<EMIRO::Control>(copter, logger, gps);
 
     ros::Duration(2).sleep();
 
