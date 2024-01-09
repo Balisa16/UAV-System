@@ -25,7 +25,7 @@ namespace EMIRO{
         bool is_locked = false;
 
     public:
-        GPS(){}
+        GPS();
 
         void init(std::shared_ptr<EMIRO::Copter> copter, std::shared_ptr<EMIRO::Logger> logger);
 
@@ -37,7 +37,7 @@ namespace EMIRO{
 
         void convert(LinearSpeed &linear_speed);
 
-        ~GPS(){}
+        ~GPS();
     };
 }
 

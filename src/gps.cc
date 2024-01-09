@@ -1,8 +1,11 @@
 #include <gps.hpp>
-#include <copter.hpp>
-#include <Logger.hpp>
 
 namespace EMIRO{
+    GPS::GPS()
+    {
+
+    }
+
     void GPS::init(std::shared_ptr<EMIRO::Copter> cptr, std::shared_ptr<EMIRO::Logger> logger)
     {
         this->copter = cptr;
@@ -53,5 +56,10 @@ namespace EMIRO{
             -(linear_speed.linear_x * cos(radians) - linear_speed.linear_y * sin(radians)),
             linear_speed.linear_x * sin(radians) + linear_speed.linear_y * cos(radians),
             linear_speed.linear_z};
+    }
+
+    GPS::~GPS()
+    {
+
     }
 }

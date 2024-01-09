@@ -85,15 +85,26 @@ add_library(${PROJECT_NAME} SHARED
   src/copter.cc
   src/gps.cc
   src/lidar.cc
-  src/control.cc
   src/jsonread.cc
   src/uart.cc
+  src/control.cc
   src/servo.cc)
 
 install(TARGETS ${PROJECT_NAME}
   LIBRARY DESTINATION "/usr/lib")
 
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/release)
+
+target_link_libraries(${PROJECT_NAME} PRIVATE
+        Logger
+        ${catkin_LIBRARIES} 
+        ${OpenCV_LIBRARIES} 
+        ${CURSES_LIBRARIES}
+        Boost::system 
+        Boost::filesystem
+        jsoncpp
+        ${LIBNOTIFY_LIBRARIES}
+        $<$<BOOL:${IS_JETSON}>:IS_JETSON_PLATFORM>)
 
 message("")
 

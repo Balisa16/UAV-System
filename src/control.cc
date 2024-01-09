@@ -1,16 +1,19 @@
 #include <control.hpp>
 
-namespace EMIRO{
-
-    void Control::reset_home()
+namespace EMIRO
+{
+    Control::Control()
     {
-        _gps.lock_pos();
+
     }
 
-    void Control::go()
+    Control::Control(std::shared_ptr<EMIRO::Logger> log)
     {
-        LinearSpeed speed = {vx, vy, vz};
-        _gps.convert(speed);
-        copter->set_vel(vx, vy, vz, 0.0f, 0.0f, 0.0f);
+
+    }
+
+    Control::~Control()
+    {
+
     }
 }
