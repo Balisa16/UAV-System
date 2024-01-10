@@ -40,6 +40,12 @@ cd emiro
 git submodule update --init
 catkin build emiro
 ```
+if there an error like this `src/EMIRO/release/manual: error while loading shared libraries: libLogger.so: cannot open shared object file: No such file or directory
+` then execute this in top of workspace in this case in `~/catkin_ws`
+```
+cp src/EMIRO/release/libemiro.so devel/lib/
+cp build/emiro/thirdparty/Logger/libLogger.so devel/lib/
+```
 
 ## Optional
 ```
