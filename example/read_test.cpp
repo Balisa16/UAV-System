@@ -8,8 +8,6 @@ int main()
     reader = "../copter/plan.json";
     std::vector<Target> target = reader.get_data();
     for(auto i : target)
-    {
-        std::cout << i.index << '\n';
-    }
+        std::cout << i ;
     return 0;
 }

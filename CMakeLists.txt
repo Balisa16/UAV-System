@@ -84,7 +84,6 @@ add_library(${PROJECT_NAME} SHARED
   src/copter.cc
   src/emiro.cc
   src/lidar.cc
-  src/jsonread.cc
   src/uart.cc
   src/servo.cc)
 

@@ -6,7 +6,7 @@
 #include <fstream>
 #include <jsoncpp/json/json.h>
 #include <enum.hpp>
-
+#include <iomanip>
 namespace EMIRO{
 	typedef struct
 	{
@@ -28,6 +28,7 @@ namespace EMIRO{
 		void get_data(std::vector<Target> &target);
 		~JSONReader();
 		void operator=(std::string path);
+		friend std::ostream& operator<<(std::ostream& os, Target target);
 	};
 
 	JSONReader::JSONReader(){}
@@ -76,6 +77,18 @@ namespace EMIRO{
 	       	counter++;
 	    }
 		stream_reader.close();
+	}
+
+	
+	std::ostream &operator<<(std::ostream &os, Target target){
+		os << std::fixed << std::setprecision(2) << 
+			"Index\t: " << target.index <<
+			"\nHeader\t: " << target.header <<
+			"\nSpeed\t: " << target.speed << 
+			"\nTarget\n\tx : " << target.wp.x <<
+			"\n\ty : " << target.wp.y <<   
+			"\n\tz : " << target.wp.z << '\n' << std::defaultfloat;
+		return os;
 	}
 
 	JSONReader::~JSONReader(){}
