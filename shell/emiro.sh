@@ -14,15 +14,15 @@ check(){
         echo  -e "[\n\t{\n\t\t\"header\": \"Takeoff\",\n\t\t\"speed\": 1.00,\n\t\t\"x\": 0.00,\n\t\t\"y\": 0.00,\n\t\t\"z\": 1.00,\n\t\t\"yaw\": 90.00\n\t}\n]" >> $EMIRO_PATH/copter/plan.json
     fi
 }
-sitl()
-{
+sitl(){
 	. ~/sitl.sh
 }
-scan()
-{
+scan(){
 	roslaunch iq_sim scan.launch
 }
-apm()
-{
+apm_sim(){
 	roslaunch iq_sim apm.launch
+}
+apm(){
+    roslaunch mavros apm.launch
 }
