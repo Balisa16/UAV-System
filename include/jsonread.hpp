@@ -4,7 +4,7 @@
 #include <iostream>
 #include <vector>
 #include <fstream>
-#include <jsoncpp/json/json.h>
+#include <json.hpp>
 #include <enum.hpp>
 #include <iomanip>
 namespace EMIRO

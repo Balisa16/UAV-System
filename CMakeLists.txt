@@ -37,9 +37,14 @@ endif()
 
 find_package(OpenCV REQUIRED)
 if(IS_JETSON)
-  message("Find Package JetsonGPIO")
-  find_package(JetsonGPIO)
+message("Find Package JetsonGPIO")
+find_package(JetsonGPIO)
 endif()
+
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/release/bin)
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/release/lib)
+set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/release/lib)
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/release/bin)
 
 find_package(Boost REQUIRED COMPONENTS system filesystem)
 find_package(Curses REQUIRED)
@@ -59,8 +64,6 @@ include_directories(
   /usr/local/include
   ${LIBNOTIFY_INCLUDE_DIRS}
 )
-
-set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/release)
 
 if(IS_JETSON)
   include_directories(${CMAKE_CURRENT_SOURCE_DIR}/platform/jetson)
@@ -87,10 +90,16 @@ add_library(${PROJECT_NAME} SHARED
   src/uart.cc
   src/servo.cc)
 
-install(TARGETS ${PROJECT_NAME}
-  LIBRARY DESTINATION "/usr/lib")
+# message(STATUS "VARIABLES: ${CATKIN_GLOBAL_LIB_DESTINATION}")
+# message(STATUS "VARIABLES: ${CATKIN_DEVEL_PREFIX}")
 
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/release)
+# install(TARGETS ${PROJECT_NAME}
+#   LIBRARY DESTINATION ${CATKIN_DEVEL_PREFIX}/${PROJECT_NAME}/lib
+# )
+
+# install(TARGETS ${PROJECT_NAME}
+#   LIBRARY DESTINATION "/usr/lib")
+
 
 target_link_libraries(${PROJECT_NAME} PRIVATE
         Logger
