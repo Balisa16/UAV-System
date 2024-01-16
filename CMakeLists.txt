@@ -141,6 +141,14 @@ foreach(SRC_FILE ${SRC_FILES})
         ${LIBNOTIFY_LIBRARIES}
         $<$<BOOL:${IS_JETSON}>:IS_JETSON_PLATFORM>)
     endif()
+
+    # Hide narrowing warnings
+    if(CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
+      target_compile_options(${TARGET_NAME} PRIVATE -Wno-narrowing)
+    elseif(MSVC)
+      target_compile_options(${TARGET_NAME} PRIVATE /wd4838)
+    endif()
+
     
     target_include_directories(${TARGET_NAME} PRIVATE
         thirdparty/glfw/include)
