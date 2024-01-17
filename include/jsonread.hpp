@@ -7,6 +7,8 @@
 #include <json.hpp>
 #include <enum.hpp>
 #include <iomanip>
+#include <boost/filesystem.hpp>
+
 namespace EMIRO
 {
 	typedef struct
@@ -57,8 +59,42 @@ namespace EMIRO
 		std::ifstream stream_reader(file_path);
 		if (!stream_reader.is_open())
 		{
-			std::cerr << "Failed to Open JSON File." << std::endl;
-			return;
+			if (!boost::filesystem::exists(file_path))
+			{
+				boost::filesystem::path parent_path = boost::filesystem::path(file_path).parent_path();
+				if (!boost::filesystem::exists(parent_path))
+				{
+					std::cout << "\033[31m\033[1mError :\033[0m Directory invalid\n";
+					std::cout << "\033[31m\033[1mInfo :\033[0m Current path is " << boost::filesystem::current_path().string() << "\n";
+					std::cout << "\033[31m\033[1mInfo :\033[0m Your input file path is " << parent_path.string() << "\n";
+				}
+				else
+				{
+					std::cout << "\033[31m\033[1mError :\033[0m File name invalid. Here is the list of exist files\n";
+					int cnt = 1;
+					for (const auto &entry : boost::filesystem::directory_iterator(parent_path))
+						if (boost::filesystem::is_regular_file(entry.path()))
+						{
+							std::cout << cnt << ".\t: " << entry.path().filename() << '\n';
+							cnt++;
+						}
+				}
+				exit(EXIT_FAILURE);
+			}
+
+			std::cout << "\033[31m\033[1mError :\033[0m Failed Open File." << std::endl;
+
+			// std::cerr << "Failed to Open File." << std::endl;
+			// FILE *pipe = popen("pwd", "r");
+			// if (!pipe)
+			// 	return;
+			// char buffer[128];
+			// std::string result;
+			// while (fgets(buffer, sizeof(buffer), pipe) != nullptr)
+			// 	result += buffer;
+			// std::cout << "Current path : " << result << std::endl;
+			// pclose(pipe);
+			exit(EXIT_FAILURE);
 		}
 
 		Json::Value json_value;
@@ -90,7 +126,7 @@ namespace EMIRO
 		std::ofstream stream_writer(file_path);
 		if (!stream_writer.is_open())
 		{
-			std::cout << "Failed to Open JSON File." << std::endl;
+			std::cout << "Failed Open File." << std::endl;
 			return;
 		}
 
@@ -99,6 +135,7 @@ namespace EMIRO
 		root["x"] = target.wp.x;
 		root["y"] = target.wp.y;
 		root["z"] = target.wp.z;
+		root["yaw"] = target.wp.yaw;
 		writer->write(root, &stream_writer);
 		stream_writer.close();
 	}

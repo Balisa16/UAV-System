@@ -11,6 +11,11 @@ find_package(catkin REQUIRED COMPONENTS
   tf
 )
 
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/release/bin)
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/release/lib)
+set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/release/lib)
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/release/bin)
+
 add_subdirectory(thirdparty/Logger)
 
 # Check Platform
@@ -40,11 +45,6 @@ if(IS_JETSON)
 message("Find Package JetsonGPIO")
 find_package(JetsonGPIO)
 endif()
-
-set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/release/bin)
-set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/release/lib)
-set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/release/lib)
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/release/bin)
 
 find_package(Boost REQUIRED COMPONENTS system filesystem)
 find_package(Curses REQUIRED)
