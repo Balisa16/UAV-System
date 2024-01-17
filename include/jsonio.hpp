@@ -24,6 +24,7 @@ namespace EMIRO
 	private:
 		std::string file_path = "";
 		std::vector<Target> data;
+		std::vector<std::string> header_id;
 
 	public:
 		JsonIO();
@@ -34,6 +35,7 @@ namespace EMIRO
 		void operator=(std::string path);
 		friend std::ostream &operator<<(std::ostream &os, Target target);
 		void operator+=(const Target &target);
+		void operator-=(const Target &target);
 	};
 
 	JsonIO::JsonIO() {}
@@ -55,6 +57,7 @@ namespace EMIRO
 
 	inline void JsonIO::operator=(std::string path)
 	{
+		header_id.clear();
 		this->file_path = path;
 		std::ifstream stream_reader(file_path);
 		if (!stream_reader.is_open())
@@ -106,6 +109,7 @@ namespace EMIRO
 		data.clear();
 		for (const auto &item : json_value)
 		{
+			header_id.push_back(item["header"].asString());
 			data.push_back({counter,
 							item["header"].asString(),
 							item["speed"].asFloat(),
@@ -120,6 +124,13 @@ namespace EMIRO
 
 	inline void JsonIO::operator+=(const Target &target)
 	{
+		for (const std::string &id : header_id)
+			if (!id.compare(target.header))
+			{
+				std::cout << "\033[31m\033[1mError :\033[0m " << target.header << " already exist." << std::endl;
+				return;
+			}
+
 		std::ifstream input_file(file_path);
 		if (!input_file.is_open())
 		{
@@ -162,6 +173,10 @@ namespace EMIRO
 		writer->write(root, &stream_writer);
 		stream_writer << "\n]";
 		stream_writer.close();
+	}
+
+	inline void JsonIO::operator-=(const Target &target)
+	{
 	}
 
 	inline std::ostream &operator<<(std::ostream &os, Target target)
