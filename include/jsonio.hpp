@@ -19,41 +19,41 @@ namespace EMIRO
 		WayPoint wp;
 	} Target;
 
-	class JSONReader
+	class JsonIO
 	{
 	private:
 		std::string file_path = "";
 		std::vector<Target> data;
 
 	public:
-		JSONReader();
-		JSONReader(std::string path);
+		JsonIO();
+		JsonIO(std::string path);
 		std::vector<Target> get_data();
 		void get_data(std::vector<Target> &target);
-		~JSONReader();
+		~JsonIO();
 		void operator=(std::string path);
 		friend std::ostream &operator<<(std::ostream &os, Target target);
 		void operator+=(const Target &target);
 	};
 
-	JSONReader::JSONReader() {}
+	JsonIO::JsonIO() {}
 
-	JSONReader::JSONReader(std::string path)
+	JsonIO::JsonIO(std::string path)
 	{
 		operator=(path);
 	}
 
-	inline std::vector<Target> JSONReader::get_data()
+	inline std::vector<Target> JsonIO::get_data()
 	{
 		return data;
 	}
 
-	inline void JSONReader::get_data(std::vector<Target> &target)
+	inline void JsonIO::get_data(std::vector<Target> &target)
 	{
 		target = data;
 	}
 
-	inline void JSONReader::operator=(std::string path)
+	inline void JsonIO::operator=(std::string path)
 	{
 		this->file_path = path;
 		std::ifstream stream_reader(file_path);
@@ -118,7 +118,7 @@ namespace EMIRO
 		stream_reader.close();
 	}
 
-	inline void JSONReader::operator+=(const Target &target)
+	inline void JsonIO::operator+=(const Target &target)
 	{
 		std::ifstream input_file(file_path);
 		if (!input_file.is_open())
@@ -171,7 +171,7 @@ namespace EMIRO
 		return os;
 	}
 
-	JSONReader::~JSONReader() {}
+	JsonIO::~JsonIO() {}
 }
 
 #endif

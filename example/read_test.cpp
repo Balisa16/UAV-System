@@ -1,10 +1,10 @@
-#include <jsonread.hpp>
+#include <jsonio.hpp>
 
 using namespace EMIRO;
 
 int main()
 {
-    JSONReader reader;
+    JsonIO reader;
     reader = "../copter/plan.json";
     std::vector<Target> target = reader.get_data();
     for (auto i : target)
