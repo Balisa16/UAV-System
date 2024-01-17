@@ -120,6 +120,19 @@ namespace EMIRO
 
 	inline void JSONReader::operator+=(const Target &target)
 	{
+		std::ifstream input_file(file_path);
+		if (!input_file.is_open())
+		{
+			std::cerr << "\033[31m\033[1mFailed Open File.\033[0m" << std::endl;
+			exit(EXIT_FAILURE);
+		}
+
+		std::vector<std::string> lines;
+		std::string line;
+		while (std::getline(input_file, line) && !input_file.eof())
+			lines.push_back(line);
+		input_file.close();
+
 		Json::Value root;
 		Json::StreamWriterBuilder builder;
 		const std::unique_ptr<Json::StreamWriter> writer(builder.newStreamWriter());
@@ -129,6 +142,16 @@ namespace EMIRO
 			std::cout << "Failed Open File." << std::endl;
 			return;
 		}
+		if (lines.size() <= 0)
+			stream_writer << "[\n";
+		if (lines.size())
+		{
+			std::string latest_line = lines.back();
+			lines.pop_back();
+			for (std::string &line : lines)
+				stream_writer << line << '\n';
+			stream_writer << latest_line << ",\n";
+		}
 
 		root["header"] = target.header;
 		root["speed"] = target.speed;
@@ -137,6 +160,7 @@ namespace EMIRO
 		root["z"] = target.wp.z;
 		root["yaw"] = target.wp.yaw;
 		writer->write(root, &stream_writer);
+		stream_writer << "\n]";
 		stream_writer.close();
 	}
 
