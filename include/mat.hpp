@@ -20,9 +20,9 @@ inline EMIRO::Euler to_euler(double w, double x, double y, double z)
     double cosy_cosp = 1 - 2 * (y * y + z * z);
     // angles.yaw = std::atan2(siny_cosp, cosy_cosp);
 
-    return { std::atan2(sinr_cosp, cosr_cosp), 
-        2.0f * std::atan2(sinp, cosp) - M_PI / 2.0f,
-        std::atan2(siny_cosp, cosy_cosp)};
+    return {(float)std::atan2(sinr_cosp, cosr_cosp),
+            (float)(2.0f * std::atan2(sinp, cosp) - M_PI / 2.0f),
+            (float)std::atan2(siny_cosp, cosy_cosp)};
 }
 
 #endif

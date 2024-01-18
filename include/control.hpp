@@ -10,11 +10,10 @@ namespace EMIRO
     class Control
     {
     private:
-        std::shared_ptr<EMIRO::Copter> copter;
-        std::shared_ptr<EMIRO::Logger> logger;
-        std::shared_ptr<EMIRO::GPS> _gps;
-        float speed_limit = 1.0f;
-        bool is_init =  false;
+        std::shared_ptr<Copter> copter;
+        std::shared_ptr<Logger> logger;
+        std::shared_ptr<GPS> _gps;
+        bool is_init = false;
 
         inline void check_init()
         {
@@ -24,91 +23,158 @@ namespace EMIRO
                 throw std::runtime_error("Bad control class implementation.");
             }
         }
+        void go(bool yaw_control = true);
 
     public:
-        float vx = 0.0f, vy = 0.0f, vz = 0.0f;
-        
+        float speed_limit = 1.0f;              // m/s
+        int rpy_speed_limit = 20;              // deg/s
+        float vx = 0.0f, vy = 0.0f, vz = 0.0f; // m/s
+        int ax = 0, ay = 0, az = 0;            // deg/s
+
         Control();
 
-        Control(std::shared_ptr<EMIRO::Copter> copter, std::shared_ptr<EMIRO::Logger> logger, std::shared_ptr<EMIRO::GPS> gps);
-
-        void go();
+        Control(std::shared_ptr<Copter> copter, std::shared_ptr<Logger> logger, std::shared_ptr<GPS> gps);
 
         void go(float x, float y, float z, float precision = 0.1f);
+
+        void go(float x, float y, float z, int yaw, float precision = 0.1f, int yaw_precision = 5);
 
         ~Control();
     };
 
     Control::Control() {}
 
-    Control::Control(std::shared_ptr<EMIRO::Copter> copter, std::shared_ptr<EMIRO::Logger> logger, std::shared_ptr<EMIRO::GPS> gps) : _gps(gps), copter(copter), logger(logger)
+    Control::Control(std::shared_ptr<Copter> copter, std::shared_ptr<Logger> logger, std::shared_ptr<GPS> gps) : _gps(gps), copter(copter), logger(logger)
     {
         _gps->lock_pos();
         is_init = true;
     }
 
-    void Control::go()
+    void Control::go(bool yaw_control)
     {
         check_init();
         LinearSpeed speed = {vx, vy, vz};
         _gps->convert(speed);
-        copter->set_vel(vx, vy, vz, 0.0f, 0.0f, 0.0f);
+        if (yaw_control)
+            copter->set_vel(vx, vy, vz, 0.0f, 0.0f, 0.0f);
+        else
+            copter->set_vel(vx, vy, vz, 0.0f, 0.0f, 0.0f);
     }
 
     void Control::go(float x, float y, float z, float precision)
     {
         check_init();
-        logger->write_show(LogLevel::INFO, "Go : %f, %f, %f", x, y, z);
+        logger->write_show(LogLevel::INFO, "Go : %.2f, %.2f, %.2f", x, y, z);
         std::cout << std::fixed << std::setprecision(2);
 
         // Loop variable
         ros::Rate r(5);
-        EMIRO::Position pos;
-        EMIRO::Quaternion quat;
+        Position pos;
+        Quaternion quat;
+        Euler eul;
 
-        while(ros::ok())
+        while (ros::ok())
         {
             // Get current position and orientation
             copter->get_pose(&pos, &quat);
-            Euler eul = to_euler(quat.w, quat.x, quat.y, quat.z);
+            eul = to_euler(quat.w, quat.x, quat.y, quat.z);
 
             // Close if position in target zone
-            if(std::fabs(pos.x - x) < precision && 
+            if (std::fabs(pos.x - x) < precision &&
                 std::fabs(pos.y - y) < precision)
                 break;
-            
+
             float diff_x = x - pos.x;
             float diff_y = y - pos.y;
             float diff_z = z - pos.z;
             vx = diff_x;
             vy = diff_y;
             vz = diff_z;
-            if(std::fabs(vx) > speed_limit)
+            if (std::fabs(vx) > speed_limit)
                 vx = (vx > 0) ? speed_limit : -speed_limit;
-            else if(std::fabs(vx) < precision)
+            else if (std::fabs(vx) < precision)
                 vx = 0.0f;
 
-            if(std::fabs(vy) > speed_limit)
+            if (std::fabs(vy) > speed_limit)
                 vy = (vy > 0) ? speed_limit : -speed_limit;
-            else if(std::fabs(vy) < precision)
+            else if (std::fabs(vy) < precision)
                 vy = 0.0f;
 
-            if(std::fabs(vz) > speed_limit)
+            if (std::fabs(vz) > speed_limit)
                 vz = (vz > 0) ? speed_limit : -speed_limit;
-            else if(std::fabs(diff_z) < precision)
+            else if (std::fabs(diff_z) < precision)
                 vz = 0.0f;
 
-            go();
-            
+            go(false);
+
             // Print position
-            std::cout << "To target x:" << diff_x << ", y:" << diff_y << ", z:" << diff_z << ", yaw:" << eul.yaw <<  "   \r";
+            std::cout << "To target x:" << diff_x << ", y:" << diff_y << ", z:" << diff_z << ", yaw:" << eul.yaw << "   \r";
             std::cout.flush();
 
             ros::spinOnce();
             r.sleep();
         }
+        logger->write_show(LogLevel::INFO, "Reached x:%.2f->%.2f, y:%.2f->%.2f, z:%.2f->%.2f", x, pos.x, y, pos.y, z, pos.z);
+    }
+
+    inline void Control::go(float x, float y, float z, int yaw, float precision, int yaw_precision)
+    {
+        check_init();
+        logger->write_show(LogLevel::INFO, "Go : %.2f, %.2f, %.2f, %d", x, y, z, yaw);
         std::cout << std::fixed << std::setprecision(2);
-        logger->write_show(LogLevel::INFO, "Reached x:%f->%f, y:%f->%f, z:%f->%f", x, pos.x, y, pos.y, z, pos.z);
+
+        // Loop variable
+        ros::Rate r(5);
+        Position pos;
+        Quaternion quat;
+        Euler eul;
+
+        while (ros::ok())
+        {
+            // Get current position and orientation
+            copter->get_pose(&pos, &quat);
+            eul = to_euler(quat.w, quat.x, quat.y, quat.z);
+
+            // Close if position in target zone
+            if (std::fabs(pos.x - x) < precision &&
+                std::fabs(pos.y - y) < precision &&
+                std::fabs(pos.z - z) < precision &&
+                std::abs(eul.yaw - yaw) < yaw_precision)
+                break;
+
+            float diff_x = x - pos.x;
+            float diff_y = y - pos.y;
+            float diff_z = z - pos.z;
+            int diff_yaw = yaw - eul.yaw;
+            vx = diff_x;
+            vy = diff_y;
+            vz = diff_z;
+            ay = diff_yaw;
+            if (std::fabs(vx) > speed_limit)
+                vx = (vx > 0) ? speed_limit : -speed_limit;
+            else if (std::fabs(vx) < precision)
+                vx = 0.0f;
+
+            if (std::fabs(vy) > speed_limit)
+                vy = (vy > 0) ? speed_limit : -speed_limit;
+            else if (std::fabs(vy) < precision)
+                vy = 0.0f;
+
+            if (std::fabs(vz) > speed_limit)
+                vz = (vz > 0) ? speed_limit : -speed_limit;
+            else if (std::fabs(diff_z) < precision)
+                vz = 0.0f;
+
+            go();
+
+            // Print position
+            std::cout << "To target x:" << diff_x << ", y:" << diff_y << ", z:" << diff_z << ", yaw:" << eul.yaw << "   \r";
+            std::cout.flush();
+
+            ros::spinOnce();
+            r.sleep();
+        }
+        logger->write_show(LogLevel::INFO, "Reached x:%.2f->%.2f, y:%.2f->%.2f, z:%.2f->%.2f, yaw:%d", x, pos.x, y, pos.y, z, pos.z, yaw);
     }
 
     Control::~Control()

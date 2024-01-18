@@ -30,7 +30,7 @@ sudo apt install ncurses-dev libnotify-dev -y
 
 git clone https://github.com/Balisa16/EMIRO.git
 cd EMIRO
-echo "export EMIRO_PATH=$(pwd)"
+echo "export EMIRO_PATH=$(pwd)" >> ~/.bashrc
 echo "source $(pwd)/shell/emiro.sh" >> ~/.bashrc
 source ~/.bashrc
 git submodule update --init
