@@ -7,7 +7,6 @@
 
 #include <tf/transform_datatypes.h>
 
-
 // Mavros Message
 #include <geographic_msgs/GeoPoseStamped.h>
 #include <mavros_msgs/CommandBool.h>
@@ -38,16 +37,18 @@
 #include <param.hpp>
 
 #ifdef IS_JETSON_PLATFORM
-  #include <pin.hpp>
+#include <pin.hpp>
 #endif
 
 #include <Logger.hpp>
 #include <enum.hpp>
 
-namespace EMIRO {
+namespace EMIRO
+{
   extern const std::string COPTER_DIR;
 
-  class Copter {
+  class Copter
+  {
   private:
     geographic_msgs::GeoPoseStamped pose_data_global;
     geometry_msgs::PoseStamped pose_data_local;
@@ -105,20 +106,19 @@ namespace EMIRO {
     // Function
     Quaternion to_quaternion(float roll_rate, float pitch_rate, float yaw_rate);
     geometry_msgs::Point enu_2_local(nav_msgs::Odometry current_pose_enu);
-    void pose_cb_local(const geometry_msgs::PoseStamped::ConstPtr& msg);
-    void pose_cb_global(const geographic_msgs::GeoPoseStamped::ConstPtr& msg);
-    void state_cb(const mavros_msgs::State::ConstPtr& msg);
+    void pose_cb_local(const geometry_msgs::PoseStamped::ConstPtr &msg);
+    void pose_cb_global(const geographic_msgs::GeoPoseStamped::ConstPtr &msg);
+    void state_cb(const mavros_msgs::State::ConstPtr &msg);
     geometry_msgs::Point get_hexa_point();
     void go_to(geometry_msgs::Pose pose);
     void goto_xyz_rpy(float x, float y, float z, float roll, float pitch, float yaw);
     void viso_align();
     int land();
 
-
   public:
     ros::ServiceClient command_client;
     CopterStatus status = CopterStatus::None;
-    void print_wp(std::string header, WayPoint& wp);
+    void print_wp(std::string header, WayPoint &wp);
 
     Copter();
 
@@ -132,8 +132,15 @@ namespace EMIRO {
     void init(std::shared_ptr<ros::NodeHandle> nh, std::shared_ptr<EMIRO::Logger> logger);
 
     /**
+     * @brief Init home position
+     *
+     * @param timeout_s timeout of init (second)
+     */
+    void init_frame(float timeout_s = 1.0f);
+
+    /**
      * @brief           Waiting for FCU to connect
-     * 
+     *
      * @param timeout_s Timeout for connect (second)
      * @return false:   Failed to connect FCU.
      * @return true:    FCU Connected successfully
@@ -149,8 +156,6 @@ namespace EMIRO {
      */
     bool FCUstart(float timeout_s = 1.0f);
 
-    void init_frame(float timeout_s = 1.0f);
-
     /**
      * @brief Set drone mode.
      *
@@ -159,8 +164,26 @@ namespace EMIRO {
      * @return int
      */
     int set_mode(CopterMode mode);
-    
-    void set_vel(float vx, float vy, float vz, float avx, float avy, float avz);
+
+    /**
+     * @brief Set the linear velocity and angular velocity
+     *
+     * @param vx  linear velocity of x (m/s)
+     * @param vy  linear velocity of y (m/s)
+     * @param vz  linear velocity of z (m/s)
+     * @param avx angular velocity of x (rad/s)
+     * @param avy angular velocity of y (rad/s)
+     * @param avz angular velocity of z (rad/s)
+     */
+    void set_vel(const float &vx, const float &vy, const float &vz, const float &avx, const float &avy, const float &avz);
+
+    /**
+     * @brief Set the linear velocity and angular velocity
+     *
+     * @param cmd_vel  copter linear and angular velocity.
+     * @see void set_vel(float &vx, float &vy, float &vz, float &avx, float &avy, float &avz);
+     */
+    void set_vel(geometry_msgs::Twist &cmd_vel);
 
     /**
      * @brief       This function arming drone throttle.
@@ -197,7 +220,7 @@ namespace EMIRO {
     void Go(WayPoint &wp, bool show = false, std::string header = "Go to");
 
     float get_alt();
-    
+
     /**
      * @brief     Landing drones in current in X = wp.x  and Y = wp.y position
      *
@@ -223,7 +246,7 @@ namespace EMIRO {
 
     /**
      * @brief             Set the EKF Source. Can be GPS or Non-GPS (T265 Camera)
-     * 
+     *
      * @param source      EKF Source Type
      */
     void set_ekf_source(EKF_Source source);
@@ -269,9 +292,8 @@ namespace EMIRO {
     // Setter
     void set_rc(int channel, int pwm);
 
-
     // Getter
-    void get_pose(Position* pos, Quaternion* quat);
+    void get_pose(Position *pos, Quaternion *quat);
 
     /**
      * @brief         Get current drone's yaw
@@ -282,7 +304,7 @@ namespace EMIRO {
 
     // WayPoint and WayPointG
     template <typename T>
-    void get_position(T& pose_ref);
+    void get_position(T &pose_ref);
 
     Mode get_current_mission();
 

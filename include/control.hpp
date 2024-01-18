@@ -29,7 +29,7 @@ namespace EMIRO
         float speed_limit = 1.0f;              // m/s
         int rpy_speed_limit = 20;              // deg/s
         float vx = 0.0f, vy = 0.0f, vz = 0.0f; // m/s
-        int ax = 0, ay = 0, az = 0;            // deg/s
+        float avx = 0, avy = 0, avz = 0;       // deg/s
 
         Control();
 
@@ -37,7 +37,7 @@ namespace EMIRO
 
         void go(float x, float y, float z, float precision = 0.1f);
 
-        void go(float x, float y, float z, int yaw, float precision = 0.1f, int yaw_precision = 5);
+        void go(float x, float y, float z, int yaw, float precision, int yaw_precision = 5);
 
         ~Control();
     };
@@ -56,7 +56,7 @@ namespace EMIRO
         LinearSpeed speed = {vx, vy, vz};
         _gps->convert(speed);
         if (yaw_control)
-            copter->set_vel(vx, vy, vz, 0.0f, 0.0f, 0.0f);
+            copter->set_vel(vx, vy, vz, avx, avy, avz);
         else
             copter->set_vel(vx, vy, vz, 0.0f, 0.0f, 0.0f);
     }
@@ -108,7 +108,7 @@ namespace EMIRO
             go(false);
 
             // Print position
-            std::cout << "To target x:" << diff_x << ", y:" << diff_y << ", z:" << diff_z << ", yaw:" << eul.yaw << "   \r";
+            std::cout << "To target x:" << diff_x << ", y:" << diff_y << ", z:" << diff_z << "   \r";
             std::cout.flush();
 
             ros::spinOnce();
@@ -149,7 +149,7 @@ namespace EMIRO
             vx = diff_x;
             vy = diff_y;
             vz = diff_z;
-            ay = diff_yaw;
+            avy = diff_yaw;
             if (std::fabs(vx) > speed_limit)
                 vx = (vx > 0) ? speed_limit : -speed_limit;
             else if (std::fabs(vx) < precision)
@@ -165,16 +165,23 @@ namespace EMIRO
             else if (std::fabs(diff_z) < precision)
                 vz = 0.0f;
 
-            go();
+            if (std::fabs(avy) > rpy_speed_limit)
+                avy = (avy > 0) ? rpy_speed_limit : -rpy_speed_limit;
+            else if (std::fabs(avy) < yaw_precision)
+                avy = 0.0f;
+
+            // go(true);
+            copter->set_vel(vx, vy, vz, 0.0f, avy, 0.0f);
 
             // Print position
-            std::cout << "To target x:" << diff_x << ", y:" << diff_y << ", z:" << diff_z << ", yaw:" << eul.yaw << "   \r";
+            std::cout << "To target x:" << diff_x << ", y:" << diff_y << ", z:" << diff_z << ", yaw:" << eul.yaw << "=>" << avy << "   \r";
             std::cout.flush();
 
             ros::spinOnce();
             r.sleep();
         }
-        logger->write_show(LogLevel::INFO, "Reached x:%.2f->%.2f, y:%.2f->%.2f, z:%.2f->%.2f, yaw:%d", x, pos.x, y, pos.y, z, pos.z, yaw);
+        logger->write_show(LogLevel::INFO, "Reached x:%.2f->%.2f, y:%.2f->%.2f, z:%.2f->%.2f, yaw:%d->%d",
+                           x, pos.x, y, pos.y, z, pos.z, yaw, std::abs(eul.yaw - yaw));
     }
 
     Control::~Control()

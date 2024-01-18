@@ -27,17 +27,19 @@ int main(int argc, char **argv)
     JsonIO reader;
     reader = "../copter/plan.json";
     std::vector<Target> target = reader.get_data();
-    if (!ros::ok())
-        exit(EXIT_FAILURE);
 
     // Set Speed limit
     control->speed_limit = 0.5;
     for (Target &t : target)
     {
+        if (!ros::ok())
+        {
+            copter->Land();
+            exit(EXIT_FAILURE);
+        }
         std::cout << C_GREEN << S_BOLD << '[' << t.header << ']' << C_RESET << '\n';
-        control->go(t.wp.x, t.wp.y, t.wp.z, 0.05f);
+        control->go(t.wp.x, t.wp.y, t.wp.z, t.wp.yaw, 0.05f, 5);
     }
-    copter->Land();
 
     return 0;
 }
