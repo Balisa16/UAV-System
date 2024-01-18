@@ -152,6 +152,7 @@ namespace EMIRO
             float diff_y = y - pos.y;
             float diff_z = z - pos.z;
             float diff_yaw = yaw - eul.yaw;
+            diff_yaw = diff_yaw > 180 ? -(360 - diff_yaw) : diff_yaw;
             vx = diff_x;
             vy = diff_y;
             vz = diff_z;
