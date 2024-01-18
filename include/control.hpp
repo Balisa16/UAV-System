@@ -27,7 +27,7 @@ namespace EMIRO
 
     public:
         float speed_limit = 1.0f;              // m/s
-        int rpy_speed_limit = 20;              // deg/s
+        int rpy_speed_limit = 10;              // deg/s
         float vx = 0.0f, vy = 0.0f, vz = 0.0f; // m/s
         float avx = 0, avy = 0, avz = 0;       // deg/s
 
@@ -128,6 +128,7 @@ namespace EMIRO
         Position pos;
         Quaternion quat;
         Euler eul;
+        float _yaw = 0.0f;
 
         while (ros::ok())
         {
@@ -137,18 +138,19 @@ namespace EMIRO
             eul.roll *= (180.0f / M_PI);
             eul.pitch *= (180.0f / M_PI);
             eul.yaw *= (180.0f / M_PI);
+            _yaw = eul.yaw;
 
             // Close if position in target zone
             if (std::fabs(pos.x - x) < precision &&
                 std::fabs(pos.y - y) < precision &&
                 std::fabs(pos.z - z) < precision &&
-                std::abs(eul.yaw - yaw) < yaw_precision)
+                std::fabs(eul.yaw - yaw) < yaw_precision)
                 break;
 
             float diff_x = x - pos.x;
             float diff_y = y - pos.y;
             float diff_z = z - pos.z;
-            int diff_yaw = yaw - eul.yaw;
+            float diff_yaw = yaw - eul.yaw;
             vx = diff_x;
             vy = diff_y;
             vz = diff_z;
@@ -168,26 +170,24 @@ namespace EMIRO
             else if (std::fabs(diff_z) < precision)
                 vz = 0.0f;
 
-            avy *= -1;
+            avy *= 0.15f;
             if (std::fabs(avy) > rpy_speed_limit)
                 avy = (avy > 0) ? rpy_speed_limit : -rpy_speed_limit;
-            else if (std::fabs(avy) < yaw_precision)
+            else if (std::fabs(eul.yaw - yaw) < yaw_precision)
                 avy = 0.0f;
 
             // go(true);
             copter->set_vel(vx, vy, vz, 0.0f, 0.0f, avy);
 
             // Print position
-            std::cout << eul.yaw << " => " << avy << " \r";
+            std::cout << C_MAGENTA << S_BOLD << "[PROGRESS] " << C_RESET << "To target x:" << diff_x << ", y:" << diff_y << ", z:" << diff_z << ", yaw:" << diff_yaw << "->" << avy << "    \r";
             std::cout.flush();
-            // std::cout << "To target x:" << diff_x << ", y:" << diff_y << ", z:" << diff_z << ", yaw:" << eul.yaw << "   \r";
-            // std::cout.flush();
 
             ros::spinOnce();
             r.sleep();
         }
-        logger->write_show(LogLevel::INFO, "Reached x:%.2f->%.2f, y:%.2f->%.2f, z:%.2f->%.2f, yaw:%d->%d",
-                           x, pos.x, y, pos.y, z, pos.z, yaw, std::abs(eul.yaw - yaw));
+        logger->write_show(LogLevel::INFO, "Reached x:%.2f->%.2f, y:%.2f->%.2f, z:%.2f->%.2f, yaw:%.2f->%.2f",
+                           x, pos.x, y, pos.y, z, pos.z, yaw, std::fabs(_yaw - yaw));
     }
 
     Control::~Control()
