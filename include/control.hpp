@@ -27,9 +27,9 @@ namespace EMIRO
 
     public:
         float speed_limit = 1.0f;              // m/s
-        int rpy_speed_limit = 10;              // deg/s
+        int rpy_speed_limit = 1.55;            // rad/s
         float vx = 0.0f, vy = 0.0f, vz = 0.0f; // m/s
-        float avx = 0, avy = 0, avz = 0;       // deg/s
+        float avx = 0, avy = 0, avz = 0;       // rad/s
 
         Control();
 
@@ -138,6 +138,7 @@ namespace EMIRO
             eul.roll *= (180.0f / M_PI);
             eul.pitch *= (180.0f / M_PI);
             eul.yaw *= (180.0f / M_PI);
+            eul.yaw = eul.yaw > 180 ? eul.yaw - 360 : eul.yaw;
             _yaw = eul.yaw;
 
             // Close if position in target zone
@@ -170,7 +171,7 @@ namespace EMIRO
             else if (std::fabs(diff_z) < precision)
                 vz = 0.0f;
 
-            avy *= 0.15f;
+            avy = diff_yaw * 3.14 / 180.0f;
             if (std::fabs(avy) > rpy_speed_limit)
                 avy = (avy > 0) ? rpy_speed_limit : -rpy_speed_limit;
             else if (std::fabs(eul.yaw - yaw) < yaw_precision)
