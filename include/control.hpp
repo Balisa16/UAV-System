@@ -165,16 +165,17 @@ namespace EMIRO
             else if (std::fabs(diff_z) < precision)
                 vz = 0.0f;
 
+            avy *= -1;
             if (std::fabs(avy) > rpy_speed_limit)
                 avy = (avy > 0) ? rpy_speed_limit : -rpy_speed_limit;
             else if (std::fabs(avy) < yaw_precision)
                 avy = 0.0f;
 
             // go(true);
-            copter->set_vel(vx, vy, vz, 0.0f, avy, 0.0f);
+            copter->set_vel(vx, vy, vz, 0.0f, 0.0f, avy);
 
             // Print position
-            std::cout << "To target x:" << diff_x << ", y:" << diff_y << ", z:" << diff_z << ", yaw:" << eul.yaw << "=>" << avy << "   \r";
+            std::cout << "To target x:" << diff_x << ", y:" << diff_y << ", z:" << diff_z << ", yaw:" << eul.yaw << "   \r";
             std::cout.flush();
 
             ros::spinOnce();
