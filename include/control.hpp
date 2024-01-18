@@ -134,6 +134,9 @@ namespace EMIRO
             // Get current position and orientation
             copter->get_pose(&pos, &quat);
             eul = to_euler(quat.w, quat.x, quat.y, quat.z);
+            eul.roll *= (180.0f / M_PI);
+            eul.pitch *= (180.0f / M_PI);
+            eul.yaw *= (180.0f / M_PI);
 
             // Close if position in target zone
             if (std::fabs(pos.x - x) < precision &&
@@ -175,8 +178,10 @@ namespace EMIRO
             copter->set_vel(vx, vy, vz, 0.0f, 0.0f, avy);
 
             // Print position
-            std::cout << "To target x:" << diff_x << ", y:" << diff_y << ", z:" << diff_z << ", yaw:" << eul.yaw << "   \r";
+            std::cout << eul.yaw << " => " << avy << " \r";
             std::cout.flush();
+            // std::cout << "To target x:" << diff_x << ", y:" << diff_y << ", z:" << diff_z << ", yaw:" << eul.yaw << "   \r";
+            // std::cout.flush();
 
             ros::spinOnce();
             r.sleep();
