@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.0.2)
+cmake_minimum_required(VERSION 3.10)
 project(emiro)
 
 add_compile_options(-std=c++11)
@@ -11,12 +11,13 @@ find_package(catkin REQUIRED COMPONENTS
   tf
 )
 
+set(CMAKE_CXX_STANDARD 17)
+
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/release/bin)
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/release/lib)
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/release/lib)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/release/bin)
 
-add_subdirectory(thirdparty/Logger)
 
 # Check Platform
 set(IS_JETSON OFF CACHE BOOL "Is Jetson platform")
@@ -24,11 +25,11 @@ if(CMAKE_SYSTEM_PROCESSOR MATCHES "arm")
   message("ARM architecture detected")
 
   try_compile(IS_JETSON
-    ${CMAKE_BINARY_DIR}/pin
-    SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/platform/jetson/pin.hpp
-    OUTPUT_VARIABLE OUTPUT_VAR
+  ${CMAKE_BINARY_DIR}/pin
+  SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/platform/jetson/pin.hpp
+  OUTPUT_VARIABLE OUTPUT_VAR
   )
-
+  
   if(IS_JETSON)
     message("Jetson platform detected")
     add_definitions(-DJETSON)
@@ -38,20 +39,21 @@ if(CMAKE_SYSTEM_PROCESSOR MATCHES "arm")
 else()
   message("Not an ARM architecture")
 endif()
-
-
-find_package(OpenCV REQUIRED)
-if(IS_JETSON)
-message("Find Package JetsonGPIO")
-find_package(JetsonGPIO)
-endif()
-
-find_package(Boost REQUIRED COMPONENTS system filesystem)
-find_package(Curses REQUIRED)
-find_package(CURL REQUIRED)
-find_package(PkgConfig REQUIRED)
-pkg_check_modules(LIBNOTIFY REQUIRED libnotify)
-
+  
+  
+  find_package(OpenCV REQUIRED)
+  if(IS_JETSON)
+  message("Find Package JetsonGPIO")
+  find_package(JetsonGPIO)
+  endif()
+  
+  find_package(Boost REQUIRED COMPONENTS system filesystem)
+  find_package(Curses REQUIRED)
+  find_package(CURL REQUIRED)
+  find_package(PkgConfig REQUIRED)
+  pkg_check_modules(LIBNOTIFY REQUIRED libnotify)
+  
+add_subdirectory(thirdparty/Logger)
 add_subdirectory(thirdparty/jsoncpp)
 add_subdirectory(thirdparty/asynccamera)
 
