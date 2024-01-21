@@ -4,3 +4,6 @@
 [submodule "thirdparty/jsoncpp"]
 	path = thirdparty/jsoncpp
 	url = https://github.com/Balisa16/jsoncpp.git
+[submodule "thirdparty/asynccamera"]
+	path = thirdparty/asynccamera
+	url = https://github.com/Balisa16/async-camera.git

@@ -53,6 +53,7 @@ find_package(PkgConfig REQUIRED)
 pkg_check_modules(LIBNOTIFY REQUIRED libnotify)
 
 add_subdirectory(thirdparty/jsoncpp)
+add_subdirectory(thirdparty/asynccamera)
 
 include_directories(
   ${CMAKE_CURRENT_SOURCE_DIR}/include
@@ -61,6 +62,7 @@ include_directories(
   ${CURSES_INCLUDE_DIR}
   ${OpenCV_INCLUDE_DIRS}
   thirdparty/jsoncpp/include
+  thirdparty/asynccamera/include
   /usr/local/include
   ${LIBNOTIFY_INCLUDE_DIRS}
 )
@@ -106,7 +108,8 @@ target_link_libraries(${PROJECT_NAME} PRIVATE
         ${catkin_LIBRARIES} 
         ${OpenCV_LIBRARIES} 
         ${CURSES_LIBRARIES}
-        Boost::system 
+        Boost::system
+        asynccamera
         Boost::filesystem
         jsoncpp
         ${LIBNOTIFY_LIBRARIES}
@@ -133,6 +136,7 @@ foreach(SRC_FILE ${SRC_FILES})
         ${CURSES_LIBRARIES}
         Boost::system 
         Boost::filesystem
+        asynccamera
         jsoncpp
         ${LIBNOTIFY_LIBRARIES}
         $<$<BOOL:${IS_JETSON}>:IS_JETSON_PLATFORM>)
@@ -146,6 +150,7 @@ foreach(SRC_FILE ${SRC_FILES})
         ${CURSES_LIBRARIES}
         Boost::system 
         Boost::filesystem
+        asynccamera
         jsoncpp
         ${LIBNOTIFY_LIBRARIES}
         $<$<BOOL:${IS_JETSON}>:IS_JETSON_PLATFORM>)
