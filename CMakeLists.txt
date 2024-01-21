@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.10)
 project(emiro)
 
-add_compile_options(-std=c++11)
+# add_compile_options(-std=c++11)
 find_package(catkin REQUIRED COMPONENTS
   mavros
   cv_bridge
@@ -65,7 +65,7 @@ include_directories(
   ${OpenCV_INCLUDE_DIRS}
   thirdparty/jsoncpp/include
   thirdparty/asynccamera/include
-  /usr/local/include
+  # /usr/local/include
   ${LIBNOTIFY_INCLUDE_DIRS}
 )
 
@@ -158,6 +158,7 @@ foreach(SRC_FILE ${SRC_FILES})
         $<$<BOOL:${IS_JETSON}>:IS_JETSON_PLATFORM>)
     endif()
 
+    target_compile_options(${TARGET_NAME} PRIVATE -flto)
     # Hide narrowing warnings
     if(CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
       target_compile_options(${TARGET_NAME} PRIVATE -Wno-narrowing)
@@ -165,6 +166,7 @@ foreach(SRC_FILE ${SRC_FILES})
       target_compile_options(${TARGET_NAME} PRIVATE /wd4838)
     endif()
 
+    target_link_options(${TARGET_NAME} PRIVATE -flto)
     
     target_include_directories(${TARGET_NAME} PRIVATE
         thirdparty/glfw/include)
