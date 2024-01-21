@@ -9,6 +9,7 @@
 #define DS2_STANDBY 1500
 #define DS2_RIGHT 2000
 
+#ifndef TERMINAL_COLOR_STYLE
 #define C_RESET "\033[0m"
 #define C_BLACK "\033[30m"
 #define C_RED "\033[31m"
@@ -21,6 +22,7 @@
 #define S_BOLD "\033[1m"
 #define S_ITALIC "\033[3m"
 #define S_UNDERLINE "\033[4m"
+#endif
 
 #include <iostream>
 #include <string>
