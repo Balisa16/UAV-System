@@ -1,16 +1,6 @@
-# EMIRO Autonomous Copter
+# Autonomous Copter System
 
-Open Source Library for Autonomous Drone.</br></br>
-| | |
-| ------------- | ------------- |
-| **Created**  | 30 September 2023 |
-| **Finished**  | - | </br>
-
-## About
-EMIRO is EEPIS Multirotor Research team that work under the auspices of Dirgantara [PENS](https://www.pens.ac.id/). This research team mainly focused on Vertical Take Off Landing research. EMIRO active following some VTOL competition especially KRTI (Kontes Robot Terbang Indonesia).</br>
-**More :**</br> 
-> [![LinkedIn](https://img.shields.io/badge/LinkedIn-%230077B5.svg?logo=linkedin&logoColor=white)](https://id.linkedin.com/company/emiro-pens) 
-
+Simple UAV System using ROS. This created primarily for my Final Project on Bachelor Degree</br></br>
 
 ## Dependencies
 1. [Ardupilot & MAVProxy](https://github.com/Intelligent-Quads/iq_tutorials)
