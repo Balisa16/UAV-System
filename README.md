@@ -1,6 +1,8 @@
 # Autonomous Copter System
 
 Simple UAV System using ROS. This created primarily for my Final Project on Bachelor Degree</br></br>
+## System Diagram
+
 
 ## Dependencies
 1. [Ardupilot & MAVProxy](https://github.com/Intelligent-Quads/iq_tutorials)
@@ -26,18 +28,21 @@ source ~/.bashrc
 git submodule update --init
 catkin build emiro
 ```
-if there an error like this `src/emiro/release/manual: error while loading shared libraries: libLogger.so: cannot open shared object file: No such file or directory
-` then execute this in top of workspace in this case in `~/catkin_ws`
-```
-cp src/emiro/release/libemiro.so devel/lib/
-cp build/emiro/thirdparty/Logger/libLogger.so devel/lib/
-```
 
 ## Optional
 ```
 pip3 install pyautogui
 ```
 
-# Autonomous Landing System
+## Autonomous Landing System
 This project using simple object detection by color to determine landing pad position. To reducing noise, i am used simple sigmoid. Here is sigmoid model.
 ![Sigmoid Model on Autonomous Landing System](docs/images/sigmoid.png)
+
+## Troubleshoot
+
+1. if there an error like this `src/emiro/release/manual: error while loading shared libraries: libLogger.so: cannot open shared object file: No such file or directory
+` then execute this in top of workspace in this case in `~/catkin_ws`
+    ```
+    cp src/emiro/release/libemiro.so devel/lib/
+    cp build/emiro/thirdparty/Logger/libLogger.so devel/lib/
+    ```
