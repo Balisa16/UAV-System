@@ -3,7 +3,7 @@
 
 using EMIRO::AsyncCam;
 
-static void rotate_point(Point &p, double angle)
+static void rotate_point(Point &p, double &angle)
 {
     double cos_theta = std::cos(angle);
     double sin_theta = std::sin(angle);
@@ -14,6 +14,17 @@ static void rotate_point(Point &p, double angle)
 
     p.x = newX;
     p.y = newY;
+}
+
+static void adjust_point(Point &p, int px_radius)
+{
+    float dist = std::sqrt(p.x * p.x + p.y * p.y);
+    if (dist <= px_radius)
+        return;
+
+    float ratio = px_radius / dist;
+    p.x *= ratio;
+    p.y *= ratio;
 }
 
 int main()
@@ -57,14 +68,19 @@ int main()
             int radius = cvRound(selected_object[2]);
 
             // circle center and outline
-            // cv::circle(frame, center, 3, cv::Scalar(0, 255, 0), -1, 8, 0);
             cv::circle(frame, center, radius, cv::Scalar(0, 0, 255), 3, 8, 0);
 
             // draw line from center to object
-            cv::line(frame, cv::Point(frame_w2, frame_h2), center, cv::Scalar(0, 255, 0), 3);
-            std::cout << "Degree : " << 90 - std::atan2(center.x - frame_w2, frame_h2 - center.y) * (180.0 / M_PI) << "    \r";
-            std::cout.flush();
             // cv::line(frame, cv::Point(frame_w2, frame_h2), center, cv::Scalar(0, 255, 0), 3);
+
+            // Draw cursor
+            cv::circle(frame, Point(frame_w2, frame_h2), 50, cv::Scalar(0, 0, 255), 3, 8, 0);
+            center.x -= frame_w2;
+            center.y -= frame_h2;
+            adjust_point(center, 50);
+            center.x += frame_w2;
+            center.y += frame_h2;
+            cv::circle(frame, center, 9, cv::Scalar(0, 255, 0), -1, 8, 0);
         }
         putText(frame, "ESC to exit", Point(20, 20), cv::FONT_HERSHEY_PLAIN, 1, Scalar(255, 0, 0), 2);
         cv::line(frame, cv::Point(cam.width / 2, 0), cv::Point(cam.width / 2, cam.height), cv::Scalar(255, 0, 0), 2);

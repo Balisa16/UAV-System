@@ -1,6 +1,9 @@
 cmake_minimum_required(VERSION 3.10)
 project(emiro)
 
+# set(CMAKE_C_COMPILER "/usr/lib/ccache/clang")
+# set(CMAKE_CXX_COMPILER "/usr/lib/ccache/clang++")
+
 # add_compile_options(-std=c++11)
 find_package(catkin REQUIRED COMPONENTS
   mavros
@@ -25,9 +28,9 @@ if(CMAKE_SYSTEM_PROCESSOR MATCHES "arm")
   message("ARM architecture detected")
 
   try_compile(IS_JETSON
-  ${CMAKE_BINARY_DIR}/pin
-  SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/platform/jetson/pin.hpp
-  OUTPUT_VARIABLE OUTPUT_VAR
+    ${CMAKE_BINARY_DIR}/pin
+    SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/platform/jetson/pin.hpp
+    OUTPUT_VARIABLE OUTPUT_VAR
   )
   
   if(IS_JETSON)
