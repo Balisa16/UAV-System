@@ -40,9 +40,8 @@ This project using simple object detection by color to determine landing pad pos
 
 ## Troubleshoot
 
-1. if there an error like this `src/emiro/release/manual: error while loading shared libraries: libLogger.so: cannot open shared object file: No such file or directory
+1. If there an error like this `src/emiro/release/manual: error while loading shared libraries: libLogger.so: cannot open shared object file: No such file or directory
 ` then execute this in top of workspace in this case in `~/catkin_ws`
     ```
-    cp src/emiro/release/libemiro.so devel/lib/
-    cp build/emiro/thirdparty/Logger/libLogger.so devel/lib/
+    cp src/emiro/release/lib/* devel/lib/
     ```
