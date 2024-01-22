@@ -28,18 +28,18 @@ EMIRO is EEPIS Multirotor Research team that work under the auspices of Dirganta
 cd ~/catkin_ws/src
 sudo apt install ncurses-dev libnotify-dev -y
 
-git clone https://github.com/Balisa16/EMIRO.git
-cd EMIRO
+git clone https://github.com/Balisa16/UAV-System.git emiro
+cd emiro
 echo "export EMIRO_PATH=$(pwd)" >> ~/.bashrc
 echo "source $(pwd)/shell/emiro.sh" >> ~/.bashrc
 source ~/.bashrc
 git submodule update --init
 catkin build emiro
 ```
-if there an error like this `src/EMIRO/release/manual: error while loading shared libraries: libLogger.so: cannot open shared object file: No such file or directory
+if there an error like this `src/emiro/release/manual: error while loading shared libraries: libLogger.so: cannot open shared object file: No such file or directory
 ` then execute this in top of workspace in this case in `~/catkin_ws`
 ```
-cp src/EMIRO/release/libemiro.so devel/lib/
+cp src/emiro/release/libemiro.so devel/lib/
 cp build/emiro/thirdparty/Logger/libLogger.so devel/lib/
 ```
 
