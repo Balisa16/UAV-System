@@ -3,17 +3,7 @@
 
 using EMIRO::AsyncCam;
 
-float sigmoid(float x, float k, float a, float b)
-{
-    // Calculate the expression: k / (1 + e^(a + bx))
-    float exponent = a + b * x;
-    float denominator = 1 + std::exp(exponent);
-    float result = k / denominator;
-
-    return result;
-}
-
-void point_buffer(Point point, const int &buffer_size)
+void point_buffer(Point &point, const int &buffer_size)
 {
     static vector<Point> buffer;
     buffer.push_back(point);
@@ -29,10 +19,6 @@ void point_buffer(Point point, const int &buffer_size)
     {
         // Calculate sigmoid expression: k / (1 + e^(a + bx))
         _sig = 0.8f / (1 + std::exp(10 - 3 * nat * i)) + 0.2f;
-
-        std::cout << _sig;
-        if (i < buffer.size() - 1)
-            std::cout << ",";
         point.x += (buffer[i].x * _sig);
         point.y += (buffer[i].y * _sig);
         Sn += _sig;
@@ -41,7 +27,7 @@ void point_buffer(Point point, const int &buffer_size)
     point.y /= Sn;
 }
 
-static void rotate_point(Point &p, double &angle)
+void rotate_point(Point &p, const double &angle)
 {
     double cos_theta = std::cos(angle);
     double sin_theta = std::sin(angle);
@@ -54,7 +40,7 @@ static void rotate_point(Point &p, double &angle)
     p.y = newY;
 }
 
-static void adjust_point(Point &p, int px_radius)
+void adjust_point(Point &p, const int &px_radius)
 {
     float dist = std::sqrt(p.x * p.x + p.y * p.y);
     if (dist <= px_radius)
