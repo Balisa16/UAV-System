@@ -1,0 +1,1193 @@
+[
+    {
+        "param_id": "AHRS_GPS_USE",
+        "type": "select",
+        "value": 1,
+        "selection": [
+            {
+                "value": 0,
+                "description": "Disabled"
+            },
+            {
+                "value": 1,
+                "description": "Use GPS for DCM position"
+            },
+            {
+                "value": 2,
+                "description": "Use GPS for DCM position and height"
+            }
+        ]
+    },
+    {
+        "param_id": "AHRS_EKF_TYPE",
+        "type": "select",
+        "value": 1,
+        "selection": [
+            {
+                "value": 0,
+                "description": "Disabled"
+            },
+            {
+                "value": 2,
+                "description": "Enable EKF2"
+            },
+            {
+                "value": 3,
+                "description": "Enable EKF3"
+            },
+            {
+                "value": 11,
+                "description": "External AHRS"
+            }
+        ]
+    },
+    {
+        "param_id": "CAN_D1_PROTOCOL",
+        "type": "select",
+        "value": 0,
+        "selection": [
+            {
+                "value": 0,
+                "description": "Disabled"
+            },
+            {
+                "value": 1,
+                "description": "Drone CAN"
+            },
+            {
+                "value": 4,
+                "description": "Piccolo CAN"
+            },
+            {
+                "value": 6,
+                "description": "EFI NWPMU"
+            },
+            {
+                "value": 7,
+                "description": "USD1"
+            },
+            {
+                "value": 8,
+                "description": "KDECAN"
+            },
+            {
+                "value": 10,
+                "description": "Scripting"
+            },
+            {
+                "value": 11,
+                "description": "Benewake"
+            },
+            {
+                "value": 12,
+                "description": "Scripting2"
+            },
+            {
+                "value": 13,
+                "description": "TOFSenseP"
+            },
+            {
+                "value": 14,
+                "description": "NanoRadar NRA24"
+            }
+        ]
+    },
+    {
+        "param_id": "CAN_D2_PROTOCOL",
+        "type": "select",
+        "value": 0,
+        "selection": [
+            {
+                "value": 0,
+                "description": "Disabled"
+            },
+            {
+                "value": 1,
+                "description": "Drone CAN"
+            },
+            {
+                "value": 4,
+                "description": "Piccolo CAN"
+            },
+            {
+                "value": 6,
+                "description": "EFI NWPMU"
+            },
+            {
+                "value": 7,
+                "description": "USD1"
+            },
+            {
+                "value": 8,
+                "description": "KDECAN"
+            },
+            {
+                "value": 10,
+                "description": "Scripting"
+            },
+            {
+                "value": 11,
+                "description": "Benewake"
+            },
+            {
+                "value": 12,
+                "description": "Scripting2"
+            },
+            {
+                "value": 13,
+                "description": "TOFSenseP"
+            },
+            {
+                "value": 14,
+                "description": "NanoRadar NRA24"
+            }
+        ]
+    },
+    {
+        "param_id": "CAN_P1_DRIVER",
+        "type": "select",
+        "value": 0,
+        "selection": [
+            {
+                "value": 0,
+                "description": "Disabled"
+            },
+            {
+                "value": 1,
+                "description": "First Driver"
+            },
+            {
+                "value": 2,
+                "description": "Second Driver"
+            },
+            {
+                "value": 3,
+                "description": "Third Driver"
+            }
+        ]
+    },
+    {
+        "param_id": "CAN_P2_DRIVER",
+        "type": "select",
+        "value": 0,
+        "selection": [
+            {
+                "value": 0,
+                "description": "Disabled"
+            },
+            {
+                "value": 1,
+                "description": "First Driver"
+            },
+            {
+                "value": 2,
+                "description": "Second Driver"
+            },
+            {
+                "value": 3,
+                "description": "Third Driver"
+            }
+        ]
+    },
+    {
+        "param_id": "EK3_ENABLE",
+        "type": "select",
+        "value": 1,
+        "selection": [
+            {
+                "value": 0,
+                "description": "Disabled"
+            },
+            {
+                "value": 1,
+                "description": "Enable"
+            }
+        ]
+    },
+    {
+        "param_id": "EK3_GLITCH_RAD",
+        "type": "float",
+        "value": 300,
+        "min": 100,
+        "max": 1000,
+    },
+    {
+        "param_id": "EK3_SRC_OPTIONS",
+        "type": "bool",
+        "value": 0,
+        "description": "Fuse All Velocities"
+    },
+    {
+        "param_id": "EK3_SRC1_POSXY",
+        "type": "select",
+        "value": 3,
+        "selection": [
+            {
+                "value": 0,
+                "description": "None"
+            },
+            {
+                "value": 3,
+                "description": "GPS"
+            },
+            {
+                "value": 4,
+                "description": "Beacon"
+            },
+            {
+                "value": 6,
+                "description": "External Nav"
+            }
+        ]
+    },
+    {
+        "param_id": "EK3_SRC1_VELXY",
+        "type": "select",
+        "value": 3,
+        "selection": [
+            {
+                "value": 0,
+                "description": "None"
+            },
+            {
+                "value": 3,
+                "description": "GPS"
+            },
+            {
+                "value": 4,
+                "description": "Beacon"
+            },
+            {
+                "value": 5,
+                "description": "Optical Flow"
+            },
+            {
+                "value": 6,
+                "description": "External Nav"
+            },
+            {
+                "value": 7,
+                "description": "Wheel Encoder"
+            },
+        ]
+    },
+    {
+        "param_id": "EK3_SRC1_POSZ",
+        "type": "select",
+        "value": 1,
+        "selection": [
+            {
+                "value": 0,
+                "description": "None"
+            },
+            {
+                "value": 1,
+                "description": "Baro"
+            },
+            {
+                "value": 2,
+                "description": "Range Finder"
+            },
+            {
+                "value": 3,
+                "description": "GPS"
+            },
+            {
+                "value": 4,
+                "description": "Beacon"
+            },
+            {
+                "value": 6,
+                "description": "External Nav"
+            }
+        ]
+    },
+    {
+        "param_id": "EK3_SRC1_VELZ",
+        "type": "select",
+        "value": 1,
+        "selection": [
+            {
+                "value": 0,
+                "description": "None"
+            },
+            {
+                "value": 3,
+                "description": "GPS"
+            },
+            {
+                "value": 4,
+                "description": "Beacon"
+            },
+            {
+                "value": 6,
+                "description": "External Nav"
+            }
+        ]
+    },
+    {
+        "param_id": "EK3_SRC1_YAW",
+        "type": "select",
+        "value": 1,
+        "selection": [
+            {
+                "value": 0,
+                "description": "None"
+            },
+            {
+                "value": 1,
+                "description": "Compass"
+            },
+            {
+                "value": 2,
+                "description": "GPS"
+            },
+            {
+                "value": 3,
+                "description": "GPS with Compass Fallback"
+            },
+            {
+                "value": 6,
+                "description": "External Nav"
+            },
+            {
+                "value": 8,
+                "description": "GSF (Gaussian Sum Filter)"
+            }
+        ]
+    },
+    {
+        "param_id": "EK3_SRC2_POSXY",
+        "type": "select",
+        "value": 3,
+        "selection": [
+            {
+                "value": 0,
+                "description": "None"
+            },
+            {
+                "value": 3,
+                "description": "GPS"
+            },
+            {
+                "value": 4,
+                "description": "Beacon"
+            },
+            {
+                "value": 6,
+                "description": "External Nav"
+            }
+        ]
+    },
+    {
+        "param_id": "EK3_SRC2_VELXY",
+        "type": "select",
+        "value": 3,
+        "selection": [
+            {
+                "value": 0,
+                "description": "None"
+            },
+            {
+                "value": 3,
+                "description": "GPS"
+            },
+            {
+                "value": 4,
+                "description": "Beacon"
+            },
+            {
+                "value": 5,
+                "description": "Optical Flow"
+            },
+            {
+                "value": 6,
+                "description": "External Nav"
+            },
+            {
+                "value": 7,
+                "description": "Wheel Encoder"
+            },
+        ]
+    },
+    {
+        "param_id": "EK3_SRC2_POSZ",
+        "type": "select",
+        "value": 1,
+        "selection": [
+            {
+                "value": 0,
+                "description": "None"
+            },
+            {
+                "value": 1,
+                "description": "Baro"
+            },
+            {
+                "value": 2,
+                "description": "Range Finder"
+            },
+            {
+                "value": 3,
+                "description": "GPS"
+            },
+            {
+                "value": 4,
+                "description": "Beacon"
+            },
+            {
+                "value": 6,
+                "description": "External Nav"
+            }
+        ]
+    },
+    {
+        "param_id": "EK3_SRC2_VELZ",
+        "type": "select",
+        "value": 1,
+        "selection": [
+            {
+                "value": 0,
+                "description": "None"
+            },
+            {
+                "value": 3,
+                "description": "GPS"
+            },
+            {
+                "value": 4,
+                "description": "Beacon"
+            },
+            {
+                "value": 6,
+                "description": "External Nav"
+            }
+        ]
+    },
+    {
+        "param_id": "EK3_SRC2_YAW",
+        "type": "select",
+        "value": 1,
+        "selection": [
+            {
+                "value": 0,
+                "description": "None"
+            },
+            {
+                "value": 1,
+                "description": "Compass"
+            },
+            {
+                "value": 2,
+                "description": "GPS"
+            },
+            {
+                "value": 3,
+                "description": "GPS with Compass Fallback"
+            },
+            {
+                "value": 6,
+                "description": "External Nav"
+            },
+            {
+                "value": 8,
+                "description": "GSF (Gaussian Sum Filter)"
+            }
+        ]
+    },
+    {
+        "param_id": "EK3_SRC3_POSXY",
+        "type": "select",
+        "value": 3,
+        "selection": [
+            {
+                "value": 0,
+                "description": "None"
+            },
+            {
+                "value": 3,
+                "description": "GPS"
+            },
+            {
+                "value": 4,
+                "description": "Beacon"
+            },
+            {
+                "value": 6,
+                "description": "External Nav"
+            }
+        ]
+    },
+    {
+        "param_id": "EK3_SRC3_VELXY",
+        "type": "select",
+        "value": 3,
+        "selection": [
+            {
+                "value": 0,
+                "description": "None"
+            },
+            {
+                "value": 3,
+                "description": "GPS"
+            },
+            {
+                "value": 4,
+                "description": "Beacon"
+            },
+            {
+                "value": 5,
+                "description": "Optical Flow"
+            },
+            {
+                "value": 6,
+                "description": "External Nav"
+            },
+            {
+                "value": 7,
+                "description": "Wheel Encoder"
+            },
+        ]
+    },
+    {
+        "param_id": "EK3_SRC3_POSZ",
+        "type": "select",
+        "value": 1,
+        "selection": [
+            {
+                "value": 0,
+                "description": "None"
+            },
+            {
+                "value": 1,
+                "description": "Baro"
+            },
+            {
+                "value": 2,
+                "description": "Range Finder"
+            },
+            {
+                "value": 3,
+                "description": "GPS"
+            },
+            {
+                "value": 4,
+                "description": "Beacon"
+            },
+            {
+                "value": 6,
+                "description": "External Nav"
+            }
+        ]
+    },
+    {
+        "param_id": "EK3_SRC3_VELZ",
+        "type": "select",
+        "value": 1,
+        "selection": [
+            {
+                "value": 0,
+                "description": "None"
+            },
+            {
+                "value": 3,
+                "description": "GPS"
+            },
+            {
+                "value": 4,
+                "description": "Beacon"
+            },
+            {
+                "value": 6,
+                "description": "External Nav"
+            }
+        ]
+    },
+    {
+        "param_id": "EK3_SRC3_YAW",
+        "type": "select",
+        "value": 1,
+        "selection": [
+            {
+                "value": 0,
+                "description": "None"
+            },
+            {
+                "value": 1,
+                "description": "Compass"
+            },
+            {
+                "value": 2,
+                "description": "GPS"
+            },
+            {
+                "value": 3,
+                "description": "GPS with Compass Fallback"
+            },
+            {
+                "value": 6,
+                "description": "External Nav"
+            },
+            {
+                "value": 8,
+                "description": "GSF (Gaussian Sum Filter)"
+            }
+        ]
+    },
+    {
+        "param_id": "RC5_MIN",
+        "type": "int",
+        "value": 1000,
+        "min": 800,
+        "max": 2200,
+    },
+    {
+        "param_id": "RC5_TRIM",
+        "type": "int",
+        "value": 1500,
+        "min": 800,
+        "max": 2200,
+    },
+    {
+        "param_id": "RC5_MIN",
+        "type": "int",
+        "value": 1500,
+        "min": 800,
+        "max": 2200,
+    },
+    {
+        "param_id": "RC5_REVERSED",
+        "type": "select",
+        "value": 0,
+        "selection": [
+            {
+                "value": 0,
+                "description": "Normal"
+            },
+            {
+                "value": 1,
+                "description": "Reversed"
+            }
+        ]
+    },
+    {
+        "param_id": "RC5_OPTION",
+        "type": "select",
+        "value": 0,
+        "selection": [
+            {
+                "value": 0,
+                "description": "Do Nothing"
+            },
+            {
+                "value": 2,
+                "description": "Flip Mode"
+            },
+            {
+                "value": 3,
+                "description": "Simple Mode"
+            },
+            {
+                "value": 4,
+                "description": "RTL"
+            },
+            {
+                "value": 10,
+                "description": "RangeFinder Enable"
+            },
+            {
+                "value": 13,
+                "description": "Super Simple Mode"
+            },
+            {
+                "value": 16,
+                "description": "AUTO Mode"
+            },
+            {
+                "value": 17,
+                "description": "AUTOTUNE Mode"
+            },
+            {
+                "value": 18,
+                "description": "LAND Mode"
+            },
+            {
+                "value": 55,
+                "description": "GUIDED Mode"
+            },
+            {
+                "value": 56,
+                "description": "LOITER Mode"
+            },
+            {
+                "value": 57,
+                "description": "FOLLOW Mode"
+            },
+            {
+                "value": 68,
+                "description": "STABILIZE Mode"
+            },
+            {
+                "value": 69,
+                "description": "POSHOLD Mode"
+            },
+            {
+                "value": 70,
+                "description": "ALTHOLD Mode"
+            },
+            {
+                "value": 71,
+                "description": "FLOWHOLD Mode"
+            },
+            {
+                "value": 80,
+                "description": "VisOdom Align"
+            },
+            {
+                "value": 81,
+                "description": "Disarm"
+            },
+            {
+                "value": 90,
+                "description": "EKF Pos Source"
+            }
+        ]
+    },
+    {
+        "param_id": "RC6_MIN",
+        "type": "int",
+        "value": 1000,
+        "min": 800,
+        "max": 2200,
+    },
+    {
+        "param_id": "RC6_TRIM",
+        "type": "int",
+        "value": 1500,
+        "min": 800,
+        "max": 2200,
+    },
+    {
+        "param_id": "RC6_MIN",
+        "type": "int",
+        "value": 1500,
+        "min": 800,
+        "max": 2200,
+    },
+    {
+        "param_id": "RC6_REVERSED",
+        "type": "select",
+        "value": 0,
+        "selection": [
+            {
+                "value": 0,
+                "description": "Normal"
+            },
+            {
+                "value": 1,
+                "description": "Reversed"
+            }
+        ]
+    },
+    {
+        "param_id": "RC6_OPTION",
+        "type": "select",
+        "value": 0,
+        "selection": [
+            {
+                "value": 0,
+                "description": "Do Nothing"
+            },
+            {
+                "value": 2,
+                "description": "Flip Mode"
+            },
+            {
+                "value": 3,
+                "description": "Simple Mode"
+            },
+            {
+                "value": 4,
+                "description": "RTL"
+            },
+            {
+                "value": 10,
+                "description": "RangeFinder Enable"
+            },
+            {
+                "value": 13,
+                "description": "Super Simple Mode"
+            },
+            {
+                "value": 16,
+                "description": "AUTO Mode"
+            },
+            {
+                "value": 17,
+                "description": "AUTOTUNE Mode"
+            },
+            {
+                "value": 18,
+                "description": "LAND Mode"
+            },
+            {
+                "value": 55,
+                "description": "GUIDED Mode"
+            },
+            {
+                "value": 56,
+                "description": "LOITER Mode"
+            },
+            {
+                "value": 57,
+                "description": "FOLLOW Mode"
+            },
+            {
+                "value": 68,
+                "description": "STABILIZE Mode"
+            },
+            {
+                "value": 69,
+                "description": "POSHOLD Mode"
+            },
+            {
+                "value": 70,
+                "description": "ALTHOLD Mode"
+            },
+            {
+                "value": 71,
+                "description": "FLOWHOLD Mode"
+            },
+            {
+                "value": 80,
+                "description": "VisOdom Align"
+            },
+            {
+                "value": 81,
+                "description": "Disarm"
+            },
+            {
+                "value": 90,
+                "description": "EKF Pos Source"
+            }
+        ]
+    },
+    {
+        "param_id": "RC7_MIN",
+        "type": "int",
+        "value": 1000,
+        "min": 800,
+        "max": 2200,
+    },
+    {
+        "param_id": "RC7_TRIM",
+        "type": "int",
+        "value": 1500,
+        "min": 800,
+        "max": 2200,
+    },
+    {
+        "param_id": "RC7_MIN",
+        "type": "int",
+        "value": 1500,
+        "min": 800,
+        "max": 2200,
+    },
+    {
+        "param_id": "RC7_REVERSED",
+        "type": "select",
+        "value": 0,
+        "selection": [
+            {
+                "value": 0,
+                "description": "Normal"
+            },
+            {
+                "value": 1,
+                "description": "Reversed"
+            }
+        ]
+    },
+    {
+        "param_id": "RC7_OPTION",
+        "type": "select",
+        "value": 0,
+        "selection": [
+            {
+                "value": 0,
+                "description": "Do Nothing"
+            },
+            {
+                "value": 2,
+                "description": "Flip Mode"
+            },
+            {
+                "value": 3,
+                "description": "Simple Mode"
+            },
+            {
+                "value": 4,
+                "description": "RTL"
+            },
+            {
+                "value": 10,
+                "description": "RangeFinder Enable"
+            },
+            {
+                "value": 13,
+                "description": "Super Simple Mode"
+            },
+            {
+                "value": 16,
+                "description": "AUTO Mode"
+            },
+            {
+                "value": 17,
+                "description": "AUTOTUNE Mode"
+            },
+            {
+                "value": 18,
+                "description": "LAND Mode"
+            },
+            {
+                "value": 55,
+                "description": "GUIDED Mode"
+            },
+            {
+                "value": 56,
+                "description": "LOITER Mode"
+            },
+            {
+                "value": 57,
+                "description": "FOLLOW Mode"
+            },
+            {
+                "value": 68,
+                "description": "STABILIZE Mode"
+            },
+            {
+                "value": 69,
+                "description": "POSHOLD Mode"
+            },
+            {
+                "value": 70,
+                "description": "ALTHOLD Mode"
+            },
+            {
+                "value": 71,
+                "description": "FLOWHOLD Mode"
+            },
+            {
+                "value": 80,
+                "description": "VisOdom Align"
+            },
+            {
+                "value": 81,
+                "description": "Disarm"
+            },
+            {
+                "value": 90,
+                "description": "EKF Pos Source"
+            }
+        ]
+    },
+    {
+        "param_id": "RC8_MIN",
+        "type": "int",
+        "value": 1000,
+        "min": 800,
+        "max": 2200,
+    },
+    {
+        "param_id": "RC8_TRIM",
+        "type": "int",
+        "value": 1500,
+        "min": 800,
+        "max": 2200,
+    },
+    {
+        "param_id": "RC8_MIN",
+        "type": "int",
+        "value": 1500,
+        "min": 800,
+        "max": 2200,
+    },
+    {
+        "param_id": "RC8_REVERSED",
+        "type": "select",
+        "value": 0,
+        "selection": [
+            {
+                "value": 0,
+                "description": "Normal"
+            },
+            {
+                "value": 1,
+                "description": "Reversed"
+            }
+        ]
+    },
+    {
+        "param_id": "RC8_OPTION",
+        "type": "select",
+        "value": 0,
+        "selection": [
+            {
+                "value": 0,
+                "description": "Do Nothing"
+            },
+            {
+                "value": 2,
+                "description": "Flip Mode"
+            },
+            {
+                "value": 3,
+                "description": "Simple Mode"
+            },
+            {
+                "value": 4,
+                "description": "RTL"
+            },
+            {
+                "value": 10,
+                "description": "RangeFinder Enable"
+            },
+            {
+                "value": 13,
+                "description": "Super Simple Mode"
+            },
+            {
+                "value": 16,
+                "description": "AUTO Mode"
+            },
+            {
+                "value": 17,
+                "description": "AUTOTUNE Mode"
+            },
+            {
+                "value": 18,
+                "description": "LAND Mode"
+            },
+            {
+                "value": 55,
+                "description": "GUIDED Mode"
+            },
+            {
+                "value": 56,
+                "description": "LOITER Mode"
+            },
+            {
+                "value": 57,
+                "description": "FOLLOW Mode"
+            },
+            {
+                "value": 68,
+                "description": "STABILIZE Mode"
+            },
+            {
+                "value": 69,
+                "description": "POSHOLD Mode"
+            },
+            {
+                "value": 70,
+                "description": "ALTHOLD Mode"
+            },
+            {
+                "value": 71,
+                "description": "FLOWHOLD Mode"
+            },
+            {
+                "value": 80,
+                "description": "VisOdom Align"
+            },
+            {
+                "value": 81,
+                "description": "Disarm"
+            },
+            {
+                "value": 90,
+                "description": "EKF Pos Source"
+            }
+        ]
+    },
+    {
+        "param_id": "VISO_TYPE",
+        "type": "select",
+        "value": 2,
+        "selection": [
+            {
+                "value": 0,
+                "description": "None"
+            },
+            {
+                "value": 1,
+                "description": "MAVLink"
+            },
+            {
+                "value": 2,
+                "description": "Intel T265"
+            },
+            {
+                "value": 3,
+                "description": "VOXL (Modal AI)"
+            }
+        ]
+    },
+    {
+        "param_id": "VISO_POS_X",
+        "type": "float",
+        "value": 0,
+        "min": -5,
+        "max": 5,
+        "selection": []
+    },
+    {
+        "param_id": "VISO_POS_Y",
+        "type": "float",
+        "value": 0,
+        "min": -5,
+        "max": 5,
+        "selection": []
+    },
+    {
+        "param_id": "VISO_POS_Z",
+        "type": "float",
+        "value": 0,
+        "min": -5,
+        "max": 5,
+        "selection": []
+    },
+    {
+        "param_id": "VISO_ORIENT",
+        "type": "select",
+        "value": 0,
+        "selection": [
+            {
+                "value": 0,
+                "description": "Forward"
+            },
+            {
+                "value": 2,
+                "description": "Right"
+            },
+            {
+                "value": 4,
+                "description": "Back"
+            },
+            {
+                "value": 6,
+                "description": "Left"
+            },
+            {
+                "value": 24,
+                "description": "Up"
+            },
+            {
+                "value": 25,
+                "description": "Down"
+            }
+        ]
+    }
+]
+
+  
