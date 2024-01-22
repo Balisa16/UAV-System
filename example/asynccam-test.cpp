@@ -3,6 +3,44 @@
 
 using EMIRO::AsyncCam;
 
+float sigmoid(float x, float k, float a, float b)
+{
+    // Calculate the expression: k / (1 + e^(a + bx))
+    float exponent = a + b * x;
+    float denominator = 1 + std::exp(exponent);
+    float result = k / denominator;
+
+    return result;
+}
+
+void point_buffer(Point point, const int &buffer_size)
+{
+    static vector<Point> buffer;
+    buffer.push_back(point);
+
+    if (buffer.size() > buffer_size)
+        buffer.erase(buffer.begin());
+
+    const float nat = 5.0f / (float)buffer.size();
+
+    float Sn = 0.0f, _, _sig = 0.0f;
+    point = {0, 0};
+    for (int i = 0; i < buffer.size(); i++)
+    {
+        // Calculate sigmoid expression: k / (1 + e^(a + bx))
+        _sig = 0.8f / (1 + std::exp(10 - 3 * nat * i)) + 0.2f;
+
+        std::cout << _sig;
+        if (i < buffer.size() - 1)
+            std::cout << ",";
+        point.x += (buffer[i].x * _sig);
+        point.y += (buffer[i].y * _sig);
+        Sn += _sig;
+    }
+    point.x /= Sn;
+    point.y /= Sn;
+}
+
 static void rotate_point(Point &p, double &angle)
 {
     double cos_theta = std::cos(angle);
@@ -80,6 +118,7 @@ int main()
             adjust_point(center, 50);
             center.x += frame_w2;
             center.y += frame_h2;
+            point_buffer(center, 50);
             cv::circle(frame, center, 9, cv::Scalar(0, 255, 0), -1, 8, 0);
         }
         putText(frame, "ESC to exit", Point(20, 20), cv::FONT_HERSHEY_PLAIN, 1, Scalar(255, 0, 0), 2);
