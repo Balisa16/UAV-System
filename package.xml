@@ -2,7 +2,7 @@
 <package format="2">
   <name>emiro</name>
   <version>0.0.0</version>
-  <description>The emiro package</description>
+  <description>The Autonomous UAV System</description>
 
   <maintainer email="sanderantoniusbalisa@gmail.com">Sander Antonius Balisa</maintainer>
 
