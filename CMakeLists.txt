@@ -161,15 +161,13 @@ foreach(SRC_FILE ${SRC_FILES})
         $<$<BOOL:${IS_JETSON}>:IS_JETSON_PLATFORM>)
     endif()
 
-    target_compile_options(${TARGET_NAME} PRIVATE -flto)
+    target_compile_options(${TARGET_NAME} PRIVATE -flto -Wunused-variable)
     # Hide narrowing warnings
     if(CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
       target_compile_options(${TARGET_NAME} PRIVATE -Wno-narrowing)
     elseif(MSVC)
       target_compile_options(${TARGET_NAME} PRIVATE /wd4838)
     endif()
-
-    target_link_options(${TARGET_NAME} PRIVATE -flto)
     
     target_include_directories(${TARGET_NAME} PRIVATE
         thirdparty/glfw/include)

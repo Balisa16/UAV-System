@@ -1,55 +1,6 @@
-#include <enum.hpp>
 #include <async_cam.hpp>
 
 using EMIRO::AsyncCam;
-
-void point_buffer(Point &point, const int &buffer_size)
-{
-    static vector<Point> buffer;
-    buffer.push_back(point);
-
-    if (buffer.size() > buffer_size)
-        buffer.erase(buffer.begin());
-
-    const float nat = 5.0f / (float)buffer.size();
-
-    float Sn = 0.0f, _, _sig = 0.0f;
-    point = {0, 0};
-    for (int i = 0; i < buffer.size(); i++)
-    {
-        // Calculate sigmoid expression: k / (1 + e^(a + bx))
-        _sig = 0.8f / (1 + std::exp(10 - 3 * nat * i)) + 0.2f;
-        point.x += (buffer[i].x * _sig);
-        point.y += (buffer[i].y * _sig);
-        Sn += _sig;
-    }
-    point.x /= Sn;
-    point.y /= Sn;
-}
-
-void rotate_point(Point &p, const double &angle)
-{
-    double cos_theta = std::cos(angle);
-    double sin_theta = std::sin(angle);
-
-    // Rotation matrix
-    double newX = p.x * cos_theta - p.y * sin_theta;
-    double newY = p.x * sin_theta + p.y * cos_theta;
-
-    p.x = newX;
-    p.y = newY;
-}
-
-void adjust_point(Point &p, const int &px_radius)
-{
-    float dist = std::sqrt(p.x * p.x + p.y * p.y);
-    if (dist <= px_radius)
-        return;
-
-    float ratio = px_radius / dist;
-    p.x *= ratio;
-    p.y *= ratio;
-}
 
 int main()
 {
@@ -98,10 +49,14 @@ int main()
 
             center.x -= frame_w2;
             center.y -= frame_h2;
-            adjust_point(center, control_radius);
+            AsyncCam::adjust_point(center, control_radius);
+
+            if (std::sqrt(center.x * center.x + center.y * center.y) < 50)
+                break;
+
             center.x += frame_w2;
             center.y += frame_h2;
-            point_buffer(center, 10);
+            AsyncCam::point_buffer(center, 10);
 
             // Draw control points
             cv::circle(frame, center, 9, cv::Scalar(0, 255, 0), -1, 8, 0);
