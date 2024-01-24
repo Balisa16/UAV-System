@@ -95,8 +95,8 @@ int main(int argc, char **argv)
             center.y += frame_h2;
             AsyncCam::point_buffer(center, 10);
 
-            // Draw control points
-            circle(frame, center, 9, Scalar(0, 255, 0), -1, 8, 0);
+            // Draw control points with invert direction
+            circle(frame, Point(-center.x, -center.y), 9, Scalar(0, 255, 0), -1, 8, 0);
         }
         circle(frame, Point(frame_w2, frame_h2), control_radius, Scalar(0, 0, 255), 3, 8, 0);
         putText(frame, "ESC to exit", Point(20, 20), FONT_HERSHEY_PLAIN, 1, Scalar(255, 0, 0), 2);
