@@ -53,8 +53,8 @@ endif()
   find_package(Boost REQUIRED COMPONENTS system filesystem)
   find_package(Curses REQUIRED)
   find_package(CURL REQUIRED)
-  find_package(PkgConfig REQUIRED)
-  pkg_check_modules(LIBNOTIFY REQUIRED libnotify)
+  # find_package(PkgConfig REQUIRED)
+  # pkg_check_modules(LIBNOTIFY REQUIRED libnotify)
   
 add_subdirectory(thirdparty/Logger)
 add_subdirectory(thirdparty/jsoncpp)
@@ -69,7 +69,7 @@ include_directories(
   thirdparty/jsoncpp/include
   thirdparty/asynccamera/include
   # /usr/local/include
-  ${LIBNOTIFY_INCLUDE_DIRS}
+  # ${LIBNOTIFY_INCLUDE_DIRS}
 )
 
 if(IS_JETSON)
@@ -117,7 +117,7 @@ target_link_libraries(${PROJECT_NAME} PRIVATE
         asynccamera
         Boost::filesystem
         jsoncpp
-        ${LIBNOTIFY_LIBRARIES}
+        # ${LIBNOTIFY_LIBRARIES}
         $<$<BOOL:${IS_JETSON}>:IS_JETSON_PLATFORM>)
 
 message("")
@@ -143,7 +143,7 @@ foreach(SRC_FILE ${SRC_FILES})
         Boost::filesystem
         asynccamera
         jsoncpp
-        ${LIBNOTIFY_LIBRARIES}
+        # ${LIBNOTIFY_LIBRARIES}
         $<$<BOOL:${IS_JETSON}>:IS_JETSON_PLATFORM>)
     else()
       # message("Not a Jetson platform")
@@ -157,7 +157,7 @@ foreach(SRC_FILE ${SRC_FILES})
         Boost::filesystem
         asynccamera
         jsoncpp
-        ${LIBNOTIFY_LIBRARIES}
+        # ${LIBNOTIFY_LIBRARIES}
         $<$<BOOL:${IS_JETSON}>:IS_JETSON_PLATFORM>)
     endif()
 
