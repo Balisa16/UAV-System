@@ -48,13 +48,17 @@ int main(int argc, char **argv)
     const int control_radius = 100;
     const int frame_w = cam.width, frame_h = cam.height;
     const int frame_w2 = frame_w / 2, frame_h2 = frame_h / 2;
-    cam.set_range(cv::Scalar(255, 40, 255), cv::Scalar(0, 0, 0));
+    cam.set_range(cv::Scalar(255, 20, 255), cv::Scalar(0, 0, 0));
     cam.start();
 
     vector<Vec3f> circles;
     Mat frame;
     Vec3f selected_object;
     Keyboard kb;
+
+    tpoint start_time = time_clock::now();
+    int cnt_frame = 2;
+    Point latest_center;
     while (ros::ok())
     {
         cam.getobject(circles, frame);
@@ -83,7 +87,7 @@ int main(int argc, char **argv)
             int radius = cvRound(selected_object[2]);
 
             // Draw object outline
-            circle(frame, center, radius, Scalar(0, 0, 255), 3, 8, 0);
+            cv::circle(frame, center, radius, Scalar(0, 0, 255), 3, 8, 0);
 
             center.x -= frame_w2;
             center.y -= frame_h2;
@@ -99,15 +103,34 @@ int main(int argc, char **argv)
             AsyncCam::point_buffer(center, 10);
 
             // Draw control points with invert direction
-            circle(frame, center, 9, Scalar(0, 255, 0), -1, 8, 0);
+            cv::circle(frame, center, 9, Scalar(0, 255, 0), -1, 8, 0);
+            latest_center = center;
         }
-        circle(frame, Point(frame_w2, frame_h2), control_radius, Scalar(0, 0, 255), 3, 8, 0);
-        putText(frame, "ESC to exit", Point(20, 20), FONT_HERSHEY_PLAIN, 1, Scalar(255, 0, 0), 2);
-        line(frame, Point(cam.width / 2, 0), Point(cam.width / 2, cam.height), Scalar(255, 0, 0), 2);
-        line(frame, Point(0, cam.height / 2), Point(cam.width, cam.height / 2), Scalar(255, 0, 0), 2);
+        if (std::chrono::duration_cast<std::chrono::milliseconds>(time_clock::now() - start_time).count() > 1000)
+        {
+            float speed_x = 0.0f;
+            if (std::abs(latest_center.x - frame_w2) > 50)
+                speed_x = latest_center.x - frame_w2 > 0.0f ? 0.2 : -0.2;
+
+            float speed_y = 0.0f;
+            if (std::abs(latest_center.y - frame_h2) > 50)
+                speed_y = latest_center.y - frame_h2 > 0.0f ? 0.2 : -0.2;
+
+            LinearSpeed speed = {speed_x, speed_y, 0};
+            gps->convert(speed);
+            copter->set_vel(speed.linear_x, speed.linear_y, speed.linear_z, 0, 0, 0);
+
+            start_time = time_clock::now();
+            latest_center = Point(frame_w2, frame_h2);
+        }
+
+        cv::circle(frame, Point(frame_w2, frame_h2), control_radius, Scalar(0, 0, 255), 3, 8, 0);
+        cv::putText(frame, "ESC to exit", Point(20, 20), FONT_HERSHEY_PLAIN, 1, Scalar(255, 0, 0), 2);
+        cv::line(frame, Point(cam.width / 2, 0), Point(cam.width / 2, cam.height), Scalar(255, 0, 0), 2);
+        cv::line(frame, Point(0, cam.height / 2), Point(cam.width, cam.height / 2), Scalar(255, 0, 0), 2);
         if (frame.size().width > 0)
             imshow("Result", frame);
-        waitKey(1);
+        cv::waitKey(1);
         if (kb.get_key() == 27)
             break;
         cam.sync_fps();

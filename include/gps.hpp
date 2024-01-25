@@ -12,8 +12,9 @@
 #include <copter.hpp>
 #include "enum.hpp"
 
-namespace EMIRO{
-    
+namespace EMIRO
+{
+
     class GPS
     {
     private:
@@ -25,7 +26,7 @@ namespace EMIRO{
         bool is_locked = false, is_init = false;
 
     public:
-        GPS(){}
+        GPS() {}
 
         inline void init(std::shared_ptr<EMIRO::Copter> copter, std::shared_ptr<EMIRO::Logger> logger)
         {
@@ -37,7 +38,7 @@ namespace EMIRO{
 
         inline void lock_pos()
         {
-            try_flag:
+        try_flag:
             log->wait("Lock GPS Position");
 
             ros::Duration(1).sleep();
@@ -88,7 +89,7 @@ namespace EMIRO{
                 linear_speed.linear_z};
         }
 
-        ~GPS(){}
+        ~GPS() {}
     };
 }
 #endif
