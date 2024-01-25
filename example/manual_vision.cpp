@@ -26,7 +26,7 @@ int main(int argc, char **argv)
 
     // Read JSON point
     JsonIO reader;
-    reader = "../copter/plan.json";
+    reader = COPTER_DIR + "/copter/plan.json";
     std::vector<Target> target = reader.get_data();
 
     // Set Speed limit
@@ -48,6 +48,7 @@ int main(int argc, char **argv)
     const int control_radius = 100;
     const int frame_w = cam.width, frame_h = cam.height;
     const int frame_w2 = frame_w / 2, frame_h2 = frame_h / 2;
+    cam.set_range(cv::Scalar(255, 40, 255), cv::Scalar(0, 0, 0));
     cam.start();
 
     vector<Vec3f> circles;
@@ -91,12 +92,14 @@ int main(int argc, char **argv)
             if (std::sqrt(center.x * center.x + center.y * center.y) < 50)
                 break;
 
-            center.x += frame_w2;
-            center.y += frame_h2;
+            center.x = frame_w2 - center.x;
+            center.y = frame_h2 - center.y;
+            // center.x += frame_w2;
+            // center.y += frame_h2;
             AsyncCam::point_buffer(center, 10);
 
             // Draw control points with invert direction
-            circle(frame, Point(-center.x, -center.y), 9, Scalar(0, 255, 0), -1, 8, 0);
+            circle(frame, center, 9, Scalar(0, 255, 0), -1, 8, 0);
         }
         circle(frame, Point(frame_w2, frame_h2), control_radius, Scalar(0, 0, 255), 3, 8, 0);
         putText(frame, "ESC to exit", Point(20, 20), FONT_HERSHEY_PLAIN, 1, Scalar(255, 0, 0), 2);
