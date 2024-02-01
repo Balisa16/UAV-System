@@ -36,7 +36,7 @@ namespace EMIRO
         float _yaw = 0.0f;
 
         Position target_point = {x, y, z};
-        ThreeAxisPID pid(target_point, 0.8, 0.0, 0.05);
+        ThreeAxisPID pid(target_point, 0.5, 0.0, 0.05);
         pid.set_speed_limit(3.0f);
 
         std::cout << std::fixed << std::setprecision(3);
@@ -65,7 +65,7 @@ namespace EMIRO
             // float diff_y = y - pos.y;
             // float diff_z = z - pos.z;
             float diff_yaw = yaw - eul.yaw;
-            diff_yaw = diff_yaw > 180 ? -(360 - diff_yaw) : diff_yaw;
+            diff_yaw = diff_yaw >= 180 ? -(360 - diff_yaw) : diff_yaw;
             // vx = diff_x;
             // vy = diff_y;
             // vz = diff_z;
