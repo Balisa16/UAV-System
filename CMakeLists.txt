@@ -79,7 +79,7 @@ endif()
 
 link_directories(/usr/local/lib)
 
-add_definitions(${OpenCV_DEFENITIONS})
+# add_definitions(${OpenCV_DEFENITIONS})
   
 add_library(${PROJECT_NAME} SHARED
   src/control.cc
