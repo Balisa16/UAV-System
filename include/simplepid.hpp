@@ -1,5 +1,4 @@
-#ifndef SIMPLE_PID_HPP
-#define SIMPLE_PID_HPP
+#pragma once
 
 #include <enum.hpp>
 
@@ -35,5 +34,3 @@ namespace EMIRO
         ~ThreeAxisPID();
     };
 }
-
-#endif

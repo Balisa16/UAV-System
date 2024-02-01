@@ -8,7 +8,7 @@ int main()
     reader = "../copter/plan.json";
     std::vector<Target> target = reader.get_data();
     for (auto i : target)
-        std::cout << i;
+        std::cout << i.header;
     Target new_data = {
         0,
         "Waypoint 2",

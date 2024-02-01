@@ -1,5 +1,4 @@
-#ifndef PARAM_H
-#define PARAM_H
+#pragma once
 
 #include <iostream>
 #include <memory>
@@ -18,7 +17,8 @@
 #include <cmath>
 #include <enum.hpp>
 
-namespace EMIRO{
+namespace EMIRO
+{
 	class Param
 	{
 	private:
@@ -30,13 +30,11 @@ namespace EMIRO{
 		std::ifstream reader;
 
 		bool enable_use = false;
+
 	public:
 		Param();
 		void init(std::string filename, ros::NodeHandle *nh, std::shared_ptr<Logger> logger);
 		void load();
 		~Param();
-		
 	};
 }
-
-#endif // PARAM

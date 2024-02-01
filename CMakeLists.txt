@@ -74,31 +74,35 @@ include_directories(
 )
   
 if(IS_JETSON)
-  include_directories(${CMAKE_CURRENT_SOURCE_DIR}/platform/jetson)
+  include_directories(${CMAKE_CURRENT_SOURCE_DIR}/platform)
 endif()
 
 link_directories(/usr/local/lib)
 
 add_definitions(${OpenCV_DEFENITIONS})
-
+  
+add_library(${PROJECT_NAME} SHARED
+  src/control.cc
+  src/convert.cc
+  src/copter.cc
+  src/gps.cc
+  src/jsonio.cc
+  src/lidar.cc
+  # src/notification.cc
+  src/param.cc
+  src/rangefinder.cc
+  src/servo.cc
+  src/simplepid.cc
+  src/tfmini.cc
+  src/uart.cc
+)
+  
 if(IS_JETSON)
   message("Adding JetsonGPIO in library")
-  add_library(
-    ${PROJECT_NAME} SHARED
+  add_library(${PROJECT_NAME} SHARED
     src/pin.cc
   )
 endif()
-  
-add_library(${PROJECT_NAME} SHARED
-  src/simplepid.cc
-  src/param.cc
-  src/convert.cc
-  src/copter.cc
-  src/emiro.cc
-  src/lidar.cc
-  src/uart.cc
-  src/servo.cc
-)
 
 # message(STATUS "VARIABLES: ${CATKIN_GLOBAL_LIB_DESTINATION}")
 # message(STATUS "VARIABLES: ${CATKIN_DEVEL_PREFIX}")
@@ -135,6 +139,11 @@ foreach(SRC_FILE ${SRC_FILES})
   message("\tFound : ${TARGET_NAME}")
 
   add_executable(${TARGET_NAME} ${SRC_FILE})
+
+  target_include_directories(${TARGET_NAME} PUBLIC 
+    ${CMAKE_CURRENT_SOURCE_DIR}/include)
+  
+  target_link_libraries(${TARGET_NAME} PUBLIC ${PROJECT_NAME})
 
   if(IS_JETSON)
     message("Adding JetsonGPIO in executable")

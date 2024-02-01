@@ -1,5 +1,4 @@
-#ifndef MATH_HEADER
-#define MATH_HEADER
+#pragma once
 
 #include <math.h>
 #include <enum.hpp>
@@ -24,5 +23,3 @@ inline EMIRO::Euler to_euler(double w, double x, double y, double z)
             (float)(2.0f * std::atan2(sinp, cosp) - M_PI / 2.0f),
             (float)std::atan2(siny_cosp, cosy_cosp)};
 }
-
-#endif
