@@ -55,10 +55,8 @@ int main(int argc, char **argv)
     Mat frame;
     Vec3f selected_object;
     Keyboard kb;
-
-    tpoint start_time = time_clock::now();
-    int cnt_frame = 2;
     Point latest_center;
+    tpoint start_time = time_clock::now();
     while (ros::ok())
     {
         cam.getobject(circles, frame);

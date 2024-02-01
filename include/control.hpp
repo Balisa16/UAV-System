@@ -4,6 +4,7 @@
 #include <copter.hpp>
 #include <gps.hpp>
 #include <mat.hpp>
+#include <simplepid.hpp>
 
 namespace EMIRO
 {
@@ -74,6 +75,10 @@ namespace EMIRO
         Euler eul;
         float _yaw = 0.0f;
 
+        Position target_point = {x, y, z};
+        ThreeAxisPID pid(target_point, 0.2, 0.0, 0.1);
+        pid.set_speed_limit(2.0f);
+
         while (ros::ok())
         {
             // Get current position and orientation
@@ -91,6 +96,9 @@ namespace EMIRO
                 std::fabs(pos.z - z) < linear_precision &&
                 std::fabs(eul.yaw - yaw) < angular_precision)
                 break;
+
+            LinearSpeed _out_pid;
+            pid.get_control(pos, _out_pid);
 
             float diff_x = x - pos.x;
             float diff_y = y - pos.y;
@@ -126,7 +134,8 @@ namespace EMIRO
             copter->set_vel(vx, vy, vz, 0.0f, 0.0f, avz);
 
             // Print position
-            std::cout << C_MAGENTA << S_BOLD << " >>> " << C_RESET << "Target (" << diff_x << ", " << diff_y << ", " << diff_z << ", " << diff_yaw << "°)     \r";
+            // std::cout << C_MAGENTA << S_BOLD << " >>> " << C_RESET << "Target (" << diff_x << ", " << diff_y << ", " << diff_z << ", " << diff_yaw << "°)     \r";
+            std::cout << "PID : " << _out_pid.linear_x << ", " << _out_pid.linear_y << ", " << _out_pid.linear_z << "     \r";
             std::cout.flush();
 
             ros::spinOnce();
