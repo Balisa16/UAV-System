@@ -36,9 +36,10 @@ namespace EMIRO
         float _yaw = 0.0f;
 
         Position target_point = {x, y, z};
-        ThreeAxisPID pid(target_point, 0.2, 0.0, 0.1);
-        // pid.set_speed_limit(2.0f);
+        ThreeAxisPID pid(target_point, 0.8, 0.0, 0.05);
+        pid.set_speed_limit(3.0f);
 
+        std::cout << std::fixed << std::setprecision(3);
         while (ros::ok())
         {
             // Get current position and orientation
@@ -60,29 +61,29 @@ namespace EMIRO
             LinearSpeed _out_pid;
             pid.get_control(pos, _out_pid);
 
-            float diff_x = x - pos.x;
-            float diff_y = y - pos.y;
-            float diff_z = z - pos.z;
+            // float diff_x = x - pos.x;
+            // float diff_y = y - pos.y;
+            // float diff_z = z - pos.z;
             float diff_yaw = yaw - eul.yaw;
             diff_yaw = diff_yaw > 180 ? -(360 - diff_yaw) : diff_yaw;
-            vx = diff_x;
-            vy = diff_y;
-            vz = diff_z;
+            // vx = diff_x;
+            // vy = diff_y;
+            // vz = diff_z;
             avz = diff_yaw;
-            if (std::fabs(vx) > speed_limit)
-                vx = (vx > 0) ? speed_limit : -speed_limit;
-            else if (std::fabs(vx) < linear_precision)
-                vx = 0.0f;
+            // if (std::fabs(vx) > speed_limit)
+            //     vx = (vx > 0) ? speed_limit : -speed_limit;
+            // else if (std::fabs(vx) < linear_precision)
+            //     vx = 0.0f;
 
-            if (std::fabs(vy) > speed_limit)
-                vy = (vy > 0) ? speed_limit : -speed_limit;
-            else if (std::fabs(vy) < linear_precision)
-                vy = 0.0f;
+            // if (std::fabs(vy) > speed_limit)
+            //     vy = (vy > 0) ? speed_limit : -speed_limit;
+            // else if (std::fabs(vy) < linear_precision)
+            //     vy = 0.0f;
 
-            if (std::fabs(vz) > speed_limit)
-                vz = (vz > 0) ? speed_limit : -speed_limit;
-            else if (std::fabs(diff_z) < linear_precision)
-                vz = 0.0f;
+            // if (std::fabs(vz) > speed_limit)
+            //     vz = (vz > 0) ? speed_limit : -speed_limit;
+            // else if (std::fabs(diff_z) < linear_precision)
+            //     vz = 0.0f;
 
             avz = diff_yaw * 3.14 / 180.0f;
             if (std::fabs(avz) > rpy_speed_limit)
@@ -91,7 +92,7 @@ namespace EMIRO
                 avz = 0.0f;
 
             // go(true);
-            copter->set_vel(vx, vy, vz, 0.0f, 0.0f, avz);
+            copter->set_vel(_out_pid.linear_x, _out_pid.linear_y, _out_pid.linear_z, 0.0f, 0.0f, avz);
 
             // Print position
             // std::cout << C_MAGENTA << S_BOLD << " >>> " << C_RESET << "Target (" << diff_x << ", " << diff_y << ", " << diff_z << ", " << diff_yaw << "°)     \r";

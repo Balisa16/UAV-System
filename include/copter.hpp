@@ -37,7 +37,7 @@
 #include <param.hpp>
 
 #ifdef IS_JETSON_PLATFORM
-#include <pin.hpp>
+#include <jetson/pin.hpp>
 #endif
 
 #include <Logger.hpp>

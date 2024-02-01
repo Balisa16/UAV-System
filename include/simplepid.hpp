@@ -30,7 +30,7 @@ namespace EMIRO
         ThreeAxisPID(const Position &target_point, const double &Kp, const double &Ki, double Kd);
         void set_speed_limit(LinearSpeed limit_m_s);
         void set_speed_limit(float limit_m_s);
-        void get_control(const Position &current_point, LinearSpeed &out_speed);
+        void get_control(Position &current_point, LinearSpeed &out_speed);
         ~ThreeAxisPID();
     };
 }

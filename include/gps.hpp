@@ -9,11 +9,10 @@
 #include <thread>
 #include <Logger.hpp>
 #include <copter.hpp>
-#include "enum.hpp"
+#include <enum.hpp>
 
 namespace EMIRO
 {
-
     class GPS
     {
     private:

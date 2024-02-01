@@ -3,7 +3,7 @@
 namespace EMIRO
 {
     // Simple PID implementation
-    PID::PID(const double &Kp, const double &Ki, double Kd)
+    PID::PID(const double &Kp, const double &Ki, double Kd) : Kp(Kp), Ki(Ki), Kd(Kd), integral(0.0), pre_error(0.0)
     {
     }
 
@@ -47,11 +47,15 @@ namespace EMIRO
         speed_limit = {limit_m_s, limit_m_s, limit_m_s};
         is_limit = true;
     }
-    void ThreeAxisPID::get_control(const Position &current_point, LinearSpeed &out_speed)
+    void ThreeAxisPID::get_control(Position &current_point, LinearSpeed &out_speed)
     {
+        // std::cout << "PID : ";
+        // std::cout << pid_x.get_control(set_point.x, current_point.x) << ", " << pid_y.get_control(set_point.y, current_point.y) << ", " << pid_z.get_control(set_point.z, current_point.z) << "    \r";
         out_speed = {pid_x.get_control(set_point.x, current_point.x),
                      pid_y.get_control(set_point.y, current_point.y),
                      pid_z.get_control(set_point.z, current_point.z)};
+        // std::cout << "   \r";
+        // std::cout.flush();
         if (!is_limit)
             return;
 
