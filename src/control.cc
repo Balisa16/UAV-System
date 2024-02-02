@@ -10,6 +10,41 @@ namespace EMIRO
         is_init = true;
     }
 
+    float &Control::get_linear_speed()
+    {
+        return speed_limit;
+    }
+
+    int Control::get_rotate_speed()
+    {
+        return rotate_speed_limit * 180 / M_PI;
+    }
+
+    void Control::set_linear_speed_limit(const float &limit_m_s)
+    {
+        if (limit_m_s < 0.1f)
+        {
+            std::cout << C_YELLOW << S_BOLD << "Warning :" << C_RESET << " Speed limit too small. Set Speed limit " << C_RED << "[REJECTED]" << C_RESET << '\n';
+            return;
+        }
+        speed_limit = limit_m_s;
+    }
+
+    void Control::set_rotate_speed_limit(const int &limit_deg_s)
+    {
+        if (limit_deg_s < 1)
+        {
+            std::cout << C_YELLOW << S_BOLD << "Warning :" << C_RESET << "Rotation limit too small. Set Speed limit" << C_RED << "[REJECTED]" << C_RESET << '\n';
+            return;
+        }
+        else if (limit_deg_s > 180)
+        {
+            std::cout << C_YELLOW << S_BOLD << "Warning :" << C_RESET << "Rotation limit too large (>180). Set Speed limit" << C_RED << "[REJECTED]" << C_RESET << '\n';
+            return;
+        }
+        rotate_speed_limit = limit_deg_s * M_PI / 180.0f;
+    }
+
     void Control::go(bool yaw_control)
     {
         check_init();
@@ -22,7 +57,7 @@ namespace EMIRO
     }
 
     void Control::go(const float &x, const float &y, const float &z,
-                     const int &yaw, const float &linear_precision, const int &angular_precision)
+                     const int &yaw, const float &pos_precision, const int &angular_precision)
     {
         check_init();
         logger->write_show(LogLevel::INFO, "Go : %.2f, %.2f, %.2f, %d", x, y, z, yaw);
@@ -52,42 +87,25 @@ namespace EMIRO
             _yaw = eul.yaw;
 
             // Close if position in target zone
-            if (std::fabs(pos.x - x) < linear_precision &&
-                std::fabs(pos.y - y) < linear_precision &&
-                std::fabs(pos.z - z) < linear_precision &&
+            if (std::fabs(pos.x - x) < pos_precision &&
+                std::fabs(pos.y - y) < pos_precision &&
+                std::fabs(pos.z - z) < pos_precision &&
                 std::fabs(eul.yaw - yaw) < angular_precision)
                 break;
 
             LinearSpeed _out_pid;
             pid.get_control(pos, _out_pid);
 
-            // float diff_x = x - pos.x;
-            // float diff_y = y - pos.y;
-            // float diff_z = z - pos.z;
+            float diff_x = x - pos.x;
+            float diff_y = y - pos.y;
+            float diff_z = z - pos.z;
             float diff_yaw = yaw - eul.yaw;
+
             diff_yaw = diff_yaw >= 180 ? -(360 - diff_yaw) : diff_yaw;
-            // vx = diff_x;
-            // vy = diff_y;
-            // vz = diff_z;
-            avz = diff_yaw;
-            // if (std::fabs(vx) > speed_limit)
-            //     vx = (vx > 0) ? speed_limit : -speed_limit;
-            // else if (std::fabs(vx) < linear_precision)
-            //     vx = 0.0f;
-
-            // if (std::fabs(vy) > speed_limit)
-            //     vy = (vy > 0) ? speed_limit : -speed_limit;
-            // else if (std::fabs(vy) < linear_precision)
-            //     vy = 0.0f;
-
-            // if (std::fabs(vz) > speed_limit)
-            //     vz = (vz > 0) ? speed_limit : -speed_limit;
-            // else if (std::fabs(diff_z) < linear_precision)
-            //     vz = 0.0f;
 
             avz = diff_yaw * 3.14 / 180.0f;
-            if (std::fabs(avz) > rpy_speed_limit)
-                avz = (avz > 0) ? rpy_speed_limit : -rpy_speed_limit;
+            if (std::fabs(avz) > rotate_speed_limit)
+                avz = (avz > 0) ? rotate_speed_limit : -rotate_speed_limit;
             else if (std::fabs(eul.yaw - yaw) < angular_precision)
                 avz = 0.0f;
 
@@ -95,8 +113,7 @@ namespace EMIRO
             copter->set_vel(_out_pid.linear_x, _out_pid.linear_y, _out_pid.linear_z, 0.0f, 0.0f, avz);
 
             // Print position
-            // std::cout << C_MAGENTA << S_BOLD << " >>> " << C_RESET << "Target (" << diff_x << ", " << diff_y << ", " << diff_z << ", " << diff_yaw << "°)     \r";
-            std::cout << "PID : " << _out_pid.linear_x << ", " << _out_pid.linear_y << ", " << _out_pid.linear_z << "     \r";
+            std::cout << C_MAGENTA << S_BOLD << " >>> " << C_RESET << "Target (" << diff_x << ", " << diff_y << ", " << diff_z << ", " << diff_yaw << "°)     \r";
             std::cout.flush();
 
             ros::spinOnce();

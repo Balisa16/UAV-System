@@ -30,7 +30,7 @@ int main(int argc, char **argv)
     std::vector<Target> target = reader.get_data();
 
     // Set Speed limit
-    control->speed_limit = 0.5;
+    control->set_linear_speed_limit(0.5f);
     for (Target &t : target)
     {
         if (!ros::ok())
