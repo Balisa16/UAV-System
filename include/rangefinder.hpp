@@ -7,15 +7,18 @@ namespace EMIRO
 {
     class RangeFinder
     {
+    public:
+        RangeFinder();
+
+        void init(ros::NodeHandle *nh);
+
+        float get_range();
+
+        ~RangeFinder();
+
     private:
         ros::Subscriber rangefinder_sub;
         void rangefinder_cb(const sensor_msgs::Range::ConstPtr &msg);
         float range;
-
-    public:
-        RangeFinder();
-        void init(ros::NodeHandle *nh);
-        float get_range();
-        ~RangeFinder();
     };
 }

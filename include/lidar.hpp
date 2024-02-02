@@ -54,6 +54,21 @@ namespace EMIRO
 
   class Lidar
   {
+  public:
+    Lidar();
+    void init(std::shared_ptr<EMIRO::Copter> copter, std::shared_ptr<EMIRO::Logger> logger);
+    void start(ros::NodeHandle *nh, LidarType lidar);
+    LidarStatus check();
+    float get_front(int idx);
+    float max_front();
+    float get_left(int idx);
+    float get_right(int idx);
+    float get_back(int idx);
+    void axis(Axis &axis, int idx = 1);
+    sensor_msgs::LaserScan get_raw();
+    void stop();
+    ~Lidar() {}
+
   private:
     ros::Subscriber lidar_sub;
     std::shared_ptr<EMIRO::Logger> logger;
@@ -69,20 +84,5 @@ namespace EMIRO
     std::shared_ptr<EMIRO::Copter> copter;
 
     LidarRef lidar_data;
-
-  public:
-    Lidar();
-    void init(std::shared_ptr<EMIRO::Copter> copter, std::shared_ptr<EMIRO::Logger> logger);
-    void start(ros::NodeHandle *nh, LidarType lidar);
-    LidarStatus check();
-    float get_front(int idx);
-    float max_front();
-    float get_left(int idx);
-    float get_right(int idx);
-    float get_back(int idx);
-    void axis(Axis &axis, int idx = 1);
-    sensor_msgs::LaserScan get_raw();
-    void stop();
-    ~Lidar() {}
   };
 }

@@ -21,6 +21,15 @@ namespace EMIRO
 {
 	class Param
 	{
+	public:
+		Param();
+
+		void init(std::string filename, ros::NodeHandle *nh, std::shared_ptr<Logger> logger);
+
+		void load();
+
+		~Param();
+
 	private:
 		ros::NodeHandle node;
 		std::shared_ptr<Logger> log;
@@ -30,11 +39,5 @@ namespace EMIRO
 		std::ifstream reader;
 
 		bool enable_use = false;
-
-	public:
-		Param();
-		void init(std::string filename, ros::NodeHandle *nh, std::shared_ptr<Logger> logger);
-		void load();
-		~Param();
 	};
 }

@@ -20,11 +20,6 @@ namespace EMIRO
 
 	class JsonIO
 	{
-	private:
-		std::string file_path = "";
-		std::vector<Target> data;
-		std::vector<std::string> header_id;
-
 	public:
 		JsonIO();
 		JsonIO(std::string path);
@@ -35,5 +30,10 @@ namespace EMIRO
 		friend std::ostream &operator<<(std::ostream &os, Target target);
 		void operator+=(const Target &target);
 		void operator-=(const Target &target);
+
+	private:
+		std::string file_path = "";
+		std::vector<Target> data;
+		std::vector<std::string> header_id;
 	};
 }

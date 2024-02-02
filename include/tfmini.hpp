@@ -8,11 +8,6 @@ namespace EMIRO
 {
     class TFMini
     {
-    private:
-        ros::Subscriber tf_sub;
-        std_msgs::Int32 tf_data;
-        void tf_data_sub(const std_msgs::Int32::ConstPtr &msg);
-
     public:
         TFMini();
         /**
@@ -31,5 +26,10 @@ namespace EMIRO
         float get_data();
 
         ~TFMini();
+
+    private:
+        ros::Subscriber tf_sub;
+        std_msgs::Int32 tf_data;
+        void tf_data_sub(const std_msgs::Int32::ConstPtr &msg);
     };
 }

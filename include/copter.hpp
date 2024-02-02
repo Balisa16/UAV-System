@@ -49,72 +49,6 @@ namespace EMIRO
 
   class Copter
   {
-  private:
-    geographic_msgs::GeoPoseStamped pose_data_global;
-    geometry_msgs::PoseStamped pose_data_local;
-    geometry_msgs::PoseStamped pose_stamped;
-    geometry_msgs::PoseStamped copter_orientation;
-    geometry_msgs::Pose pose_data2;
-    geometry_msgs::Pose hexa_pose;
-    geometry_msgs::Twist cmd_vel;
-    geometry_msgs::Point local_offset_pose_g;
-
-    mavros_msgs::State current_state_g;
-
-    ros::Time timestamp;
-    ros::Time last_request;
-
-    // Subscriber
-    ros::Subscriber cmd_pos_sub_local;
-    ros::Subscriber cmd_pos_sub_global;
-    ros::Subscriber state_sub;
-
-    // Publisher
-    ros::Publisher cmd_pos_pub;
-    ros::Publisher gps_pos_pub;
-    ros::Publisher cmd_vel_pub;
-    ros::Publisher cmd_rc_pub;
-    ros::Publisher cmd_rc_override_pub;
-
-    // Service Client
-    ros::ServiceClient set_mode_client;
-    ros::ServiceClient arming_client;
-    ros::ServiceClient takeoff_client;
-    ros::ServiceClient land_client;
-    Mode misi_mode;
-
-    // Parameter settings
-    std::shared_ptr<EMIRO::Logger> logger;
-    EMIRO::Logger traj_logger;
-    Param copter_param;
-
-    // Initialize frame
-    WayPoint local_frame;
-    bool is_init_pubs_subs, is_init_frame;
-
-    // System variable
-    float local_offset_g;
-    int pin_1 = 7;
-    int pin_2 = 16;
-    int pin_3 = 18;
-    float copter_speed = 1.0f;
-
-    // Remote
-    uint16_t rc6_pwm = 1000;
-    uint16_t rc7_pwm = 1000;
-
-    // Function
-    Quaternion to_quaternion(float roll_rate, float pitch_rate, float yaw_rate);
-    geometry_msgs::Point enu_2_local(nav_msgs::Odometry current_pose_enu);
-    void pose_cb_local(const geometry_msgs::PoseStamped::ConstPtr &msg);
-    void pose_cb_global(const geographic_msgs::GeoPoseStamped::ConstPtr &msg);
-    void state_cb(const mavros_msgs::State::ConstPtr &msg);
-    geometry_msgs::Point get_hexa_point();
-    void go_to(geometry_msgs::Pose pose);
-    void goto_xyz_rpy(float x, float y, float z, float roll, float pitch, float yaw);
-    void viso_align();
-    int land();
-
   public:
     ros::ServiceClient command_client;
     CopterStatus status = CopterStatus::None;
@@ -309,6 +243,72 @@ namespace EMIRO
     Mode get_current_mission();
 
     ~Copter();
+
+  private:
+    geographic_msgs::GeoPoseStamped pose_data_global;
+    geometry_msgs::PoseStamped pose_data_local;
+    geometry_msgs::PoseStamped pose_stamped;
+    geometry_msgs::PoseStamped copter_orientation;
+    geometry_msgs::Pose pose_data2;
+    geometry_msgs::Pose hexa_pose;
+    geometry_msgs::Twist cmd_vel;
+    geometry_msgs::Point local_offset_pose_g;
+
+    mavros_msgs::State current_state_g;
+
+    ros::Time timestamp;
+    ros::Time last_request;
+
+    // Subscriber
+    ros::Subscriber cmd_pos_sub_local;
+    ros::Subscriber cmd_pos_sub_global;
+    ros::Subscriber state_sub;
+
+    // Publisher
+    ros::Publisher cmd_pos_pub;
+    ros::Publisher gps_pos_pub;
+    ros::Publisher cmd_vel_pub;
+    ros::Publisher cmd_rc_pub;
+    ros::Publisher cmd_rc_override_pub;
+
+    // Service Client
+    ros::ServiceClient set_mode_client;
+    ros::ServiceClient arming_client;
+    ros::ServiceClient takeoff_client;
+    ros::ServiceClient land_client;
+    Mode misi_mode;
+
+    // Parameter settings
+    std::shared_ptr<EMIRO::Logger> logger;
+    EMIRO::Logger traj_logger;
+    Param copter_param;
+
+    // Initialize frame
+    WayPoint local_frame;
+    bool is_init_pubs_subs, is_init_frame;
+
+    // System variable
+    float local_offset_g;
+    int pin_1 = 7;
+    int pin_2 = 16;
+    int pin_3 = 18;
+    float copter_speed = 1.0f;
+
+    // Remote
+    uint16_t rc6_pwm = 1000;
+    uint16_t rc7_pwm = 1000;
+
+    // Function
+    Quaternion to_quaternion(float roll_rate, float pitch_rate, float yaw_rate);
+    geometry_msgs::Point enu_2_local(nav_msgs::Odometry current_pose_enu);
+    void pose_cb_local(const geometry_msgs::PoseStamped::ConstPtr &msg);
+    void pose_cb_global(const geographic_msgs::GeoPoseStamped::ConstPtr &msg);
+    void state_cb(const mavros_msgs::State::ConstPtr &msg);
+    geometry_msgs::Point get_hexa_point();
+    void go_to(geometry_msgs::Pose pose);
+    void goto_xyz_rpy(float x, float y, float z, float roll, float pitch, float yaw);
+    void viso_align();
+    int land();
   };
 
 }
