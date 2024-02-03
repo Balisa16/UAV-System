@@ -115,13 +115,37 @@ namespace EMIRO
     float roll, pitch, yaw;
   } Euler;
 
-  typedef struct
+  struct WayPoint
   {
     float x;
     float y;
     float z;
     float yaw;
-  } WayPoint;
+
+    void operator+=(const WayPoint &wp)
+    {
+      x += wp.x;
+      y += wp.y;
+      z += wp.z;
+      yaw += wp.yaw;
+    }
+
+    void operator/=(int i)
+    {
+      x /= i;
+      y /= i;
+      z /= i;
+      yaw /= i;
+    }
+
+    void clear()
+    {
+      x = 0.f;
+      y = 0.f;
+      z = 0.f;
+      yaw = 0.f;
+    }
+  };
 
   typedef struct
   {

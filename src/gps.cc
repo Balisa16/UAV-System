@@ -1,4 +1,5 @@
 #include <gps.hpp>
+#include <keyboard.hpp>
 
 namespace EMIRO
 {
@@ -14,35 +15,55 @@ namespace EMIRO
 
     void GPS::lock_pos()
     {
-    try_flag:
-        log->wait("Lock GPS Position");
+        log->show(LogLevel::INFO, "Waiting for GPS position...");
 
         ros::Duration(1).sleep();
         ros::Rate in_rate(2);
 
         EMIRO::WayPoint temp_wp;
-        uint8_t count = 6;
         // Waiting for position to refresh
-        while (ros::ok() && count)
+        std::cout << std::fixed << std::setprecision(3);
+        std::vector<WayPoint> pos_temp;
+        int maks_data = 20;
+        WayPoint wp_average;
+        Keyboard keyboard;
+
+        while (ros::ok())
         {
             copter->get_position(temp_wp);
+            pos_temp.push_back(temp_wp);
+
+            // Remove old data
+            if (pos_temp.size() > maks_data)
+                pos_temp.erase(pos_temp.begin());
+
+            // Calculate average and MAE
+            wp_average.clear();
+            for (WayPoint &w : pos_temp)
+                wp_average += w;
+            wp_average /= pos_temp.size();
+
+            std::cout << "Position : [" << wp_average.x << ", " << wp_average.y << ", " << wp_average.z << ", " << wp_average.yaw << "], MAE : " << wp_average.x - temp_wp.x << ", " << wp_average.y - temp_wp.y << ", " << wp_average.z - temp_wp.z << ", " << wp_average.yaw - temp_wp.yaw << "   Lock ? (y/n)    \r" << std::flush;
+
+            char key = keyboard.get_key();
+            if (key == 'y' || key == 'Y')
+                break;
+            else if (key == 'n' || key == 'N')
+            {
+                log->write_show(LogLevel::INFO, "\033[KGPS position unlocked");
+                return;
+            }
+            else if (key >= 32 && key <= 126)
+                log->show(LogLevel::WARNING, "\033[KUnrecognized keyboard input: \033[1m(%c)\033[0m", key);
+
             ros::spinOnce();
             in_rate.sleep();
-            count--;
         }
 
-        log->wait_success();
-
         // Ask if position is accepted
-        log->write_show(LogLevel::ASK, "Position => x : %.2f, y : %.2f, z : %.2f, yaw : %d. Lock Position ? (y/n) ",
-                        temp_wp.x, temp_wp.y, temp_wp.z, (int)temp_wp.yaw);
-        char choice;
-        std::cin >> choice;
-        if (!(choice == 'y' || choice == 'Y'))
-            goto try_flag;
-        start_point = temp_wp;
-        log->write_show(LogLevel::INFO, "Lock start on => x : %.2f, y : %.2f, z : %.2f, yaw : %d",
-                        start_point.x, start_point.y, start_point.z, (int)start_point.yaw);
+        log->write_show(LogLevel::INFO, "Start position locked on => x : %.2f, y : %.2f, z : %.2f, yaw : %d.",
+                        wp_average.x, wp_average.y, wp_average.z, (int)wp_average.yaw);
+        start_point = wp_average;
         is_locked = true;
 
         // Get radians value
