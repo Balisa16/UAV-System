@@ -1,10 +1,9 @@
 #pragma once
 
-#include <math.h>
 #include <enum.hpp>
+#include <math.h>
 
-inline EMIRO::Euler to_euler(double w, double x, double y, double z)
-{
+inline EMIRO::Euler to_euler(double w, double x, double y, double z) {
     double sinr_cosp = 2 * (w * x + y * z);
     double cosr_cosp = 1 - 2 * (x * x + y * y);
     // angles.roll = std::atan2(sinr_cosp, cosr_cosp);

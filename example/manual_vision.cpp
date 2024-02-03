@@ -1,11 +1,10 @@
+#include <async_cam.hpp>
 #include <control.hpp>
 #include <jsonio.hpp>
-#include <async_cam.hpp>
 
 using namespace EMIRO;
 
-int main(int argc, char **argv)
-{
+int main(int argc, char **argv) {
     ros::init(argc, argv, "manual_node");
     std::shared_ptr<ros::NodeHandle> nh = std::make_shared<ros::NodeHandle>();
 
@@ -18,7 +17,8 @@ int main(int argc, char **argv)
     copter->init(nh, logger);
     std::shared_ptr<GPS> gps = std::make_shared<GPS>();
     gps->init(copter, logger);
-    std::shared_ptr<Control> control = std::make_shared<Control>(copter, logger, gps);
+    std::shared_ptr<Control> control =
+        std::make_shared<Control>(copter, logger, gps);
 
     // Takeoff Copter
     copter->takeoff(1);
@@ -31,15 +31,14 @@ int main(int argc, char **argv)
 
     // Set Speed limit
     control->set_linear_speed_limit(0.5f);
-    for (Target &t : target)
-    {
-        if (!ros::ok())
-        {
+    for (Target &t : target) {
+        if (!ros::ok()) {
             copter->Land();
             ros::Duration(5).sleep();
             exit(EXIT_FAILURE);
         }
-        std::cout << C_GREEN << S_BOLD << '[' << t.header << ']' << C_RESET << '\n';
+        std::cout << C_GREEN << S_BOLD << '[' << t.header << ']' << C_RESET
+                  << '\n';
         control->go(t.wp.x, t.wp.y, t.wp.z, t.wp.yaw, 0.05f, 5);
     }
 
@@ -57,31 +56,27 @@ int main(int argc, char **argv)
     Keyboard kb;
     Point latest_center;
     tpoint start_time = time_clock::now();
-    while (ros::ok())
-    {
+    while (ros::ok()) {
         cam.getobject(circles, frame);
-        if (!circles.empty())
-        {
+        if (!circles.empty()) {
             selected_object = circles[0];
 
             // Select largest object
-            if (circles.size() > 1)
-            {
+            if (circles.size() > 1) {
                 int largest_radius = 0;
-                for (auto &c : circles)
-                {
+                for (auto &c : circles) {
                     Point p(c[0], c[1]);
                     int radius = cvRound(c[2]);
 
-                    if (radius > largest_radius)
-                    {
+                    if (radius > largest_radius) {
                         largest_radius = radius;
                         selected_object = c;
                     }
                 }
             }
 
-            Point center(cvRound(selected_object[0]), cvRound(selected_object[1]));
+            Point center(cvRound(selected_object[0]),
+                         cvRound(selected_object[1]));
             int radius = cvRound(selected_object[2]);
 
             // Draw object outline
@@ -104,8 +99,9 @@ int main(int argc, char **argv)
             cv::circle(frame, center, 9, Scalar(0, 255, 0), -1, 8, 0);
             latest_center = center;
         }
-        if (std::chrono::duration_cast<std::chrono::milliseconds>(time_clock::now() - start_time).count() > 1000)
-        {
+        if (std::chrono::duration_cast<std::chrono::milliseconds>(
+                time_clock::now() - start_time)
+                .count() > 1000) {
             float speed_x = 0.0f;
             if (std::abs(latest_center.x - frame_w2) > 50)
                 speed_x = latest_center.x - frame_w2 > 0.0f ? 0.2 : -0.2;
@@ -116,16 +112,21 @@ int main(int argc, char **argv)
 
             LinearSpeed speed = {speed_x, speed_y, 0};
             gps->convert(speed);
-            copter->set_vel(speed.linear_x, speed.linear_y, speed.linear_z, 0, 0, 0);
+            copter->set_vel(speed.linear_x, speed.linear_y, speed.linear_z, 0,
+                            0, 0);
 
             start_time = time_clock::now();
             latest_center = Point(frame_w2, frame_h2);
         }
 
-        cv::circle(frame, Point(frame_w2, frame_h2), control_radius, Scalar(0, 0, 255), 3, 8, 0);
-        cv::putText(frame, "ESC to exit", Point(20, 20), FONT_HERSHEY_PLAIN, 1, Scalar(255, 0, 0), 2);
-        cv::line(frame, Point(cam.width / 2, 0), Point(cam.width / 2, cam.height), Scalar(255, 0, 0), 2);
-        cv::line(frame, Point(0, cam.height / 2), Point(cam.width, cam.height / 2), Scalar(255, 0, 0), 2);
+        cv::circle(frame, Point(frame_w2, frame_h2), control_radius,
+                   Scalar(0, 0, 255), 3, 8, 0);
+        cv::putText(frame, "ESC to exit", Point(20, 20), FONT_HERSHEY_PLAIN, 1,
+                    Scalar(255, 0, 0), 2);
+        cv::line(frame, Point(cam.width / 2, 0),
+                 Point(cam.width / 2, cam.height), Scalar(255, 0, 0), 2);
+        cv::line(frame, Point(0, cam.height / 2),
+                 Point(cam.width, cam.height / 2), Scalar(255, 0, 0), 2);
         if (frame.size().width > 0)
             imshow("Result", frame);
         cv::waitKey(1);

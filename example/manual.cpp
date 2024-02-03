@@ -3,8 +3,7 @@
 
 using namespace EMIRO;
 
-int main(int argc, char **argv)
-{
+int main(int argc, char **argv) {
     ros::init(argc, argv, "manual_node");
     std::shared_ptr<ros::NodeHandle> nh = std::make_shared<ros::NodeHandle>();
 
@@ -17,7 +16,8 @@ int main(int argc, char **argv)
     copter->init(nh, logger);
     std::shared_ptr<GPS> gps = std::make_shared<GPS>();
     gps->init(copter, logger);
-    std::shared_ptr<Control> control = std::make_shared<Control>(copter, logger, gps);
+    std::shared_ptr<Control> control =
+        std::make_shared<Control>(copter, logger, gps);
 
     // Takeoff Copter
     copter->takeoff(1);
@@ -30,14 +30,13 @@ int main(int argc, char **argv)
 
     // Set Speed limit
     control->set_linear_speed_limit(0.5f);
-    for (Target &t : target)
-    {
-        if (!ros::ok())
-        {
+    for (Target &t : target) {
+        if (!ros::ok()) {
             copter->Land();
             exit(EXIT_FAILURE);
         }
-        std::cout << C_GREEN << S_BOLD << '[' << t.header << ']' << C_RESET << '\n';
+        std::cout << C_GREEN << S_BOLD << '[' << t.header << ']' << C_RESET
+                  << '\n';
         control->go(t.wp.x, t.wp.y, t.wp.z, t.wp.yaw, 0.05f, 5);
     }
 

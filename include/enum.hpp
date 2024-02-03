@@ -28,185 +28,129 @@
 #include <string>
 #include <vector>
 
-namespace EMIRO
-{
+namespace EMIRO {
 
-  enum class Mode
-  {
-    Indoor,
-    Outdoor
-  };
+enum class Mode { Indoor, Outdoor };
 
-  enum class CopterStatus
-  {
-    None,
-    Armed,
-    Takeoff,
-    Flying,
-    Land,
-    Disarmed
-  };
+enum class CopterStatus { None, Armed, Takeoff, Flying, Land, Disarmed };
 
-  enum class CopterMode
-  {
-    LAND,
-    GUIDED,
-    AUTO,
-    RTL
-  };
+enum class CopterMode { LAND, GUIDED, AUTO, RTL };
 
-  enum Indoor_State
-  {
+enum Indoor_State {
     Takeoff,
     GetPayload,
     PreInterchange,
     Left_Right,
     DropPayload,
     ChangeNav
-  };
+};
 
-  enum class EKF_Source
-  {
-    GPS_BARO,
-    GPS_GY,
-    T265_GY
-  };
+enum class EKF_Source { GPS_BARO, GPS_GY, T265_GY };
 
-  enum class DSServo_Condition
-  {
-    Left,
-    Standby,
-    Right
-  };
+enum class DSServo_Condition { Left, Standby, Right };
 
-  enum class Servo_Condition
-  {
-    Open,
-    Close
-  };
+enum class Servo_Condition { Open, Close };
 
-  enum class Movement
-  {
-    Forward,
-    TakeLoad,
-    Left_Right,
-    DropLoad
-  };
+enum class Movement { Forward, TakeLoad, Left_Right, DropLoad };
 
-  typedef struct
-  {
+typedef struct {
     bool is_detect;
     int x_pixel;
     int y_pixel;
-  } VCoordinate;
+} VCoordinate;
 
-  typedef struct
-  {
+typedef struct {
     float x, y, z;
-  } Position;
+} Position;
 
-  typedef struct
-  {
+typedef struct {
     float w, x, y, z;
-  } Quaternion;
+} Quaternion;
 
-  typedef struct
-  {
+typedef struct {
     float roll, pitch, yaw;
-  } Euler;
+} Euler;
 
-  struct WayPoint
-  {
+struct WayPoint {
     float x;
     float y;
     float z;
     float yaw;
 
-    void operator+=(const WayPoint &wp)
-    {
-      x += wp.x;
-      y += wp.y;
-      z += wp.z;
-      yaw += wp.yaw;
+    void operator+=(const WayPoint &wp) {
+        x += wp.x;
+        y += wp.y;
+        z += wp.z;
+        yaw += wp.yaw;
     }
 
-    void operator/=(int i)
-    {
-      x /= i;
-      y /= i;
-      z /= i;
-      yaw /= i;
+    void operator/=(int i) {
+        x /= i;
+        y /= i;
+        z /= i;
+        yaw /= i;
     }
 
-    void clear()
-    {
-      x = 0.f;
-      y = 0.f;
-      z = 0.f;
-      yaw = 0.f;
+    void clear() {
+        x = 0.f;
+        y = 0.f;
+        z = 0.f;
+        yaw = 0.f;
     }
-  };
+};
 
-  typedef struct
-  {
+typedef struct {
     float lat;
     float lng;
     float alt;
     float yaw;
-  } WayPointG;
+} WayPointG;
 
-  typedef struct
-  {
+typedef struct {
     float x;
     float y;
     float z;
     float yaw;
     float speed;
-  } WayPoint2;
+} WayPoint2;
 
-  typedef struct
-  {
+typedef struct {
     float linear_x;
     float linear_y;
     float linear_z;
-  } LinearSpeed;
+} LinearSpeed;
 
-  static std::ostream &operator<<(std::ostream &stream, WayPoint &data)
-  {
-    stream << "\n\tx\t: " << data.x << " m\n\ty\t: " << data.y << " m\n\tz\t: " << data.z << " m\n\tyaw\t: " << data.yaw << " deg";
+static std::ostream &operator<<(std::ostream &stream, WayPoint &data) {
+    stream << "\n\tx\t: " << data.x << " m\n\ty\t: " << data.y
+           << " m\n\tz\t: " << data.z << " m\n\tyaw\t: " << data.yaw << " deg";
     return stream;
-  }
+}
 
-  typedef struct
-  {
+typedef struct {
     int Hue;
     int Saturation;
     int Value;
-  } HSV;
+} HSV;
 
-  typedef struct
-  {
+typedef struct {
     HSV Low;
     HSV High;
-  } Color_Range;
+} Color_Range;
 
-  typedef struct
-  {
+typedef struct {
     int Aux_idx;
     int Left;
     int Standby;
     int Right;
-  } DSServo;
+} DSServo;
 
-  typedef struct
-  {
+typedef struct {
     int Aux_idx;
     int Open;
     int Close;
-  } NServo;
+} NServo;
 
-  typedef struct
-  {
+typedef struct {
     float front_min;
     float right_min;
     float back_min;
@@ -215,63 +159,54 @@ namespace EMIRO
     float right_max;
     float back_max;
     float left_max;
-  } Lidar_Scan;
+} Lidar_Scan;
 
-  typedef struct
-  {
+typedef struct {
     float front;
     float back;
     float left;
     float right;
-  } Axis;
+} Axis;
 
-  typedef struct
-  {
+typedef struct {
     bool value;
     bool is_set;
-  } ParamB;
+} ParamB;
 
-  typedef struct
-  {
+typedef struct {
     bool is_set;
     int value;
     int min;
     int maks;
-  } ParamI;
+} ParamI;
 
-  typedef struct
-  {
+typedef struct {
     bool is_set;
     int value;
     int min;
     int maks;
-  } ParamF;
+} ParamF;
 
-  struct Option
-  {
+struct Option {
     int option_int;
     std::string option_desc;
     Option(int id, std::string desc) : option_int(id), option_desc(desc) {}
-  };
+};
 
-  class ParamS
-  {
+class ParamS {
   public:
     std::string param_id;
     std::string param_type;
     int value;
     std::vector<Option> options;
 
-    ParamS(std::string param_id, std::string param_type, int value) : param_id(param_id), param_type(param_type), value(value) {}
+    ParamS(std::string param_id, std::string param_type, int value)
+        : param_id(param_id), param_type(param_type), value(value) {}
 
-    void add(Option op)
-    {
-      options.push_back(op);
-    }
-  };
+    void add(Option op) { options.push_back(op); }
+};
 
-  typedef struct
-  {
+typedef struct {
     ParamB EK3_ENABLE;
     ParamB EK2_ENABLE;
     ParamI AHRS_EKF_TYPE;
@@ -322,7 +257,7 @@ namespace EMIRO
     ParamF VISO_POS_X;
     ParamF VISO_POS_Y;
     ParamF VISO_POS_Z;
-  } ArduParam;
-}
+} ArduParam;
+} // namespace EMIRO
 
 #endif // ENUM_HEADER

@@ -14,8 +14,8 @@
 #include <mavros_msgs/CommandLongRequest.h>
 #include <mavros_msgs/CommandTOL.h>
 #include <mavros_msgs/GlobalPositionTarget.h>
-#include <mavros_msgs/RCIn.h>
 #include <mavros_msgs/OverrideRCIn.h>
+#include <mavros_msgs/RCIn.h>
 #include <mavros_msgs/SetMode.h>
 #include <mavros_msgs/State.h>
 
@@ -33,8 +33,8 @@
 
 #include <cinttypes>
 #include <cstdio>
-#include <type_traits>
 #include <param.hpp>
+#include <type_traits>
 
 #ifdef IS_JETSON_PLATFORM
 #include <jetson/pin.hpp>
@@ -43,12 +43,10 @@
 #include <Logger.hpp>
 #include <enum.hpp>
 
-namespace EMIRO
-{
-  extern const std::string COPTER_DIR;
+namespace EMIRO {
+extern const std::string COPTER_DIR;
 
-  class Copter
-  {
+class Copter {
   public:
     ros::ServiceClient command_client;
     CopterStatus status = CopterStatus::None;
@@ -63,7 +61,8 @@ namespace EMIRO
      * @param nh  A reference to the Node Handle that manages services,
      * publishers, and clients
      */
-    void init(std::shared_ptr<ros::NodeHandle> nh, std::shared_ptr<EMIRO::Logger> logger);
+    void init(std::shared_ptr<ros::NodeHandle> nh,
+              std::shared_ptr<EMIRO::Logger> logger);
 
     /**
      * @brief Init home position
@@ -109,13 +108,15 @@ namespace EMIRO
      * @param avy angular velocity of y (rad/s)
      * @param avz angular velocity of z (rad/s)
      */
-    void set_vel(const float &vx, const float &vy, const float &vz, const float &avx, const float &avy, const float &avz);
+    void set_vel(const float &vx, const float &vy, const float &vz,
+                 const float &avx, const float &avy, const float &avz);
 
     /**
      * @brief Set the linear velocity and angular velocity
      *
      * @param cmd_vel  copter linear and angular velocity.
-     * @see void set_vel(float &vx, float &vy, float &vz, float &avx, float &avy, float &avz);
+     * @see void set_vel(float &vx, float &vy, float &vz, float &avx, float
+     * &avy, float &avz);
      */
     void set_vel(geometry_msgs::Twist &cmd_vel);
 
@@ -138,8 +139,8 @@ namespace EMIRO
 
     /**
      * @brief       Arming drone and takeoff in X = wp.x, Y = wp.y
-     * @note        Used when we want to takeoff not in home position / EKF origin
-     * position
+     * @note        Used when we want to takeoff not in home position / EKF
+     * origin position
      *
      * @param wp    Current Waypoint
      * @return int
@@ -179,7 +180,8 @@ namespace EMIRO
     int set_speed(float speed_mps);
 
     /**
-     * @brief             Set the EKF Source. Can be GPS or Non-GPS (T265 Camera)
+     * @brief             Set the EKF Source. Can be GPS or Non-GPS (T265
+     * Camera)
      *
      * @param source      EKF Source Type
      */
@@ -198,8 +200,9 @@ namespace EMIRO
 
     /**
      * @brief Set the home position.
-     * @note This parameter can be set more than once. But be carefully when drone
-     * land and takeoff again, home automatically set into takeoff position
+     * @note This parameter can be set more than once. But be carefully when
+     * drone land and takeoff again, home automatically set into takeoff
+     * position
      *
      * @param lat   Desire latitude
      * @param lnt   Desire longitude
@@ -221,7 +224,8 @@ namespace EMIRO
 
     bool check_alt(float dist_alt, float tolerance);
 
-    WayPoint calc_transition(WayPoint start_point, WayPoint stop_point, float copter_deg, float copter_alt = 0.8f);
+    WayPoint calc_transition(WayPoint start_point, WayPoint stop_point,
+                             float copter_deg, float copter_alt = 0.8f);
 
     // Setter
     void set_rc(int channel, int pwm);
@@ -237,8 +241,7 @@ namespace EMIRO
     float get_yaw(bool use360 = false);
 
     // WayPoint and WayPointG
-    template <typename T>
-    void get_position(T &pose_ref);
+    template <typename T> void get_position(T &pose_ref);
 
     Mode get_current_mission();
 
@@ -306,11 +309,12 @@ namespace EMIRO
     void state_cb(const mavros_msgs::State::ConstPtr &msg);
     geometry_msgs::Point get_hexa_point();
     void go_to(geometry_msgs::Pose pose);
-    void goto_xyz_rpy(float x, float y, float z, float roll, float pitch, float yaw);
+    void goto_xyz_rpy(float x, float y, float z, float roll, float pitch,
+                      float yaw);
     void viso_align();
     int land();
-  };
+};
 
-}
+} // namespace EMIRO
 
 #endif // COPTER_HEADER

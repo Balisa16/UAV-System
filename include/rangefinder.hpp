@@ -3,22 +3,20 @@
 #include <ros/ros.h>
 #include <sensor_msgs/Range.h>
 
-namespace EMIRO
-{
-    class RangeFinder
-    {
-    public:
-        RangeFinder();
+namespace EMIRO {
+class RangeFinder {
+  public:
+    RangeFinder();
 
-        void init(ros::NodeHandle *nh);
+    void init(ros::NodeHandle *nh);
 
-        float get_range();
+    float get_range();
 
-        ~RangeFinder();
+    ~RangeFinder();
 
-    private:
-        ros::Subscriber rangefinder_sub;
-        void rangefinder_cb(const sensor_msgs::Range::ConstPtr &msg);
-        float range;
-    };
-}
+  private:
+    ros::Subscriber rangefinder_sub;
+    void rangefinder_cb(const sensor_msgs::Range::ConstPtr &msg);
+    float range;
+};
+} // namespace EMIRO

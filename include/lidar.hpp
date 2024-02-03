@@ -1,46 +1,31 @@
 #pragma once
 
-#include <sensor_msgs/LaserScan.h>
-#include <ros/ros.h>
-#include <mutex>
-#include "enum.hpp"
 #include "copter.hpp"
-#include <tuple>
-#include <memory>
-#include <thread>
+#include "enum.hpp"
 #include <Logger.hpp>
+#include <memory>
+#include <mutex>
+#include <ros/ros.h>
+#include <sensor_msgs/LaserScan.h>
+#include <thread>
+#include <tuple>
 
-namespace EMIRO
-{
-  std::mutex lidar_proc_mtx;
+namespace EMIRO {
+std::mutex lidar_proc_mtx;
 
-  enum class LidarType
-  {
-    Simulator,
-    A1,
-    S1
-  };
+enum class LidarType { Simulator, A1, S1 };
 
-  enum class LidarStatus
-  {
-    None,
-    Init,
-    Start,
-    Run,
-    Stop
-  };
+enum class LidarStatus { None, Init, Start, Run, Stop };
 
-  typedef struct
-  {
+typedef struct {
     float margin_left_2;
     float margin_left_1;
     float center;
     float margin_right_1;
     float margin_right_2;
-  } SideRange;
+} SideRange;
 
-  typedef struct
-  {
+typedef struct {
     LidarType type;
     LidarStatus status;
     sensor_msgs::LaserScan in_data;
@@ -50,13 +35,13 @@ namespace EMIRO
     SideRange out_right_rng;
     SideRange out_front_rng;
     SideRange out_back_rng;
-  } LidarRef;
+} LidarRef;
 
-  class Lidar
-  {
+class Lidar {
   public:
     Lidar();
-    void init(std::shared_ptr<EMIRO::Copter> copter, std::shared_ptr<EMIRO::Logger> logger);
+    void init(std::shared_ptr<EMIRO::Copter> copter,
+              std::shared_ptr<EMIRO::Logger> logger);
     void start(ros::NodeHandle *nh, LidarType lidar);
     LidarStatus check();
     float get_front(int idx);
@@ -84,5 +69,5 @@ namespace EMIRO
     std::shared_ptr<EMIRO::Copter> copter;
 
     LidarRef lidar_data;
-  };
-}
+};
+} // namespace EMIRO
