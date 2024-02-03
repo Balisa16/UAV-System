@@ -69,6 +69,20 @@ class Control {
      * @default limit_rad_s = 10
      */
     void set_rotate_speed_limit(const int &limit_deg_s = 10);
+
+    /**
+     * @brief Set PID control parameters
+     *
+     * @param Kp
+     * @param Ki
+     * @param Kd
+     *
+     * @default
+     *  - Kp = 0.5
+     *  - Ki = 0.0
+     *  - Kd = 0.05
+     */
+    void set_PID(const double &Kp, const double &Ki, const double &Kd);
 #pragma endregion
 
     /**
@@ -86,7 +100,7 @@ class Control {
      *  - yaw_precision = 5
      */
     void go(const float &x, const float &y, const float &z, const int &yaw,
-            const float &pos_precision = 0.2f, const int &yaw_precision = 5);
+            const float &pos_precision = .2f, const int &yaw_precision = 5);
 
     ~Control();
 
@@ -96,10 +110,11 @@ class Control {
     std::shared_ptr<GPS> _gps;
     bool is_init = false;
 
-    float speed_limit = 1.0f;              // m/s
-    float rotate_speed_limit = 1.55;       // rad/s
-    float vx = 0.0f, vy = 0.0f, vz = 0.0f; // m/s
-    float avx = 0, avy = 0, avz = 0;       // rad/s
+    float Kp = .5f, Ki = 0.f, Kd = .05f;
+    float linear_speed_limit = 1.0f;       // m/s
+    float rotate_speed_limit = 1.55f;      // rad/s
+    float vx = 0.f, vy = 0.f, vz = 0.f;    // m/s
+    float avx = 0.f, avy = 0.f, avz = 0.f; // rad/s
 
     inline void check_init() {
         if (!is_init) {
