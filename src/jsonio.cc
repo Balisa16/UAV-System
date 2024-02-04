@@ -5,12 +5,18 @@ JsonIO::JsonIO() {}
 
 JsonIO::JsonIO(std::string path) { operator=(path); }
 
-std::vector<Target> JsonIO::get_data() { return data; }
+std::map<TargetKey, Target> &JsonIO::get_data_map() { return data; }
 
-void JsonIO::get_data(std::vector<Target> &target) { target = data; }
+std::vector<Target> JsonIO::get_data_vector() {
+    std::vector<Target> target;
+    for (const auto &i : data)
+        target.push_back(i.second);
+    return target;
+}
+
+void JsonIO::get_data(std::map<TargetKey, Target> &target) { target = data; }
 
 void JsonIO::operator=(std::string path) {
-    header_id.clear();
     this->file_path = path;
     std::ifstream stream_reader(file_path);
     if (!stream_reader.is_open()) {
@@ -61,27 +67,39 @@ void JsonIO::operator=(std::string path) {
     JSONCPP_STRING errs;
     Json::parseFromStream(reader, stream_reader, &json_value, &errs);
 
-    int counter = 1;
+    data_counter = 0;
     data.clear();
     for (const auto &item : json_value) {
-        header_id.push_back(item["header"].asString());
-        data.push_back({counter,
-                        item["header"].asString(),
-                        item["speed"].asFloat(),
-                        {item["x"].asFloat(), item["y"].asFloat(),
-                         item["z"].asFloat(), item["yaw"].asFloat()}});
-        counter++;
+        TargetKey t_key{data_counter, item["header"].asString()};
+        if (t_key.exist(data)) {
+            std::cerr << "Error: Key '" << item["header"].asString()
+                      << "' already exists.\n";
+            continue;
+        }
+        data.emplace(t_key,
+                     Target(item["header"].asString(), item["speed"].asFloat(),
+                            {item["x"].asFloat(), item["y"].asFloat(),
+                             item["z"].asFloat(), item["yaw"].asFloat()}));
+        data_counter++;
     }
+
+    for (const auto &a : data) {
+        std::cout << "Out : " << a.first.data_idx << "\t: " << a.first.data_name
+                  << std::endl;
+    }
+
     stream_reader.close();
 }
 
 void JsonIO::operator+=(const Target &target) {
-    for (const std::string &id : header_id)
-        if (!id.compare(target.header)) {
-            std::cout << "\033[31m\033[1mError :\033[0m " << target.header
-                      << " already exist." << std::endl;
-            return;
-        }
+    TargetKey t_key{data_counter, target.header};
+    if (t_key.exist(data)) {
+        std::cerr << "Error: Key '" << target.header << "' already exists."
+                  << std::endl;
+        return;
+    }
+    data.emplace(t_key, target);
+    data_counter++;
 
     std::ifstream input_file(file_path);
     if (!input_file.is_open()) {
@@ -125,15 +143,6 @@ void JsonIO::operator+=(const Target &target) {
 }
 
 void JsonIO::operator-=(const Target &target) {}
-
-std::ostream &operator<<(std::ostream &os, Target target) {
-    os << std::fixed << std::setprecision(2) << "Index\t: " << target.index
-       << "\nHeader\t: " << target.header << "\nSpeed\t: " << target.speed
-       << "\nTarget\n\tx : " << target.wp.x << "\n\ty : " << target.wp.y
-       << "\n\tz : " << target.wp.z << '\n'
-       << std::defaultfloat;
-    return os;
-}
 
 JsonIO::~JsonIO() {}
 } // namespace EMIRO

@@ -26,7 +26,7 @@ int main(int argc, char **argv) {
     // Read JSON point
     JsonIO reader;
     reader = COPTER_DIR + "/docs/plan.json";
-    std::vector<Target> target = reader.get_data();
+    std::vector<Target> target = reader.get_data_vector();
 
     // Set Speed limit
     control->set_linear_speed_limit(0.5f);
