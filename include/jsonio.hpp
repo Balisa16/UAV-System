@@ -19,10 +19,11 @@ struct Target {
         : header(header), speed(speed), wp(wp) {}
 
     friend std::ostream &operator<<(std::ostream &os, Target target) {
-        os << std::fixed << std::setprecision(2)
-           << "\nHeader\t: " << target.header << "\nSpeed\t: " << target.speed
-           << "\nTarget\n\tx : " << target.wp.x << "\n\ty : " << target.wp.y
-           << "\n\tz : " << target.wp.z << '\n'
+        os << std::fixed << std::setprecision(2) << "\033[1;32m>>> "
+           << target.header << " <<<\033[0m\nSpeed\t: " << target.speed
+           << "\nTarget\n - x   : " << target.wp.x
+           << "\n - y   : " << target.wp.y << "\n - z   : " << target.wp.z
+           << "\n - yaw : " << target.wp.yaw << '\n'
            << std::defaultfloat;
         return os;
     }
