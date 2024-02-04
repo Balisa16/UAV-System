@@ -83,11 +83,6 @@ void JsonIO::operator=(std::string path) {
         data_counter++;
     }
 
-    for (const auto &a : data) {
-        std::cout << "Out : " << a.first.data_idx << "\t: " << a.first.data_name
-                  << std::endl;
-    }
-
     stream_reader.close();
 }
 
