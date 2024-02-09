@@ -3,7 +3,8 @@
 
 using namespace EMIRO;
 
-int main(int argc, char **argv) {
+int main(int argc, char **argv)
+{
     ros::init(argc, argv, "manual_node");
 
     Copter::init("Manual", FileType::CSV);
@@ -18,8 +19,10 @@ int main(int argc, char **argv) {
 
     // Set Speed limit
     Control::set_linear_speed_limit(0.5f);
-    for (Target &t : target) {
-        if (!ros::ok()) {
+    for (Target &t : target)
+    {
+        if (!ros::ok())
+        {
             Copter::Land();
             exit(EXIT_FAILURE);
         }
