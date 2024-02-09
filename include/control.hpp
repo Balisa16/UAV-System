@@ -8,28 +8,10 @@
 namespace EMIRO {
 class Control {
   public:
-    /**
-     * @brief Manual Control using SimplePID
-     *
-     * @note Parameters must be set
-     * @see Control(std::shared_ptr<Copter> copter, std::shared_ptr<Logger>
-     * logger, std::shared_ptr<GPS> gps);
-     */
-    Control();
-
-    /**
-     * @brief Control Constructor
-     *
-     * @param copter    Copter object
-     * @param logger    Logger object for event logging
-     * @param gps       GPS object to convert Copter Local degree into Global
-     * position
-     *
-     * @note
-     *  - Copter object must be initialized
-     */
-    Control(std::shared_ptr<Copter> copter, std::shared_ptr<Logger> logger,
-            std::shared_ptr<GPS> gps);
+    static Control &get() {
+        static Control control;
+        return control;
+    }
 
 #pragma region Getters
     /**
@@ -37,14 +19,14 @@ class Control {
      *
      * @return float& speed limit (m/s)
      */
-    float &get_linear_speed();
+    static float get_linear_speed();
 
     /**
      * @brief Get the rotation speed limit
      *
      * @return float& rotation speed limit (deg/s)
      */
-    int get_rotate_speed();
+    static int get_rotate_speed();
 #pragma endregion
 
 #pragma region Setters
@@ -57,7 +39,7 @@ class Control {
      *
      * @default limit_m_s = 5
      */
-    void set_linear_speed_limit(const float &limit_m_s = 5.f);
+    static void set_linear_speed_limit(const float &limit_m_s = 5.f);
 
     /**
      * @brief Set the limit of copter rotation speed in x, y and z axis
@@ -68,7 +50,7 @@ class Control {
      *  - limit_rad_s = 1 - 180
      * @default limit_rad_s = 10
      */
-    void set_rotate_speed_limit(const int &limit_deg_s = 10);
+    static void set_rotate_speed_limit(const int &limit_deg_s = 10);
 
     /**
      * @brief Set PID control parameters
@@ -82,7 +64,7 @@ class Control {
      *  - Ki = 0.0
      *  - Kd = 0.05
      */
-    void set_PID(const double &Kp, const double &Ki, const double &Kd);
+    static void set_PID(const double &Kp, const double &Ki, const double &Kd);
 #pragma endregion
 
     /**
@@ -99,30 +81,27 @@ class Control {
      *  - pos_precision = 0.2
      *  - yaw_precision = 5
      */
-    void go(const float &x, const float &y, const float &z, const int &yaw,
-            const float &pos_precision = .2f, const int &yaw_precision = 5);
-
-    ~Control();
+    static void go(const float &x, const float &y, const float &z,
+                   const int &yaw, const float &pos_precision = .2f,
+                   const int &yaw_precision = 5);
 
   private:
-    std::shared_ptr<Copter> copter;
-    std::shared_ptr<Logger> logger;
-    std::shared_ptr<GPS> _gps;
-    bool is_init = false;
-
+    float control_get_linear_speed();
+    int control_get_rotate_speed();
+    void control_set_linear_speed_limit(const float &limit_m_s);
+    void control_set_rotate_speed_limit(const int &limit_deg_s);
+    void control_set_PID(const double &Kp, const double &Ki, const double &Kd);
+    void control_go(const float &x, const float &y, const float &z,
+                    const int &yaw, const float &pos_precision,
+                    const int &yaw_precision);
+    Control();
+    ~Control();
     float Kp = .5f, Ki = 0.f, Kd = .05f;
     float linear_speed_limit = 1.0f;       // m/s
     float rotate_speed_limit = 1.55f;      // rad/s
     float vx = 0.f, vy = 0.f, vz = 0.f;    // m/s
     float avx = 0.f, avy = 0.f, avz = 0.f; // rad/s
 
-    inline void check_init() {
-        if (!is_init) {
-            copter->Land();
-            throw std::runtime_error("Bad control class implementation.");
-        }
-    }
-
-    void go(bool yaw_control = true);
+    void control_go(bool yaw_control = true);
 };
 } // namespace EMIRO

@@ -13,20 +13,25 @@
 namespace EMIRO {
 class GPS {
   public:
-    GPS();
+    static GPS &get_gps() {
+        static GPS instance;
+        return instance;
+    }
 
-    void init(std::shared_ptr<EMIRO::Copter> copter,
-              std::shared_ptr<EMIRO::Logger> logger);
+    static void init();
 
-    void lock_pos();
+    static void lock_pos();
 
-    void convert(LinearSpeed &linear_speed);
-
-    ~GPS();
+    static void convert(LinearSpeed &linear_speed);
 
   private:
-    std::shared_ptr<EMIRO::Copter> copter;
-    std::shared_ptr<EMIRO::Logger> log;
+    GPS();
+    ~GPS();
+    void gps_init();
+
+    void gps_lock_pos();
+
+    void gps_convert(LinearSpeed &linear_speed);
     WayPoint start_point;
     float radians;
     float mul_x, mul_y;

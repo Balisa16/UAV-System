@@ -4,16 +4,21 @@
 namespace EMIRO {
 GPS::GPS() {}
 
-void GPS::init(std::shared_ptr<EMIRO::Copter> copter,
-               std::shared_ptr<EMIRO::Logger> logger) {
-    this->copter = copter;
-    this->log = logger;
-    log->write_show(LogLevel::INFO, "GPS initialized");
+void GPS::init() { GPS::get_gps().gps_init(); }
+
+void GPS::lock_pos() { GPS::get_gps().gps_lock_pos(); }
+
+void GPS::convert(LinearSpeed &linear_speed) {
+    GPS::get_gps().gps_convert(linear_speed);
+}
+
+void GPS::gps_init() {
+    Copter::get_logger().write_show(LogLevel::INFO, "GPS initialized");
     is_init = true;
 }
 
-void GPS::lock_pos() {
-    log->show(LogLevel::INFO, "Waiting for GPS position...");
+void GPS::gps_lock_pos() {
+    Copter::get_logger().show(LogLevel::INFO, "Waiting for GPS position...");
 
     ros::Duration(1).sleep();
     ros::Rate in_rate(2);
@@ -27,7 +32,7 @@ void GPS::lock_pos() {
     Keyboard keyboard;
 
     while (ros::ok()) {
-        copter->get_position(temp_wp);
+        Copter::get().get_position(temp_wp);
         pos_temp.push_back(temp_wp);
 
         // Remove old data
@@ -52,19 +57,20 @@ void GPS::lock_pos() {
         if (key == 'y' || key == 'Y')
             break;
         else if (key == 'n' || key == 'N') {
-            log->write_show(LogLevel::INFO, "\033[KGPS position unlocked");
+            Copter::get_logger().write_show(LogLevel::INFO,
+                                            "\033[KGPS position unlocked");
             return;
         } else if (key >= 32 && key <= 126)
-            log->show(LogLevel::WARNING,
-                      "\033[KUnrecognized keyboard input: \033[1m(%c)\033[0m",
-                      key);
+            Copter::get_logger().show(
+                LogLevel::WARNING,
+                "\033[KUnrecognized keyboard input: \033[1m(%c)\033[0m", key);
 
         ros::spinOnce();
         in_rate.sleep();
     }
 
     // Ask if position is accepted
-    log->write_show(
+    Copter::get_logger().write_show(
         LogLevel::INFO,
         "Start position locked on => x : %.2f, y : %.2f, z : %.2f, yaw : %d.",
         wp_average.x, wp_average.y, wp_average.z, (int)wp_average.yaw);
@@ -78,9 +84,10 @@ void GPS::lock_pos() {
     radians = start_point.yaw * M_PI / 180.0;
 }
 
-void GPS::convert(LinearSpeed &linear_speed) {
+void GPS::gps_convert(LinearSpeed &linear_speed) {
     if (!is_init || !is_locked) {
-        log->write_show(LogLevel::ERROR, "GPS is not init or not locked");
+        Copter::get_logger().write_show(LogLevel::ERROR,
+                                        "GPS is not init or not locked");
         throw std::runtime_error("GPS is not init or not locked");
     }
     linear_speed = {-(linear_speed.linear_x * cos(radians) -

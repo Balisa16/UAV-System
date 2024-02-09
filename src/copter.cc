@@ -158,6 +158,10 @@ bool Copter::copter_init(std::string logger_name, FileType logger_type) {
     } else
         get_logger().write_show(LogLevel::WARNING,
                                 "Publisher and Subscriber Already Initialized");
+
+    get_logger().write_show(LogLevel::INFO, "Initializing GPS");
+
+    GPS::init();
     return true;
 }
 

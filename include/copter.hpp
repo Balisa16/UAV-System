@@ -41,7 +41,9 @@
 #endif
 
 #include <Logger.hpp>
+#include <control.hpp>
 #include <enum.hpp>
+#include <gps.hpp>
 
 namespace EMIRO {
 extern const std::string COPTER_DIR;
