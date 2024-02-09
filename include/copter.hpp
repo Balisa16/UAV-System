@@ -52,24 +52,30 @@ class Copter {
     CopterStatus status = CopterStatus::None;
     void print_wp(std::string header, WayPoint &wp);
 
-    Copter();
+    static ros::NodeHandle *get_nh() {
+        static ros::NodeHandle nh;
+        return &nh;
+    }
 
-    /**
-     * @brief     This function initializes all service clients, publishers, and
-     * subscribers.
-     *
-     * @param nh  A reference to the Node Handle that manages services,
-     * publishers, and clients
-     */
-    void init(std::shared_ptr<ros::NodeHandle> nh,
-              std::shared_ptr<EMIRO::Logger> logger);
+    static Copter &get() {
+        static Copter copter_instance;
+        return copter_instance;
+    }
+
+    static Logger &get_logger() {
+        static Logger main_logger;
+        return main_logger;
+    }
+
+    static bool init(std::string log_name = "copter",
+                     FileType log_type = FileType::CSV);
 
     /**
      * @brief Init home position
      *
      * @param timeout_s timeout of init (second)
      */
-    void init_frame(float timeout_s = 1.0f);
+    static void init_frame(float timeout_s = 1.0f);
 
     /**
      * @brief           Waiting for FCU to connect
@@ -78,7 +84,7 @@ class Copter {
      * @return false:   Failed to connect FCU.
      * @return true:    FCU Connected successfully
      */
-    bool FCUconnect(float timeout_s = 1.0f);
+    static bool FCUconnect(float timeout_s = 1.0f);
 
     /**
      * @brief           Waiting FCU turn into GUIDED Mode.
@@ -87,7 +93,7 @@ class Copter {
      * @return true     FCU in GUIDED mode
      * @return false    FCU not in GUIDED mode
      */
-    bool FCUstart(float timeout_s = 1.0f);
+    static bool FCUstart(float timeout_s = 1.0f);
 
     /**
      * @brief Set drone mode.
@@ -96,7 +102,7 @@ class Copter {
      * @see https://ardupilot.org/copter/docs/flight-modes.html
      * @return int
      */
-    int set_mode(CopterMode mode);
+    static int set_mode(CopterMode mode);
 
     /**
      * @brief Set the linear velocity and angular velocity
@@ -108,8 +114,8 @@ class Copter {
      * @param avy angular velocity of y (rad/s)
      * @param avz angular velocity of z (rad/s)
      */
-    void set_vel(const float &vx, const float &vy, const float &vz,
-                 const float &avx, const float &avy, const float &avz);
+    static void set_vel(const float &vx, const float &vy, const float &vz,
+                        const float &avx, const float &avy, const float &avz);
 
     /**
      * @brief Set the linear velocity and angular velocity
@@ -118,14 +124,14 @@ class Copter {
      * @see void set_vel(float &vx, float &vy, float &vz, float &avx, float
      * &avy, float &avz);
      */
-    void set_vel(geometry_msgs::Twist &cmd_vel);
+    static void set_vel(geometry_msgs::Twist &cmd_vel);
 
     /**
      * @brief       This function arming drone throttle.
      *
      * @return int  Service feedback
      */
-    bool Arming();
+    static bool Arming();
 
     /**
      * @brief Arming drone and takeoff in X = 0, Y = 0
@@ -133,9 +139,9 @@ class Copter {
      * @param takeoff_alt   Target altitude (m)
      * @return int          Service feedback
      */
-    int takeoff(float takeoff_alt);
+    static int takeoff(float takeoff_alt);
 
-    int just_takeoff(float takeoff_alt, float _yaw);
+    static int just_takeoff(float takeoff_alt, float _yaw);
 
     /**
      * @brief       Arming drone and takeoff in X = wp.x, Y = wp.y
@@ -145,29 +151,31 @@ class Copter {
      * @param wp    Current Waypoint
      * @return int
      */
-    int takeoff2(WayPoint wp);
+    static int takeoff2(WayPoint wp);
 
     /**
      * @brief     Give command to copter to go to desire Waypoint
      *
      * @param wp  Target point
      */
-    void Go(WayPoint &wp, bool show = false, std::string header = "Go to");
+    static void Go(WayPoint &wp, bool show = false,
+                   std::string header = "Go to");
 
-    float get_alt();
+    static float get_alt();
 
     /**
-     * @brief     Landing drones in current in X = wp.x  and Y = wp.y position
+     * @brief     Landing drones in current in X = wp.x  and Y = wp.y
+     position
      *
      * @param wp
      */
-    void Go_Land(WayPoint wp, float tolerance = 0.15f);
+    static void Go_Land(WayPoint wp, float tolerance = 0.15f);
 
     /**
      * @brief Just Send Land Command
      *
      */
-    void Land();
+    static void Land();
 
     /**
      * @brief             Set drone speed besed Ground Speed of drones.
@@ -177,7 +185,7 @@ class Copter {
      *
      * @return int        Service feedback
      */
-    int set_speed(float speed_mps);
+    static int set_speed(float speed_mps);
 
     /**
      * @brief             Set the EKF Source. Can be GPS or Non-GPS (T265
@@ -185,7 +193,7 @@ class Copter {
      *
      * @param source      EKF Source Type
      */
-    void set_ekf_source(EKF_Source source);
+    static void set_ekf_source(EKF_Source source);
 
     /**
      * @brief       Set the EKF Origin for the desired GPS global.
@@ -196,7 +204,7 @@ class Copter {
      *
      * @note This parameter just can be once setting
      */
-    void set_ekf_origin(float lat, float lnt, float alt);
+    static void set_ekf_origin(float lat, float lnt, float alt);
 
     /**
      * @brief Set the home position.
@@ -210,44 +218,85 @@ class Copter {
      *
      * @return int  Service feedback
      */
-    int set_home(float lat, float lnt, float alt);
+    static int set_home(float lat, float lnt, float alt);
 
     /**
-     * @brief             Check if copter in range of tolerance waypoint target.
+     * @brief             Check if copter in range of tolerance waypoint
+     target.
      *
      * @param dest        Waypoint target
      * @param tolerance   Tolerance range (m)
      * @return true       Copter successfully reached the waypoint
      * @return false      Copter isn't reached the waypoint
      */
-    bool is_reached(WayPoint dest, float tolerance);
+    static bool is_reached(WayPoint dest, float tolerance);
 
-    bool check_alt(float dist_alt, float tolerance);
+    static bool check_alt(float dist_alt, float tolerance);
 
-    WayPoint calc_transition(WayPoint start_point, WayPoint stop_point,
-                             float copter_deg, float copter_alt = 0.8f);
+    static WayPoint calc_transition(WayPoint start_point, WayPoint stop_point,
+                                    float copter_deg, float copter_alt = 0.8f);
 
     // Setter
-    void set_rc(int channel, int pwm);
+    static void set_rc(int channel, int pwm);
 
     // Getter
-    void get_pose(Position *pos, Quaternion *quat);
+    static void get_pose(Position *pos, Quaternion *quat);
 
     /**
      * @brief         Get current drone's yaw
      *
      * @return float  Degree of drone's yaw
      */
-    float get_yaw(bool use360 = false);
+    static float get_yaw(bool use360 = false);
 
     // WayPoint and WayPointG
-    template <typename T> void get_position(T &pose_ref);
+    static void get_position(WayPoint &pose_ref);
 
-    Mode get_current_mission();
-
-    ~Copter();
+    static Mode get_current_mission();
 
   private:
+    Copter();
+
+    // Prevent Copying
+    Copter(const Copter &) = delete;
+    Copter(Copter &&) = delete;
+    Copter &operator=(const Copter &) = delete;
+    Copter &operator=(Copter &&) = delete;
+
+    EMIRO::Logger traj_logger;
+
+    // Implementation
+    bool copter_init(std::string logger_name, FileType logger_type);
+    void copter_init_frame(float timeout_s);
+    bool copter_FCUconnect(float timeout_s = 1.0f);
+    bool copter_FCUstart(float timeout_s = 1.0f);
+    int copter_set_mode(CopterMode mode);
+    void copter_set_vel(const float &vx, const float &vy, const float &vz,
+                        const float &avx, const float &avy, const float &avz);
+    void copter_set_vel(geometry_msgs::Twist &cmd_vel);
+    bool copter_Arming();
+    int copter_takeoff(float takeoff_alt);
+    int copter_just_takeoff(float takeoff_alt, float _yaw);
+    int copter_takeoff2(WayPoint wp);
+    void copter_Go(WayPoint &wp, bool show = false,
+                   std::string header = "Go to");
+    float copter_get_alt();
+    void copter_Go_Land(WayPoint wp, float tolerance = 0.15f);
+    void copter_Land();
+    int copter_set_speed(float speed_mps);
+    void copter_set_ekf_source(EKF_Source source);
+    void copter_set_ekf_origin(float lat, float lnt, float alt);
+    int copter_set_home(float lat, float lnt, float alt);
+    bool copter_is_reached(WayPoint dest, float tolerance);
+    bool copter_check_alt(float dist_alt, float tolerance);
+    WayPoint copter_calc_transition(WayPoint start_point, WayPoint stop_point,
+                                    float copter_deg, float copter_alt = 0.8f);
+    void copter_set_rc(int channel, int pwm);
+    void copter_get_pose(Position *pos, Quaternion *quat);
+    float copter_get_yaw(bool use360 = false);
+    void copter_get_position(WayPoint &pose_ref);
+    Mode copter_get_current_mission();
+
     geographic_msgs::GeoPoseStamped pose_data_global;
     geometry_msgs::PoseStamped pose_data_local;
     geometry_msgs::PoseStamped pose_stamped;
@@ -282,8 +331,6 @@ class Copter {
     Mode misi_mode;
 
     // Parameter settings
-    std::shared_ptr<EMIRO::Logger> logger;
-    EMIRO::Logger traj_logger;
     Param copter_param;
 
     // Initialize frame
@@ -302,17 +349,20 @@ class Copter {
     uint16_t rc7_pwm = 1000;
 
     // Function
-    Quaternion to_quaternion(float roll_rate, float pitch_rate, float yaw_rate);
-    geometry_msgs::Point enu_2_local(nav_msgs::Odometry current_pose_enu);
-    void pose_cb_local(const geometry_msgs::PoseStamped::ConstPtr &msg);
-    void pose_cb_global(const geographic_msgs::GeoPoseStamped::ConstPtr &msg);
-    void state_cb(const mavros_msgs::State::ConstPtr &msg);
-    geometry_msgs::Point get_hexa_point();
-    void go_to(geometry_msgs::Pose pose);
-    void goto_xyz_rpy(float x, float y, float z, float roll, float pitch,
-                      float yaw);
-    void viso_align();
-    int land();
+    Quaternion _to_quaternion(float roll_rate, float pitch_rate,
+                              float yaw_rate);
+    geometry_msgs::Point _enu_2_local(nav_msgs::Odometry current_pose_enu);
+    void _pose_cb_local(const geometry_msgs::PoseStamped::ConstPtr &msg);
+    void _pose_cb_global(const geographic_msgs::GeoPoseStamped::ConstPtr &msg);
+    void _state_cb(const mavros_msgs::State::ConstPtr &msg);
+    geometry_msgs::Point _get_hexa_point();
+    void _go_to(geometry_msgs::Pose pose);
+    void _goto_xyz_rpy(float x, float y, float z, float roll, float pitch,
+                       float yaw);
+    void _viso_align();
+    int _land();
+
+    ~Copter();
 };
 
 } // namespace EMIRO
