@@ -256,7 +256,7 @@ namespace EMIRO
 
         static Mode get_current_mission();
 
-        static void go_rtl(float alt = -1.f);
+        static void go_rtl(float alt = -1.f, float tolerance = 0.2f);
 
     private:
         Copter();
@@ -296,7 +296,7 @@ namespace EMIRO
         float copter_get_yaw(bool use360 = false) const;
         void copter_get_position(WayPoint &pose_ref) const;
         Mode copter_get_current_mission() const;
-        void copter_Go_RTL(float alt) const;
+        void copter_Go_RTL(float alt, float tolerance);
 
         // Private Implementation
         Quaternion _to_quaternion(float roll_rate, float pitch_rate, float yaw_rate) const;

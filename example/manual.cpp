@@ -17,12 +17,20 @@ int main(int argc, char **argv)
 
     // Set Speed limit
     Control::set_linear_speed_limit(2.f);
+
+    int cnt = 4;
     for (Target &t : target)
     {
         if (!ros::ok())
         {
             Copter::Land();
             exit(EXIT_FAILURE);
+        }
+        cnt--;
+        if (!cnt)
+        {
+            Copter::go_rtl(5.f);
+            break;
         }
         std::cout << C_GREEN << S_BOLD << '[' << t.header << ']' << C_RESET
                   << '\n';

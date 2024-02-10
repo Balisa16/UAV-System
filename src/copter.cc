@@ -191,9 +191,9 @@ namespace EMIRO
     }
 
     void
-    Copter::go_rtl(float alt)
+    Copter::go_rtl(float alt, float tolerance)
     {
-        get().copter_Go_RTL(alt);
+        get().copter_Go_RTL(alt, tolerance);
     }
 
 #pragma region Initialize
@@ -983,10 +983,22 @@ namespace EMIRO
         return _wp;
     }
 
-    void Copter::copter_Go_RTL(float alt) const
+    void Copter::copter_Go_RTL(float alt, float tolerance)
     {
-        if (alt <= 0.f)
+        if (alt >= 0.f)
+            takeoff_wp.z = alt;
+        copter_Go(takeoff_wp, true, "Go to RTL");
+
+        WayPoint _wp;
+        while (ros::ok())
         {
+            copter_get_position(_wp);
+            ros::spinOnce();
+            if (_wp.x > takeoff_wp.x - tolerance && _wp.x < takeoff_wp.x + tolerance &&
+                _wp.y > takeoff_wp.y - tolerance && _wp.y < takeoff_wp.y + tolerance &&
+                _wp.z > takeoff_wp.z - tolerance && _wp.z < takeoff_wp.z + tolerance)
+                break;
+            ros::Duration(0.2).sleep();
         }
     }
 #pragma endregion
