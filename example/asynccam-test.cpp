@@ -2,7 +2,8 @@
 
 using EMIRO::AsyncCam;
 
-int main() {
+int main()
+{
     AsyncCam cam(0, 640, 480);
     const int control_radius = 100;
     const int frame_w = cam.width, frame_h = cam.height;
@@ -16,19 +17,24 @@ int main() {
     Vec3f selected_object;
     EMIRO::Keyboard kb;
 
-    while (true) {
+    while (true)
+    {
         cam.getobject(circles, frame);
-        if (!circles.empty()) {
+        if (!circles.empty())
+        {
             selected_object = circles[0];
 
             // Select largest object
-            if (circles.size() > 1) {
+            if (circles.size() > 1)
+            {
                 int largest_radius = 0;
-                for (auto &c : circles) {
+                for (auto &c : circles)
+                {
                     Point p(c[0], c[1]);
                     int radius = cvRound(c[2]);
 
-                    if (radius > largest_radius) {
+                    if (radius > largest_radius)
+                    {
                         largest_radius = radius;
                         selected_object = c;
                     }

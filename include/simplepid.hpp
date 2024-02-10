@@ -2,8 +2,10 @@
 
 #include <enum.hpp>
 
-namespace EMIRO {
-class PID {
+namespace EMIRO
+{
+  class PID
+  {
 
   public:
     PID(const double &Kp, const double &Ki, double Kd);
@@ -24,9 +26,10 @@ class PID {
     double Kp, Ki, Kd;
     double pre_error;
     double integral;
-};
+  };
 
-class ThreeAxisPID {
+  class ThreeAxisPID
+  {
 
   public:
     ThreeAxisPID(const Position &target_point, const double &Kp,
@@ -61,5 +64,5 @@ class ThreeAxisPID {
     Position set_point;
     LinearSpeed speed_limit{0.0f, 0.0f, 0.0f};
     bool is_limit = false;
-};
+  };
 } // namespace EMIRO

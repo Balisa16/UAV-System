@@ -11,16 +11,18 @@
 #include <unistd.h>
 #endif
 
-struct Keyboard {
-  private:
+struct Keyboard
+{
+private:
 #ifdef __linux__
     int ch;
     int oldf;
     struct termios oldt, newt;
 #endif
 
-  public:
-    Keyboard() {
+public:
+    Keyboard()
+    {
 #ifdef __linux__
         tcgetattr(STDIN_FILENO, &oldt);
         newt = oldt;
@@ -31,7 +33,8 @@ struct Keyboard {
 #endif
     }
 
-    char get_key() {
+    char get_key()
+    {
 #ifdef __linux__
         return getchar();
 #elif _WIN32
@@ -40,7 +43,8 @@ struct Keyboard {
 #endif
     }
 
-    ~Keyboard() {
+    ~Keyboard()
+    {
 #ifdef __linux__
         tcsetattr(STDIN_FILENO, TCSANOW, &oldt);
         fcntl(STDIN_FILENO, F_SETFL, oldf);

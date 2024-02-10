@@ -6,9 +6,11 @@
 #include <enum.hpp>
 #include <vector>
 
-namespace EMIRO {
+namespace EMIRO
+{
 
-class Servo {
+  class Servo
+  {
   public:
     Servo();
 
@@ -29,6 +31,6 @@ class Servo {
     std::vector<DSServo> servo_ds_list;
     std::shared_ptr<EMIRO::Copter> copter;
     std::shared_ptr<EMIRO::Logger> logger;
-};
+  };
 } // namespace EMIRO
 #endif // SERVO_HEADER

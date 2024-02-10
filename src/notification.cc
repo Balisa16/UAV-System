@@ -3,7 +3,8 @@
 Notification::Notification() { notify_init("Copter Autonomous Flight"); }
 
 void Notification::show(std::string message, std::string title = "Copter",
-                        int timeout_ms = 3000) {
+                        int timeout_ms = 3000)
+{
     NotifyNotification *notification =
         notify_notification_new(title.c_str(), message.c_str(), 0);
 

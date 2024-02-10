@@ -4,8 +4,10 @@
 #include <std_msgs/Int32.h>
 #include <string>
 
-namespace EMIRO {
-class TFMini {
+namespace EMIRO
+{
+  class TFMini
+  {
   public:
     TFMini();
     /**
@@ -29,5 +31,5 @@ class TFMini {
     ros::Subscriber tf_sub;
     std_msgs::Int32 tf_data;
     void tf_data_sub(const std_msgs::Int32::ConstPtr &msg);
-};
+  };
 } // namespace EMIRO

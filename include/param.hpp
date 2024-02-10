@@ -17,8 +17,10 @@
 #include <unistd.h>
 #include <vector>
 
-namespace EMIRO {
-class Param {
+namespace EMIRO
+{
+  class Param
+  {
   public:
     Param();
 
@@ -38,5 +40,5 @@ class Param {
     std::ifstream reader;
 
     bool enable_use = false;
-};
+  };
 } // namespace EMIRO

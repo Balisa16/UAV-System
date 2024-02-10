@@ -8,8 +8,10 @@
 #include <termios.h>
 #include <unistd.h>
 
-namespace EMIRO {
-class UART {
+namespace EMIRO
+{
+  class UART
+  {
   public:
     UART();
 
@@ -59,5 +61,5 @@ class UART {
     int uart_fd;
     std::string device;
     speed_t baudrate;
-};
+  };
 } // namespace EMIRO
