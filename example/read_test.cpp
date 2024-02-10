@@ -3,7 +3,8 @@
 
 using namespace EMIRO;
 
-int main() {
+int main()
+{
     JsonIO reader;
     reader = COPTER_DIR + "/docs/plan.json";
     // std::map<std::string, Target> target = reader.get_ordered_data();

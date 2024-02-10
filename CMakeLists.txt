@@ -83,7 +83,7 @@ link_directories(/usr/local/lib)
   
 add_library(${PROJECT_NAME} SHARED
   src/control.cc
-  src/convert.cc
+  # src/convert.cc
   src/copter.cc
   src/gps.cc
   src/jsonio.cc

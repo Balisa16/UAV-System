@@ -52,13 +52,13 @@ namespace EMIRO
     class Copter
     {
     public:
-        static ros::NodeHandle *get_nh()
+        static ros::NodeHandle *get_nh(int argc = 0, char **argv = nullptr)
         {
             static ros::NodeHandle nh;
             return &nh;
         }
 
-        static Copter &get()
+        static Copter &get(int argc = 0, char **argv = nullptr)
         {
             static Copter copter_instance;
             return copter_instance;
@@ -70,8 +70,7 @@ namespace EMIRO
             return main_logger;
         }
 
-        static bool init(std::string log_name = "copter",
-                         FileType log_type = FileType::CSV);
+        static bool init(int argc, char **argv, std::string copter_name = "copter", std::string log_name = "copter", FileType log_type = FileType::CSV);
 
         /**
          * @brief Init home position
@@ -270,48 +269,48 @@ namespace EMIRO
         // Static Implementation
         bool copter_init(std::string logger_name, FileType logger_type);
         void copter_init_frame(float timeout_s);
-        bool copter_FCUconnect(float timeout_s = 1.0f);
-        bool copter_FCUstart(float timeout_s = 1.0f);
+        bool copter_FCUconnect(float timeout_s = 1.0f) const;
+        bool copter_FCUstart(float timeout_s = 1.0f) const;
         int copter_set_mode(CopterMode mode);
         void copter_set_vel(const float &vx, const float &vy, const float &vz, const float &avx, const float &avy, const float &avz);
         void copter_set_vel(geometry_msgs::Twist &cmd_vel);
+        int copter_set_speed(float speed_mps);
+        void copter_set_ekf_source(EKF_Source source);
+        void copter_set_ekf_origin(float lat, float lnt, float alt);
+        int copter_set_home(float lat, float lnt, float alt);
+        void copter_set_rc(int channel, int pwm);
         bool copter_Arming();
         int copter_takeoff(float takeoff_alt);
         int copter_just_takeoff(float takeoff_alt, float _yaw);
         int copter_takeoff2(WayPoint wp);
         void copter_Go(WayPoint &wp, bool show = false, std::string header = "Go to");
-        float copter_get_alt();
         void copter_Go_Land(WayPoint wp, float tolerance = 0.15f);
         void copter_Land();
-        int copter_set_speed(float speed_mps);
-        void copter_set_ekf_source(EKF_Source source);
-        void copter_set_ekf_origin(float lat, float lnt, float alt);
-        int copter_set_home(float lat, float lnt, float alt);
-        bool copter_is_reached(WayPoint dest, float tolerance);
-        bool copter_check_alt(float dist_alt, float tolerance);
-        WayPoint copter_calc_transition(WayPoint start_point, WayPoint stop_point, float copter_deg, float copter_alt = 0.8f);
-        void copter_set_rc(int channel, int pwm);
-        void copter_get_pose(Position *pos, Quaternion *quat);
-        float copter_get_yaw(bool use360 = false);
-        void copter_get_position(WayPoint &pose_ref);
-        Mode copter_get_current_mission();
+        bool copter_is_reached(WayPoint dest, float tolerance) const;
+        bool copter_check_alt(float dist_alt, float tolerance) const;
+        WayPoint copter_calc_transition(WayPoint start_point, WayPoint stop_point, float copter_deg, float copter_alt = 0.8f) const;
+        float copter_get_alt() const;
+        void copter_get_pose(Position *pos, Quaternion *quat) const;
+        float copter_get_yaw(bool use360 = false) const;
+        void copter_get_position(WayPoint &pose_ref) const;
+        Mode copter_get_current_mission() const;
 
         // Private Implementation
-        Quaternion _to_quaternion(float roll_rate, float pitch_rate, float yaw_rate);
-        geometry_msgs::Point _enu_2_local(nav_msgs::Odometry current_pose_enu);
+        Quaternion _to_quaternion(float roll_rate, float pitch_rate, float yaw_rate) const;
+        geometry_msgs::Point _enu_2_local(nav_msgs::Odometry current_pose_enu) const;
         void _pose_cb_local(const geometry_msgs::PoseStamped::ConstPtr &msg);
         void _pose_cb_global(const geographic_msgs::GeoPoseStamped::ConstPtr &msg);
         void _state_cb(const mavros_msgs::State::ConstPtr &msg);
-        geometry_msgs::Point _get_hexa_point();
+        geometry_msgs::Point _get_hexa_point() const;
         void _go_to(geometry_msgs::Pose pose);
         void _goto_xyz_rpy(float x, float y, float z, float roll, float pitch, float yaw);
-        void _viso_align();
+        void _viso_align() const;
         int _land();
 
     public:
         ros::ServiceClient command_client;
         CopterStatus status = CopterStatus::None;
-        void print_wp(std::string header, WayPoint &wp);
+        void print_wp(std::string header, WayPoint &wp) const;
 
     private:
         EMIRO::Logger traj_logger;

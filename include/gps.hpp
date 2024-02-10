@@ -10,12 +10,15 @@
 #include <ncurses.h>
 #include <thread>
 
-namespace EMIRO {
-class GPS {
+namespace EMIRO
+{
+  class GPS
+  {
   public:
-    static GPS &get_gps() {
-        static GPS instance;
-        return instance;
+    static GPS &get_gps()
+    {
+      static GPS instance;
+      return instance;
     }
 
     static void init();
@@ -31,10 +34,11 @@ class GPS {
 
     void gps_lock_pos();
 
-    void gps_convert(LinearSpeed &linear_speed);
+    void gps_convert(LinearSpeed &linear_speed) const;
+
     WayPoint start_point;
     float radians;
     float mul_x, mul_y;
     bool is_locked = false, is_init = false;
-};
-} // namespace EMIRO
+  };
+}

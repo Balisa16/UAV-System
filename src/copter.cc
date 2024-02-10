@@ -15,8 +15,14 @@ namespace EMIRO
     }
 
     bool
-    Copter::init(std::string log_name, FileType log_type)
+    Copter::init(int argc, char **argv, std::string copter_name, std::string log_name, FileType log_type)
     {
+        static bool _init_ros = false;
+        if (!_init_ros)
+        {
+            ros::init(argc, argv, copter_name);
+            _init_ros = true;
+        }
         return get().copter_init(log_name, log_type);
     }
 
@@ -273,7 +279,7 @@ namespace EMIRO
 
 #pragma region FCU
     bool
-    Copter::copter_FCUconnect(float timeout_s)
+    Copter::copter_FCUconnect(float timeout_s) const
     {
         ros::Rate _timeout_rate(20);
         int _timeout_int = timeout_s < 0.2f ? 4 : timeout_s * 20;
@@ -290,7 +296,7 @@ namespace EMIRO
     }
 
     bool
-    Copter::copter_FCUstart(float timeout_s)
+    Copter::copter_FCUstart(float timeout_s) const
     {
         ros::Rate _timeout_rate(20);
         int _timeout_int = timeout_s < 0.2f ? 4 : timeout_s * 20;
@@ -312,7 +318,7 @@ namespace EMIRO
 
 #pragma region Pose
     Quaternion
-    Copter::_to_quaternion(float roll_rate, float pitch_rate, float yaw_rate)
+    Copter::_to_quaternion(float roll_rate, float pitch_rate, float yaw_rate) const
     {
         float yaw = yaw_rate * (M_PI / 180);
         float pitch = pitch_rate * (M_PI / 180);
@@ -334,7 +340,7 @@ namespace EMIRO
     }
 
     geometry_msgs::Point
-    Copter::_enu_2_local(nav_msgs::Odometry current_pose_enu)
+    Copter::_enu_2_local(nav_msgs::Odometry current_pose_enu) const
     {
         float x = current_pose_enu.pose.pose.position.x;
         float y = current_pose_enu.pose.pose.position.y;
@@ -374,19 +380,19 @@ namespace EMIRO
 
 #pragma region Getter
     geometry_msgs::Point
-    Copter::_get_hexa_point()
+    Copter::_get_hexa_point() const
     {
         return pose_data_local.pose.position;
     }
 
     Mode
-    Copter::copter_get_current_mission()
+    Copter::copter_get_current_mission() const
     {
-        return this->misi_mode;
+        return misi_mode;
     }
 
     void
-    Copter::copter_get_pose(Position *pos, Quaternion *quat)
+    Copter::copter_get_pose(Position *pos, Quaternion *quat) const
     {
         pos->x = pose_data_local.pose.position.x;
         pos->y = pose_data_local.pose.position.y;
@@ -399,13 +405,13 @@ namespace EMIRO
     }
 
     float
-    Copter::copter_get_alt()
+    Copter::copter_get_alt() const
     {
         return pose_data_local.pose.position.z;
     }
 
     void
-    Copter::copter_get_position(WayPoint &pose_ref)
+    Copter::copter_get_position(WayPoint &pose_ref) const
     {
         pose_ref = {(float)pose_data_local.pose.position.x,
                     (float)pose_data_local.pose.position.y,
@@ -413,7 +419,7 @@ namespace EMIRO
     }
 
     float
-    Copter::copter_get_yaw(bool use360)
+    Copter::copter_get_yaw(bool use360) const
     {
         float w = pose_data_local.pose.orientation.w;
         float x = pose_data_local.pose.orientation.x;
@@ -768,7 +774,7 @@ namespace EMIRO
     }
 
     void
-    Copter::_viso_align()
+    Copter::_viso_align() const
     {
         uint16_t rc7_pwm = 1000;
         mavros_msgs::RCIn rc1;
@@ -882,7 +888,7 @@ namespace EMIRO
 
 #pragma region Check
     bool
-    Copter::copter_is_reached(WayPoint dest, float tolerance)
+    Copter::copter_is_reached(WayPoint dest, float tolerance) const
     {
         geometry_msgs::Point cur_pos = _get_hexa_point();
         float _yaw_value = copter_get_yaw();
@@ -893,7 +899,7 @@ namespace EMIRO
     }
 
     bool
-    Copter::copter_check_alt(float dist_alt, float tolerance)
+    Copter::copter_check_alt(float dist_alt, float tolerance) const
     {
         float _curr_alt = pose_data_local.pose.position.z;
         if (_curr_alt > dist_alt - tolerance && _curr_alt < dist_alt + tolerance)
@@ -909,7 +915,7 @@ namespace EMIRO
 
 #pragma region Tools
     void
-    Copter::print_wp(std::string header, WayPoint &wp)
+    Copter::print_wp(std::string header, WayPoint &wp) const
     {
         std::vector<ListItem<float>> it;
         it.push_back({"x\t", wp.x, "m"});
@@ -921,7 +927,7 @@ namespace EMIRO
 
     WayPoint
     Copter::copter_calc_transition(WayPoint start_point, WayPoint stop_point,
-                                   float copter_deg, float copter_alt)
+                                   float copter_deg, float copter_alt) const
     {
         WayPoint _wp;
         double dist_AB = sqrt(pow(stop_point.x - start_point.x, 2) + pow(start_point.y - stop_point.y, 2));

@@ -10,22 +10,37 @@
 #include <thread>
 #include <tuple>
 
-namespace EMIRO {
-std::mutex lidar_proc_mtx;
+namespace EMIRO
+{
+  std::mutex lidar_proc_mtx;
 
-enum class LidarType { Simulator, A1, S1 };
+  enum class LidarType
+  {
+    Simulator,
+    A1,
+    S1
+  };
 
-enum class LidarStatus { None, Init, Start, Run, Stop };
+  enum class LidarStatus
+  {
+    None,
+    Init,
+    Start,
+    Run,
+    Stop
+  };
 
-typedef struct {
+  typedef struct
+  {
     float margin_left_2;
     float margin_left_1;
     float center;
     float margin_right_1;
     float margin_right_2;
-} SideRange;
+  } SideRange;
 
-typedef struct {
+  typedef struct
+  {
     LidarType type;
     LidarStatus status;
     sensor_msgs::LaserScan in_data;
@@ -35,9 +50,10 @@ typedef struct {
     SideRange out_right_rng;
     SideRange out_front_rng;
     SideRange out_back_rng;
-} LidarRef;
+  } LidarRef;
 
-class Lidar {
+  class Lidar
+  {
   public:
     Lidar();
     void init(std::shared_ptr<EMIRO::Copter> copter,
@@ -69,5 +85,5 @@ class Lidar {
     std::shared_ptr<EMIRO::Copter> copter;
 
     LidarRef lidar_data;
-};
+  };
 } // namespace EMIRO

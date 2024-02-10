@@ -5,9 +5,7 @@ using namespace EMIRO;
 
 int main(int argc, char **argv)
 {
-    ros::init(argc, argv, "manual_node");
-
-    Copter::init("Manual", FileType::CSV);
+    Copter::init(argc, argv);
 
     Copter::takeoff(1);
     ros::Duration(10).sleep();

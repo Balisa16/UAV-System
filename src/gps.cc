@@ -97,7 +97,7 @@ namespace EMIRO
     }
 
     void
-    GPS::gps_convert(LinearSpeed &linear_speed)
+    GPS::gps_convert(LinearSpeed &linear_speed) const
     {
         if (!is_init || !is_locked)
         {

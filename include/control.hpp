@@ -89,10 +89,10 @@ namespace EMIRO
     private:
         Control();
         ~Control();
-        float control_get_linear_speed();
-        int control_get_rotate_speed();
-        void control_set_linear_speed_limit(const float &limit_m_s);
-        void control_set_rotate_speed_limit(const int &limit_deg_s);
+        float control_get_linear_speed() const;
+        int control_get_rotate_speed() const;
+        void control_set_linear_speed_limit(const float &limit_m_s) const;
+        void control_set_rotate_speed_limit(const int &limit_deg_s) const;
         void control_set_PID(const double &Kp,
                              const double &Ki,
                              const double &Kd);
@@ -104,10 +104,10 @@ namespace EMIRO
                         const int &yaw_precision);
 
         float Kp = .5f, Ki = 0.f, Kd = .05f;
-        float linear_speed_limit = 1.0f;       // m/s
-        float rotate_speed_limit = 1.55f;      // rad/s
-        float vx = 0.f, vy = 0.f, vz = 0.f;    // m/s
-        float avx = 0.f, avy = 0.f, avz = 0.f; // rad/s
+        mutable float linear_speed_limit = 1.0f;  // m/s
+        mutable float rotate_speed_limit = 1.55f; // rad/s
+        float vx = 0.f, vy = 0.f, vz = 0.f;       // m/s
+        float avx = 0.f, avy = 0.f, avz = 0.f;    // rad/s
 
         void control_go(bool yaw_control = true);
     };
