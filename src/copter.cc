@@ -498,7 +498,6 @@ namespace EMIRO
     }
 #pragma endregion
 
-#pragma region Arming_Takeoff
     bool
     Copter::copter_Arming()
     {
@@ -612,110 +611,6 @@ namespace EMIRO
 
         return 0;
     }
-
-    // int
-    // Copter::copter_just_takeoff(float takeoff_alt, float _yaw)
-    // {
-    //     // Update location data
-    //     ros::Rate _internal_rate(2);
-    //     int _timer = 5;
-    //     while (ros::ok() && _timer > 0)
-    //     {
-    //         _timer--;
-    //         ros::spinOnce();
-    //         _internal_rate.sleep();
-    //     }
-
-    //     // Get latest position data
-    //     WayPoint _wp;
-    //     copter_get_position(_wp);
-    //     _goto_xyz_rpy(_wp.x, _wp.y, takeoff_alt, 0, 0, _yaw);
-    //     for (int i = 0; i < 10; i++)
-    //     {
-    //         cmd_pos_pub.publish(pose_stamped);
-    //         ros::spinOnce();
-    //         ros::Duration(0.1).sleep();
-    //     }
-
-    //     // Arming drone
-    //     get_logger().write_show(LogLevel::INFO, "Arming drone");
-    //     mavros_msgs::CommandBool arm_request;
-    //     arm_request.request.value = true;
-    //     while (!current_state_g.armed && !arm_request.response.success && ros::ok())
-    //     {
-    //         ros::Duration(.1).sleep();
-    //         arming_client.call(arm_request);
-    //         cmd_pos_pub.publish(pose_stamped);
-    //     }
-
-    //     if (arm_request.response.success)
-    //         get_logger().write_show(LogLevel::INFO, "Arming Successful");
-    //     else
-    //     {
-    //         get_logger().write_show(LogLevel::ERROR, "Arming Failed : %d",
-    //                                 arm_request.response.success);
-    //         return -1;
-    //     }
-
-    //     // Takeoff drone
-    //     mavros_msgs::CommandTOL srv_takeoff;
-    //     srv_takeoff.request.altitude = takeoff_alt;
-    //     if (takeoff_client.call(srv_takeoff))
-    //         get_logger().write_show(LogLevel::INFO, "Success Takeoff");
-    //     else
-    //     {
-    //         get_logger().write_show(LogLevel::ERROR, "Failed Takeoff");
-    //         return -2;
-    //     }
-
-    //     return 0;
-    // }
-
-    // int
-    // Copter::copter_takeoff2(WayPoint wp)
-    // {
-    //     _goto_xyz_rpy(wp.x, wp.y, wp.z, 0, 0, wp.yaw);
-    //     for (int i = 0; i < 100; i++)
-    //     {
-    //         cmd_pos_pub.publish(pose_stamped);
-    //         ros::spinOnce();
-    //         ros::Duration(0.01).sleep();
-    //     }
-    //     // arming
-    //     get_logger().write_show(LogLevel::INFO, "Arming drone");
-    //     mavros_msgs::CommandBool arm_request;
-    //     arm_request.request.value = true;
-    //     while (!current_state_g.armed && !arm_request.response.success && ros::ok())
-    //     {
-    //         ros::Duration(.1).sleep();
-    //         arming_client.call(arm_request);
-    //         cmd_pos_pub.publish(pose_stamped);
-    //     }
-    //     if (arm_request.response.success)
-    //         get_logger().write_show(LogLevel::INFO, "Arming Successful");
-    //     else
-    //     {
-    //         get_logger().write_show(LogLevel::INFO, "Arming Failed : %d",
-    //                                 arm_request.response.success);
-    //         return -1;
-    //     }
-
-    //     // request takeoff
-    //     mavros_msgs::CommandTOL srv_takeoff;
-    //     srv_takeoff.request.altitude = wp.z;
-    //     if (takeoff_client.call(srv_takeoff))
-    //     {
-    //         get_logger().write_show(LogLevel::INFO, "Success Takeoff");
-    //     }
-    //     else
-    //     {
-    //         get_logger().write_show(LogLevel::ERROR, "Takeoff Failed");
-    //         return -2;
-    //     }
-
-    //     return 0;
-    // }
-#pragma endregion
 
 #pragma region Land
     int

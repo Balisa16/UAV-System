@@ -143,18 +143,6 @@ namespace EMIRO
          */
         static int takeoff(float takeoff_alt, float tolerance = 0.2f);
 
-        // static int just_takeoff(float takeoff_alt, float _yaw);
-
-        // /**
-        //  * @brief       Arming drone and takeoff in X = wp.x, Y = wp.y
-        //  * @note        Used when we want to takeoff not in home position / EKF
-        //  * origin position
-        //  *
-        //  * @param wp    Current Waypoint
-        //  * @return int
-        //  */
-        // static int takeoff2(WayPoint wp);
-
         /**
          * @brief     Give command to copter to go to desire Waypoint
          *
@@ -283,8 +271,6 @@ namespace EMIRO
         void copter_set_rc(int channel, int pwm);
         bool copter_Arming();
         int copter_takeoff(float takeoff_alt, float tolerance);
-        // int copter_just_takeoff(float takeoff_alt, float _yaw);
-        // int copter_takeoff2(WayPoint wp);
         void copter_Go(WayPoint &wp, bool show = false, std::string header = "Go to");
         void copter_Go_Land(WayPoint wp, float tolerance = 0.15f);
         void copter_Land();
