@@ -8,7 +8,7 @@ int main(int argc, char **argv)
     Copter::init(argc, argv);
 
     Copter::takeoff(1);
-    ros::Duration(10).sleep();
+    // ros::Duration(10).sleep();
 
     // Read JSON point
     JsonIO reader;
@@ -27,6 +27,7 @@ int main(int argc, char **argv)
         std::cout << C_GREEN << S_BOLD << '[' << t.header << ']' << C_RESET
                   << '\n';
         Control::go(t.wp.x, t.wp.y, t.wp.z, t.wp.yaw, 0.05f, 5);
+        break;
     }
 
     return 0;

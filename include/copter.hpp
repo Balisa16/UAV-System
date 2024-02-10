@@ -141,19 +141,19 @@ namespace EMIRO
          * @param takeoff_alt   Target altitude (m)
          * @return int          Service feedback
          */
-        static int takeoff(float takeoff_alt);
+        static int takeoff(float takeoff_alt, float tolerance = 0.2f);
 
-        static int just_takeoff(float takeoff_alt, float _yaw);
+        // static int just_takeoff(float takeoff_alt, float _yaw);
 
-        /**
-         * @brief       Arming drone and takeoff in X = wp.x, Y = wp.y
-         * @note        Used when we want to takeoff not in home position / EKF
-         * origin position
-         *
-         * @param wp    Current Waypoint
-         * @return int
-         */
-        static int takeoff2(WayPoint wp);
+        // /**
+        //  * @brief       Arming drone and takeoff in X = wp.x, Y = wp.y
+        //  * @note        Used when we want to takeoff not in home position / EKF
+        //  * origin position
+        //  *
+        //  * @param wp    Current Waypoint
+        //  * @return int
+        //  */
+        // static int takeoff2(WayPoint wp);
 
         /**
          * @brief     Give command to copter to go to desire Waypoint
@@ -256,6 +256,8 @@ namespace EMIRO
 
         static Mode get_current_mission();
 
+        static void go_rtl(float alt = -1.f);
+
     private:
         Copter();
 
@@ -280,9 +282,9 @@ namespace EMIRO
         int copter_set_home(float lat, float lnt, float alt);
         void copter_set_rc(int channel, int pwm);
         bool copter_Arming();
-        int copter_takeoff(float takeoff_alt);
-        int copter_just_takeoff(float takeoff_alt, float _yaw);
-        int copter_takeoff2(WayPoint wp);
+        int copter_takeoff(float takeoff_alt, float tolerance);
+        // int copter_just_takeoff(float takeoff_alt, float _yaw);
+        // int copter_takeoff2(WayPoint wp);
         void copter_Go(WayPoint &wp, bool show = false, std::string header = "Go to");
         void copter_Go_Land(WayPoint wp, float tolerance = 0.15f);
         void copter_Land();
@@ -294,6 +296,7 @@ namespace EMIRO
         float copter_get_yaw(bool use360 = false) const;
         void copter_get_position(WayPoint &pose_ref) const;
         Mode copter_get_current_mission() const;
+        void copter_Go_RTL(float alt) const;
 
         // Private Implementation
         Quaternion _to_quaternion(float roll_rate, float pitch_rate, float yaw_rate) const;
@@ -351,7 +354,7 @@ namespace EMIRO
         Param copter_param;
 
         // Initialize frame
-        WayPoint local_frame;
+        WayPoint local_frame, takeoff_wp = {0.0f, 0.0f, 0.0f, 0.0f};
         bool is_init_pubs_subs, is_init_frame;
 
         // System variable
