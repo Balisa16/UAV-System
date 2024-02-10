@@ -16,7 +16,7 @@ int main(int argc, char **argv)
     std::vector<Target> target = reader.get_data_vector();
 
     // Set Speed limit
-    Control::set_linear_speed_limit(0.5f);
+    Control::set_linear_speed_limit(2.f);
     for (Target &t : target)
     {
         if (!ros::ok())
@@ -27,7 +27,6 @@ int main(int argc, char **argv)
         std::cout << C_GREEN << S_BOLD << '[' << t.header << ']' << C_RESET
                   << '\n';
         Control::go(t.wp.x, t.wp.y, t.wp.z, t.wp.yaw, 0.05f, 5);
-        break;
     }
 
     return 0;

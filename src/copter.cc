@@ -513,12 +513,18 @@ namespace EMIRO
         get_logger().wait("Arming drone");
         mavros_msgs::CommandBool arm_request;
         arm_request.request.value = true;
+
+        ros::Rate _internal_rate(2);
+        int _timeout = 5 * 2; // 5 seconds timeout
         while (!current_state_g.armed && !arm_request.response.success && ros::ok())
         {
             arming_client.call(arm_request);
             cmd_pos_pub.publish(pose_stamped);
+            _timeout--;
+            if (_timeout <= 0)
+                break;
             ros::spinOnce();
-            ros::Duration(.1).sleep();
+            _internal_rate.sleep();
         }
 
         if (arm_request.response.success)
@@ -552,7 +558,11 @@ namespace EMIRO
         }
 
         // Arming
-        bool is_armed = copter_Arming();
+        if (!copter_Arming())
+        {
+            this->~Copter();
+            exit(0);
+        }
 
         _goto_xyz_rpy(_wp.x, _wp.y, takeoff_alt, 0, 0, _wp.yaw);
         for (int i = 0; i < 10; i++)
@@ -562,28 +572,23 @@ namespace EMIRO
             _internal_rate.sleep();
         }
 
-        // Takeoff
+        // Call Takeoff
         mavros_msgs::CommandTOL srv_takeoff;
         srv_takeoff.request.altitude = takeoff_alt;
-        if (takeoff_client.call(srv_takeoff))
+        if (!takeoff_client.call(srv_takeoff))
         {
-            get_logger().write_show(LogLevel::INFO, "Success Takeoff");
-            status = CopterStatus::Takeoff;
-        }
-        else
-        {
-            get_logger().write_show(LogLevel::ERROR, "Failed Takeoff");
-            return -2;
+            get_logger().write_show(LogLevel::ERROR, "Failed Call Takeoff");
+            this->~Copter();
+            exit(0);
         }
 
-        // wait for takeoff
-        // get_logger().wait("Waiting for takeoff");
+        // Takeoff
         int counter = 10 * 5; // 10 sec timeout
         while (ros::ok() && current_state_g.mode != "AUTO.TAKEOFF")
         {
             float _curr_alt = get().get_alt();
             counter--;
-            std::cout << C_MAGENTA << S_BOLD << " >>> " << C_RESET << "alt : " << _curr_alt << "m\t => [" << takeoff_alt - tolerance << " <= alt <=  " << takeoff_alt + tolerance << "   \r" << std::flush;
+            std::cout << C_MAGENTA << S_BOLD << " >>> " << C_RESET << "alt : " << _curr_alt << "m\t" << takeoff_alt - tolerance << " <= alt <=  " << takeoff_alt + tolerance << "   \r" << std::flush;
             if (counter == 0)
             {
                 // get_logger().wait_failed();
@@ -593,7 +598,7 @@ namespace EMIRO
             }
             if (_curr_alt >= takeoff_alt - tolerance && _curr_alt <= takeoff_alt + tolerance)
             {
-                get_logger().write_show(LogLevel::INFO, "Success Takeoff");
+                get_logger().write_show(LogLevel::INFO, "Success Takeoff         ");
                 status = CopterStatus::Takeoff;
                 break;
             }
@@ -991,6 +996,6 @@ namespace EMIRO
         if (status == CopterStatus::Flying || status == CopterStatus::Takeoff)
             copter_Land();
         get_logger().finish();
-        traj_logger.finish();
+        traj_logger.finish(false);
     }
 } // namespace EMIRO
