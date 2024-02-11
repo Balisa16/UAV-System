@@ -163,4 +163,53 @@ namespace EMIRO
     }
 
     Control::~Control() {}
+
+    // PID Control
+    PIDControl::PIDControl(const double &Kp, const double &Ki, const double &Kd) : _Kp(Kp), _Ki(Ki), _Kd(Kd)
+    {
+    }
+
+    void PIDControl::set_linear_speed(const float &linear_speed_m_s)
+    {
+        _linear_speed = linear_speed_m_s;
+    }
+    void PIDControl::set_rotation_speed(const float &rotation_speed_deg_s)
+    {
+        _rotation_speed = rotation_speed_deg_s;
+    }
+    void PIDControl::set_target_point(const WayPoint &wp)
+    {
+        _target_point = wp;
+    }
+
+    WayPoint &PIDControl::get_target_point()
+    {
+        return _target_point;
+    }
+    float &PIDControl::get_linear_speed()
+    {
+        return _linear_speed;
+    }
+    float &PIDControl::get_rotation_speed()
+    {
+        return _rotation_speed;
+    }
+    bool PIDControl::go_wait()
+    {
+        // Reset PID
+        _x_integral = _y_integral = _z_integral = _yaw_integral = _x_prev_error = _y_prev_error = _z_prev_error = _yaw_prev_error = .0f;
+
+        PIDOut __output_pid;
+        WayPoint __current_pos;
+        while (ros::ok())
+        {
+            Copter::get_position(__current_pos);
+            calculate(__current_pos, __output_pid);
+        }
+    }
+
+    void PIDControl::calculate(WayPoint &current_pos, PIDOut &out)
+    {
+        WayPoint __wp_error = _target_point - current_pos;
+    }
 } // namespace EMIRO

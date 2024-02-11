@@ -115,17 +115,50 @@ namespace EMIRO
     class BaseControl
     {
     public:
-        virtual void get() = 0;
-        virtual bool go() = 0;
+        virtual bool go_wait() = 0;
+        // Setter
+        virtual void set_linear_speed(const float &linear_speed_m_s) = 0;
+        virtual void set_rotation_speed(const float &rotation_speed_deg_s) = 0;
+        virtual void set_target_point(const WayPoint &wp) = 0;
+
+        // Getter
+        virtual WayPoint &get_target_point() = 0;
+        virtual float &get_linear_speed() = 0;
+        virtual float &get_rotation_speed() = 0;
         virtual ~BaseControl() = default;
     };
 
     class PIDControl : public BaseControl
     {
     public:
-        PIDControl(const Position &target_point, const double &Kp, const double &Ki, const double &Kd);
+        PIDControl(const double &Kp = .5f, const double &Ki = .0f, const double &Kd = .05f);
         ~PIDControl();
-        void get() override;
-        bool go() override;
+        void set_linear_speed(const float &linear_speed_m_s) override;
+        void set_rotation_speed(const float &rotation_speed_deg_s) override;
+        void set_target_point(const WayPoint &wp) override;
+
+        WayPoint &get_target_point() override;
+        float &get_linear_speed() override;
+        float &get_rotation_speed() override;
+        bool go_wait() override;
+
+    private:
+        struct PIDOut
+        {
+            float x_out, y_out, z_out, yaw_out;
+
+            PIDOut()
+            {
+                x_out = y_out = z_out = yaw_out = .0f;
+            }
+        };
+        void calculate(WayPoint &current_pos, PIDOut &out);
+
+    private:
+        WayPoint _target_point;
+        float _Kp, _Ki, _Kd;
+        float _linear_speed;
+        float _rotation_speed;
+        float _x_integral, _y_integral, _z_integral, _yaw_integral, _x_prev_error, _y_prev_error, _z_prev_error, _yaw_prev_error;
     };
 } // namespace EMIRO
