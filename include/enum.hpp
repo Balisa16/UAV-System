@@ -156,6 +156,14 @@ namespace EMIRO
             return _wp_result;
         }
 
+        void operator=(const WayPoint &wp)
+        {
+            x = wp.x;
+            y = wp.y;
+            z = wp.z;
+            yaw = wp.yaw;
+        }
+
         void clear()
         {
             x = 0.f;

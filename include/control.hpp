@@ -136,6 +136,8 @@ namespace EMIRO
         void set_linear_speed(const float &linear_speed_m_s) override;
         void set_rotation_speed(const float &rotation_speed_deg_s) override;
         void set_target_point(const WayPoint &wp) override;
+        void set_linear_tolerance(float tolerance);
+        void set_rotation_tolerance(float tolerance);
 
         WayPoint &get_target_point() override;
         float &get_linear_speed() override;
@@ -156,9 +158,10 @@ namespace EMIRO
 
     private:
         WayPoint _target_point;
+        WayPoint _integral, _prev_error;
         float _Kp, _Ki, _Kd;
         float _linear_speed;
         float _rotation_speed;
-        float _x_integral, _y_integral, _z_integral, _yaw_integral, _x_prev_error, _y_prev_error, _z_prev_error, _yaw_prev_error;
+        float _linear_tolerance, _rotation_tolerance;
     };
 } // namespace EMIRO

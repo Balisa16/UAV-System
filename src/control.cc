@@ -181,6 +181,12 @@ namespace EMIRO
     {
         _target_point = wp;
     }
+    void PIDControl::set_linear_tolerance(float tolerance)
+    {
+    }
+    void PIDControl::set_rotation_tolerance(float tolerance)
+    {
+    }
 
     WayPoint &PIDControl::get_target_point()
     {
@@ -197,13 +203,25 @@ namespace EMIRO
     bool PIDControl::go_wait()
     {
         // Reset PID
-        _x_integral = _y_integral = _z_integral = _yaw_integral = _x_prev_error = _y_prev_error = _z_prev_error = _yaw_prev_error = .0f;
+        _integral.clear();
+        _prev_error.clear();
 
         PIDOut __output_pid;
         WayPoint __current_pos;
+        const float x_low = _target_point.x - _linear_tolerance;
+        const float x_high = _target_point.x + _linear_tolerance;
+        const float y_low = _target_point.y - _linear_tolerance;
+        const float y_high = _target_point.y + _linear_tolerance;
+        const float z_low = _target_point.z - _linear_tolerance;
+        const float z_high = _target_point.z + _linear_tolerance;
         while (ros::ok())
         {
             Copter::get_position(__current_pos);
+            if (std::fabs(__current_pos.x - _target_point.x) < _linear_tolerance &&
+                std::fabs(__current_pos.x - _target_point.y) < _linear_tolerance &&
+                std::fabs(__current_pos.x - _target_point.z) < _linear_tolerance &&
+                std::fabs(__current_pos.yaw - _target_point.yaw) < _rotation_tolerance)
+                break;
             calculate(__current_pos, __output_pid);
         }
     }
@@ -211,5 +229,12 @@ namespace EMIRO
     void PIDControl::calculate(WayPoint &current_pos, PIDOut &out)
     {
         WayPoint __wp_error = _target_point - current_pos;
+        _integral += __wp_error;
+        out.x_out = _Kp * __wp_error.x + _Ki * _integral.x + _Kd * (__wp_error.x - _prev_error.x);
+        out.y_out = _Kp * __wp_error.y + _Ki * _integral.y + _Kd * (__wp_error.y - _prev_error.y);
+        out.z_out = _Kp * __wp_error.z + _Ki * _integral.z + _Kd * (__wp_error.z - _prev_error.z);
+        out.yaw_out = _Kp * __wp_error.yaw + _Ki * _integral.yaw + _Kd * (__wp_error.yaw - _prev_error.yaw);
+
+        _prev_error = __wp_error;
     }
 } // namespace EMIRO
