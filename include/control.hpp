@@ -111,4 +111,21 @@ namespace EMIRO
 
         void control_go(bool yaw_control = true);
     };
+
+    class BaseControl
+    {
+    public:
+        virtual void get() = 0;
+        virtual bool go() = 0;
+        virtual ~BaseControl() = default;
+    };
+
+    class PIDControl : public BaseControl
+    {
+    public:
+        PIDControl(const Position &target_point, const double &Kp, const double &Ki, const double &Kd);
+        ~PIDControl();
+        void get() override;
+        bool go() override;
+    };
 } // namespace EMIRO
