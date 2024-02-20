@@ -199,7 +199,7 @@ namespace EMIRO
     }
     bool PIDControl::go_wait()
     {
-        Copter::get_logger().write_show(LogLevel::INFO, "Go to\t[%.2f, %.2f, %.2f, %d°]\n", _target_point.x, _target_point.y, _target_point.z, (int)_target_point.yaw);
+        Copter::get_logger().write_show(LogLevel::INFO, "Go to\t[%.2f, %.2f, %.2f, %d°]", _target_point.x, _target_point.y, _target_point.z, (int)_target_point.yaw);
 
         // Reset PID
         _integral.clear();
