@@ -55,12 +55,12 @@ namespace EMIRO
                 wp_average += w;
             wp_average /= pos_temp.size();
 
-            std::cout << "Position : [" << wp_average.x << ", " << wp_average.y
+            std::cout << CLEAR_LINE << "Position : [" << wp_average.x << ", " << wp_average.y
                       << ", " << wp_average.z << ", " << wp_average.yaw
                       << "], MAE : " << wp_average.x - temp_wp.x << ", "
                       << wp_average.y - temp_wp.y << ", "
                       << wp_average.z - temp_wp.z << ", "
-                      << wp_average.yaw - temp_wp.yaw << "   Lock ? (y/n)    \r"
+                      << wp_average.yaw - temp_wp.yaw << "   Lock ? (y/n)\r"
                       << std::flush;
 
             char key = keyboard.get_key();

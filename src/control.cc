@@ -164,11 +164,6 @@ namespace EMIRO
 
     Control::~Control() {}
 
-    // PID Control
-    PIDControl::PIDControl(const double &Kp, const double &Ki, const double &Kd) : _Kp(Kp), _Ki(Ki), _Kd(Kd)
-    {
-    }
-
     void PIDControl::set_linear_speed(const float &linear_speed_m_s)
     {
         _linear_speed = linear_speed_m_s;
@@ -214,8 +209,12 @@ namespace EMIRO
         const float y_high = _target_point.y + _linear_tolerance;
         const float z_low = _target_point.z - _linear_tolerance;
         const float z_high = _target_point.z + _linear_tolerance;
-        while (ros::ok())
+
+        ros::Rate r(5);
+        while (true)
         {
+            if (!ros::ok())
+                return false;
             Copter::get_position(__current_pos);
             if (std::fabs(__current_pos.x - _target_point.x) < _linear_tolerance &&
                 std::fabs(__current_pos.x - _target_point.y) < _linear_tolerance &&
@@ -223,7 +222,21 @@ namespace EMIRO
                 std::fabs(__current_pos.yaw - _target_point.yaw) < _rotation_tolerance)
                 break;
             calculate(__current_pos, __output_pid);
+
+            Copter::get().set_vel(__output_pid.x_out, __output_pid.y_out, __output_pid.z_out, 0.f, 0.f, __output_pid.yaw_out);
+
+            std::cout << CLEAR_LINE << '\r' << C_MAGENTA << S_BOLD << " >>> " << C_RESET << "To target\t["
+                      << __output_pid.x_out << ", " << __output_pid.y_out << ", " << __output_pid.z_out << ", "
+                      << __output_pid.yaw_out << "°]" << std::flush;
+
+            ros::spinOnce();
+            r.sleep();
         }
+        Copter::get_logger().write_show(
+            LogLevel::INFO,
+            "Reached (%.2f, %.2f, %.2f, %d°) => (%.2f, %.2f, %.2f, %d°)", _target_point.x, _target_point.y, _target_point.z, (int)_target_point.yaw,
+            __current_pos.x, __current_pos.y, __current_pos.z, (int)__current_pos.yaw);
+        return true;
     }
 
     void PIDControl::calculate(WayPoint &current_pos, PIDOut &out)
@@ -233,7 +246,7 @@ namespace EMIRO
         out.x_out = _Kp * __wp_error.x + _Ki * _integral.x + _Kd * (__wp_error.x - _prev_error.x);
         out.y_out = _Kp * __wp_error.y + _Ki * _integral.y + _Kd * (__wp_error.y - _prev_error.y);
         out.z_out = _Kp * __wp_error.z + _Ki * _integral.z + _Kd * (__wp_error.z - _prev_error.z);
-        out.yaw_out = _Kp * __wp_error.yaw + _Ki * _integral.yaw + _Kd * (__wp_error.yaw - _prev_error.yaw);
+        out.yaw_out = _Kp * __wp_error.yaw + _Ki * _integral.yaw + _Kd * (__wp_error.yaw - _prev_error.yaw) * 3.14 / 180.f;
 
         _prev_error = __wp_error;
     }

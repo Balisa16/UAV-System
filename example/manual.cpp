@@ -16,7 +16,8 @@ int main(int argc, char **argv)
     std::vector<Target> target = reader.get_data_vector();
 
     // Set Speed limit
-    Control::set_linear_speed_limit(2.f);
+    // Control::set_linear_speed_limit(2.f);
+    PIDControl::get().set_rotation_speed(10.f);
 
     for (Target &t : target)
     {
@@ -25,9 +26,12 @@ int main(int argc, char **argv)
             Copter::Land();
             exit(EXIT_FAILURE);
         }
-        std::cout << C_GREEN << S_BOLD << '[' << t.header << ']' << C_RESET
-                  << '\n';
-        Control::go(t.wp.x, t.wp.y, t.wp.z, t.wp.yaw, 0.05f, 5);
+        std::cout << C_GREEN << S_BOLD << '[' << t.header << ']' << C_RESET << '\n';
+
+        PIDControl::get().set_target_point(t.wp);
+        PIDControl::get().set_linear_speed(t.speed);
+        PIDControl::get().go_wait();
+        // Control::go(t.wp.x, t.wp.y, t.wp.z, t.wp.yaw, 0.05f, 5);
     }
 
     return 0;

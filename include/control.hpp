@@ -131,8 +131,11 @@ namespace EMIRO
     class PIDControl : public BaseControl
     {
     public:
-        PIDControl(const double &Kp = .5f, const double &Ki = .0f, const double &Kd = .05f);
-        ~PIDControl();
+        static PIDControl &get()
+        {
+            static PIDControl _instance;
+            return _instance;
+        }
         void set_linear_speed(const float &linear_speed_m_s) override;
         void set_rotation_speed(const float &rotation_speed_deg_s) override;
         void set_target_point(const WayPoint &wp) override;
@@ -145,6 +148,13 @@ namespace EMIRO
         bool go_wait() override;
 
     private:
+        PIDControl(const PIDControl &&) = delete;
+        PIDControl(const PIDControl &) = delete;
+        PIDControl &operator=(const PIDControl &) = delete;
+        PIDControl &&operator=(const PIDControl &&) = delete;
+
+        PIDControl() = default;
+        ~PIDControl() = default;
         struct PIDOut
         {
             float x_out, y_out, z_out, yaw_out;
@@ -159,7 +169,7 @@ namespace EMIRO
     private:
         WayPoint _target_point;
         WayPoint _integral, _prev_error;
-        float _Kp, _Ki, _Kd;
+        float _Kp = .5f, _Ki = .0f, _Kd = .05f;
         float _linear_speed;
         float _rotation_speed;
         float _linear_tolerance, _rotation_tolerance;
