@@ -221,6 +221,7 @@ namespace EMIRO
                 std::fabs(__current_pos.x - _target_point.z) < _linear_tolerance &&
                 std::fabs(__current_pos.yaw - _target_point.yaw) < _rotation_tolerance)
                 break;
+
             calculate(__current_pos, __output_pid);
 
             Copter::get().set_vel(__output_pid.x_out, __output_pid.y_out, __output_pid.z_out, 0.f, 0.f, __output_pid.yaw_out);
@@ -246,7 +247,12 @@ namespace EMIRO
         out.x_out = _Kp * __wp_error.x + _Ki * _integral.x + _Kd * (__wp_error.x - _prev_error.x);
         out.y_out = _Kp * __wp_error.y + _Ki * _integral.y + _Kd * (__wp_error.y - _prev_error.y);
         out.z_out = _Kp * __wp_error.z + _Ki * _integral.z + _Kd * (__wp_error.z - _prev_error.z);
-        out.yaw_out = _Kp * __wp_error.yaw + _Ki * _integral.yaw + _Kd * (__wp_error.yaw - _prev_error.yaw) * 3.14 / 180.f;
+
+        float diff_yaw = __wp_error.yaw - _prev_error.yaw;
+        diff_yaw = std::fabs(diff_yaw) > _rotation_speed ? _rotation_speed : diff_yaw;
+        diff_yaw *= 3.14f / 180.f;
+
+        out.yaw_out = _Kp * __wp_error.yaw * 3.14f / 180.f + _Ki * _integral.yaw * 3.14f / 180.f + _Kd * diff_yaw;
 
         _prev_error = __wp_error;
     }
