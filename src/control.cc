@@ -178,9 +178,11 @@ namespace EMIRO
     }
     void PIDControl::set_linear_tolerance(float tolerance)
     {
+        _linear_tolerance = tolerance;
     }
     void PIDControl::set_rotation_tolerance(float tolerance)
     {
+        _rotation_tolerance = tolerance;
     }
 
     WayPoint &PIDControl::get_target_point()
@@ -197,18 +199,14 @@ namespace EMIRO
     }
     bool PIDControl::go_wait()
     {
+        Copter::get_logger().write_show(LogLevel::INFO, "Go to\t[%.2f, %.2f, %.2f, %d°]\n", _target_point.x, _target_point.y, _target_point.z, (int)_target_point.yaw);
+
         // Reset PID
         _integral.clear();
         _prev_error.clear();
 
         PIDOut __output_pid;
         WayPoint __current_pos;
-        const float x_low = _target_point.x - _linear_tolerance;
-        const float x_high = _target_point.x + _linear_tolerance;
-        const float y_low = _target_point.y - _linear_tolerance;
-        const float y_high = _target_point.y + _linear_tolerance;
-        const float z_low = _target_point.z - _linear_tolerance;
-        const float z_high = _target_point.z + _linear_tolerance;
 
         ros::Rate r(5);
         while (true)
@@ -217,8 +215,8 @@ namespace EMIRO
                 return false;
             Copter::get_position(__current_pos);
             if (std::fabs(__current_pos.x - _target_point.x) < _linear_tolerance &&
-                std::fabs(__current_pos.x - _target_point.y) < _linear_tolerance &&
-                std::fabs(__current_pos.x - _target_point.z) < _linear_tolerance &&
+                std::fabs(__current_pos.y - _target_point.y) < _linear_tolerance &&
+                std::fabs(__current_pos.z - _target_point.z) < _linear_tolerance &&
                 std::fabs(__current_pos.yaw - _target_point.yaw) < _rotation_tolerance)
                 break;
 
@@ -227,12 +225,15 @@ namespace EMIRO
             Copter::get().set_vel(__output_pid.x_out, __output_pid.y_out, __output_pid.z_out, 0.f, 0.f, __output_pid.yaw_out);
 
             std::cout << CLEAR_LINE << '\r' << C_MAGENTA << S_BOLD << " >>> " << C_RESET << "To target\t["
-                      << __output_pid.x_out << ", " << __output_pid.y_out << ", " << __output_pid.z_out << ", "
-                      << __output_pid.yaw_out << "°]" << std::flush;
+                      << __current_pos.x - _target_point.x << ", "
+                      << __current_pos.y - _target_point.y << ", "
+                      << __current_pos.z - _target_point.z << ", "
+                      << __current_pos.yaw - _target_point.yaw << "°]" << std::flush;
 
             ros::spinOnce();
             r.sleep();
         }
+        std::cout << CLEAR_LINE << '\r';
         Copter::get_logger().write_show(
             LogLevel::INFO,
             "Reached (%.2f, %.2f, %.2f, %d°) => (%.2f, %.2f, %.2f, %d°)", _target_point.x, _target_point.y, _target_point.z, (int)_target_point.yaw,

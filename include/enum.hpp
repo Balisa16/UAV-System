@@ -153,7 +153,7 @@ namespace EMIRO
             _wp_result.x = x - wp.x;
             _wp_result.y = y - wp.y;
             _wp_result.z = z - wp.z;
-            _wp_result.yaw = z - wp.yaw;
+            _wp_result.yaw = yaw - wp.yaw;
             return _wp_result;
         }
 

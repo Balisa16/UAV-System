@@ -18,6 +18,8 @@ int main(int argc, char **argv)
     // Set Speed limit
     // Control::set_linear_speed_limit(2.f);
     PIDControl::get().set_rotation_speed(10.f);
+    PIDControl::get().set_linear_tolerance(0.2f);
+    PIDControl::get().set_rotation_tolerance(5.f);
 
     for (Target &t : target)
     {
