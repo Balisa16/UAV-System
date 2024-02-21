@@ -68,7 +68,6 @@ set(emiro_include
 if(IS_JETSON)
   include_directories(${CMAKE_CURRENT_SOURCE_DIR}/platform)
 endif()
-  
 
 if(IS_JETSON)
   message(STATUS "Adding JetsonGPIO in library")
@@ -91,7 +90,6 @@ if(IS_JETSON)
     jsoncpp
     JetsonGPIO)
 
-  target_link_directories(${PROJECT_NAME} PUBLIC /usr/local/lib)
 else()
   message(STATUS "Not adding JetsonGPIO in library")
   add_library(${PROJECT_NAME} SHARED
@@ -112,14 +110,18 @@ else()
     jsoncpp)
 endif()
 
+link_directories(${PROJECT_NAME} PUBLIC /usr/local/lib)  
+
 message("")
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/release/bin)
 
 file(GLOB SRC_FILES example/*.cpp)
+
+message(STATUS "Executable :")
 foreach(SRC_FILE ${SRC_FILES})
   get_filename_component(TARGET_NAME ${SRC_FILE} NAME_WE)
 
-  message("\tFound : ${TARGET_NAME}")
+  message(STATUS "\t${TARGET_NAME}")
 
   add_executable(${TARGET_NAME} ${SRC_FILE})
 
@@ -129,19 +131,16 @@ foreach(SRC_FILE ${SRC_FILES})
   target_link_libraries(${TARGET_NAME} PUBLIC ${PROJECT_NAME})
 
   if(IS_JETSON)
-    message("Adding JetsonGPIO in executable")
     target_link_libraries(${TARGET_NAME} PRIVATE
       JetsonGPIO
       Logger
-      ${catkin_LIBS} 
+      ${catkin_LIBRARIES} 
       ${OpenCV_LIBS} 
       ${CURSES_LIBRARIES}
       Boost::system 
       Boost::filesystem
       asynccamera
       jsoncpp
-      # ${LIBNOTIFY_LIBRARIES}
-      $<$<BOOL:${IS_JETSON}>:IS_JETSON_PLATFORM>
       ${PROJECT_NAME}
     )
   else()
@@ -154,8 +153,6 @@ foreach(SRC_FILE ${SRC_FILES})
       Boost::filesystem
       asynccamera
       jsoncpp
-      # ${LIBNOTIFY_LIBRARIES}
-      $<$<BOOL:${IS_JETSON}>:IS_JETSON_PLATFORM>
       ${PROJECT_NAME}
     )
   endif()
@@ -164,7 +161,7 @@ foreach(SRC_FILE ${SRC_FILES})
     -Wno-dev
     -flto 
     -Wunused-variable)
-  # Hide narrowing warnings
+
   if(CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
     target_compile_options(${TARGET_NAME} PRIVATE -Wno-narrowing)
   elseif(MSVC)
@@ -182,5 +179,4 @@ foreach(SRC_FILE ${SRC_FILES})
 endforeach()
 message("")
 
-# Install library
 install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/release/lib DESTINATION ${CATKIN_DEVEL_PREFIX}/lib)
