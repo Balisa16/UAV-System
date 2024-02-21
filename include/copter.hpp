@@ -177,6 +177,8 @@ namespace EMIRO
          */
         static int set_speed(float speed_mps);
 
+        static bool set_mode(const std::string &mode);
+
         /**
          * @brief             Set the EKF Source. Can be GPS or Non-GPS (T265
          * Camera)
@@ -265,6 +267,7 @@ namespace EMIRO
         void copter_set_vel(const float &vx, const float &vy, const float &vz, const float &avx, const float &avy, const float &avz);
         void copter_set_vel(geometry_msgs::Twist &cmd_vel);
         int copter_set_speed(float speed_mps);
+        bool copter_set_mode(std::string &mode);
         void copter_set_ekf_source(EKF_Source source);
         void copter_set_ekf_origin(float lat, float lnt, float alt);
         int copter_set_home(float lat, float lnt, float alt);

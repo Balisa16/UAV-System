@@ -894,8 +894,26 @@ namespace EMIRO
                 _wp.y > takeoff_wp.y - tolerance && _wp.y < takeoff_wp.y + tolerance &&
                 _wp.z > takeoff_wp.z - tolerance && _wp.z < takeoff_wp.z + tolerance)
                 break;
+            ros::spinOnce();
             ros::Duration(0.2).sleep();
         }
+
+        copter_Land();
+        get_logger().wait("Waiting to Land");
+        while (true)
+        {
+            if (!ros::ok())
+            {
+                get_logger().wait_failed();
+                return;
+            }
+            copter_get_position(_wp);
+            if (std::fabs(_wp.z) < tolerance)
+                break;
+            ros::spinOnce();
+            ros::Duration(0.1).sleep();
+        }
+        get_logger().wait_success();
     }
 #pragma endregion
 
