@@ -173,8 +173,8 @@ namespace EMIRO
         WayPoint _target_point;
         WayPoint _integral, _prev_error;
         float _Kp = .5f, _Ki = .0f, _Kd = .05f;
-        float _linear_speed;
-        float _rotation_speed;
+        float _linear_speed = 2.f;
+        float _rotation_speed = 10.f;
         float _linear_tolerance, _rotation_tolerance;
     };
 } // namespace EMIRO

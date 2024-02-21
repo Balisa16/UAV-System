@@ -209,7 +209,7 @@ namespace EMIRO
     void PIDControl::set_target_point(const WayPoint &wp)
     {
         float _dist = std::sqrt(std::pow(wp.x - _target_point.x, 2) + std::pow(wp.y - _target_point.y, 2) + std::pow(wp.z - _target_point.z, 2));
-        Copter::get_logger().write_show(LogLevel::INFO, "Target point set to (%.2f, %.2f, %.2f, %d°). Distance : %.2f", wp.x, wp.y, wp.z, (int)wp.yaw, _dist);
+        Copter::get_logger().write_show(LogLevel::INFO, "Target point set to [%.2f, %.2f, %.2f, %d°]. Distance : %.2f", wp.x, wp.y, wp.z, (int)wp.yaw, _dist);
         if (_dist > 100.f)
             Copter::get_logger().write_show(LogLevel::WARNING, "Target point too far from current position.");
         else if (_dist < 1.f)
@@ -249,7 +249,7 @@ namespace EMIRO
     }
     bool PIDControl::go_wait()
     {
-        Copter::get_logger().write_show(LogLevel::INFO, "Go to\t[%.2f, %.2f, %.2f, %d°]", _target_point.x, _target_point.y, _target_point.z, (int)_target_point.yaw);
+        Copter::get_logger().write_show(LogLevel::INFO, "Go to [%.2f, %.2f, %.2f, %d°]", _target_point.x, _target_point.y, _target_point.z, (int)_target_point.yaw);
 
         // Reset PID
         _integral.clear();
