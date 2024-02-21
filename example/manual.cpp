@@ -33,7 +33,7 @@ int main(int argc, char **argv)
 
         if (cnt == 0)
         {
-            Copter::go_rtl(5, 0.5);
+            Copter::go_rtl();
             ros::Duration(5).sleep();
             if (!Copter::set_mode(CopterMode::GUIDED))
                 exit(EXIT_FAILURE);

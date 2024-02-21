@@ -165,7 +165,7 @@ namespace EMIRO
          * @brief Just Send Land Command
          *
          */
-        static void Land();
+        static void Land(float ground_tolerance = 0.2f);
 
         /**
          * @brief             Set drone speed besed Ground Speed of drones.
@@ -176,8 +176,6 @@ namespace EMIRO
          * @return int        Service feedback
          */
         static int set_speed(float speed_mps);
-
-        static bool set_mode(const std::string &mode);
 
         /**
          * @brief             Set the EKF Source. Can be GPS or Non-GPS (T265
@@ -267,7 +265,6 @@ namespace EMIRO
         void copter_set_vel(const float &vx, const float &vy, const float &vz, const float &avx, const float &avy, const float &avz);
         void copter_set_vel(geometry_msgs::Twist &cmd_vel);
         int copter_set_speed(float speed_mps);
-        bool copter_set_mode(std::string &mode);
         void copter_set_ekf_source(EKF_Source source);
         void copter_set_ekf_origin(float lat, float lnt, float alt);
         int copter_set_home(float lat, float lnt, float alt);
@@ -276,7 +273,7 @@ namespace EMIRO
         int copter_takeoff(float takeoff_alt, float tolerance);
         void copter_Go(WayPoint &wp, bool show = false, std::string header = "Go to");
         void copter_Go_Land(WayPoint wp, float tolerance = 0.15f);
-        void copter_Land();
+        void copter_Land(float tolerance);
         bool copter_is_reached(WayPoint dest, float tolerance) const;
         bool copter_check_alt(float dist_alt, float tolerance) const;
         WayPoint copter_calc_transition(WayPoint start_point, WayPoint stop_point, float copter_deg, float copter_alt = 0.8f) const;
@@ -297,7 +294,7 @@ namespace EMIRO
         void _go_to(geometry_msgs::Pose pose);
         void _goto_xyz_rpy(float x, float y, float z, float roll, float pitch, float yaw);
         void _viso_align() const;
-        int _land();
+        bool _land(float tolerance);
 
     public:
         ros::ServiceClient command_client;
