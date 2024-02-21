@@ -11,8 +11,7 @@ find_package(catkin REQUIRED COMPONENTS
   image_transport
   std_msgs
   geometry_msgs
-  tf
-)
+  tf)
 
 set(CMAKE_CXX_STANDARD 17)
 
@@ -20,14 +19,28 @@ set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/release/bin)
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/release/lib)
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/release/lib)
 
+set(emiro_file
+  src/control.cc
+  src/copter.cc
+  src/gps.cc
+  src/jsonio.cc
+  src/lidar.cc
+  src/param.cc
+  src/rangefinder.cc
+  src/servo.cc
+  src/simplepid.cc
+  src/tfmini.cc
+  src/uart.cc)
+
 
 # Check Platform
 set(IS_JETSON OFF CACHE BOOL "Is Jetson platform")
 if(CMAKE_SYSTEM_PROCESSOR MATCHES "aarch64")
-  message("AARCH64 architecture detected")
+  message(STATUS "AARCH64 architecture detected")
   add_subdirectory(thirdparty/JetsonGPIO)
+  set(IS_JETSON ON)
 else()
-  message("Not an AARCH64 architecture")
+  message(STATUS "Not an AARCH64 architecture")
 endif()
 
 
@@ -43,75 +56,63 @@ add_subdirectory(thirdparty/Logger)
 add_subdirectory(thirdparty/jsoncpp)
 add_subdirectory(thirdparty/asynccamera)
 
-include_directories(
+set(emiro_include
   ${CMAKE_CURRENT_SOURCE_DIR}/include
   ${CMAKE_CURRENT_SOURCE_DIR}/thirdparty/Logger/include
   ${catkin_INCLUDE_DIRS}
   ${CURSES_INCLUDE_DIR}
   ${OpenCV_INCLUDE_DIRS}
   ${CMAKE_CURRENT_SOURCE_DIR}/thirdparty/jsoncpp/include
-  ${CMAKE_CURRENT_SOURCE_DIR}/thirdparty/asynccamera/include
-  # /usr/local/include
-  # ${LIBNOTIFY_INCLUDE_DIRS}
-)
-  
+  ${CMAKE_CURRENT_SOURCE_DIR}/thirdparty/asynccamera/include)
+
 if(IS_JETSON)
   include_directories(${CMAKE_CURRENT_SOURCE_DIR}/platform)
 endif()
-
-link_directories(/usr/local/lib)
-
-# add_definitions(${OpenCV_DEFENITIONS})
   
-add_library(${PROJECT_NAME} SHARED
-  src/control.cc
-  # src/convert.cc
-  src/copter.cc
-  src/gps.cc
-  src/jsonio.cc
-  src/lidar.cc
-  # src/notification.cc
-  src/param.cc
-  src/rangefinder.cc
-  src/servo.cc
-  src/simplepid.cc
-  src/tfmini.cc
-  src/uart.cc
-)
-  
+
 if(IS_JETSON)
-  message("Adding JetsonGPIO in library")
+  message(STATUS "Adding JetsonGPIO in library")
   add_library(${PROJECT_NAME} SHARED
-    src/pin.cc
-  )
+    ${emiro_file}
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/pin.cc)
+
+  target_include_directories(${PROJECT_NAME} PUBLIC
+    ${emiro_include}
+    ${CMAKE_CURRENT_SOURCE_DIR}/platform)
+
+  target_link_libraries(${PROJECT_NAME} PRIVATE
+    Logger
+    ${catkin_LIBRARIES} 
+    ${OpenCV_LIBS} 
+    ${CURSES_LIBRARIES}
+    Boost::system
+    asynccamera
+    Boost::filesystem
+    jsoncpp
+    JetsonGPIO)
+
+  target_link_directories(${PROJECT_NAME} PUBLIC /usr/local/lib)
+else()
+  message(STATUS "Not adding JetsonGPIO in library")
+  add_library(${PROJECT_NAME} SHARED
+    ${emiro_file})
+
+  target_include_directories(${PROJECT_NAME} PUBLIC
+    ${emiro_include}
+    ${CMAKE_CURRENT_SOURCE_DIR}/platform)
+
+  target_link_libraries(${PROJECT_NAME} PRIVATE
+    Logger
+    ${catkin_LIBRARIES} 
+    ${OpenCV_LIBS} 
+    ${CURSES_LIBRARIES}
+    Boost::system
+    asynccamera
+    Boost::filesystem
+    jsoncpp)
 endif()
 
-# message(STATUS "VARIABLES: ${CATKIN_GLOBAL_LIB_DESTINATION}")
-# message(STATUS "VARIABLES: ${CATKIN_DEVEL_PREFIX}")
-
-# install(TARGETS ${PROJECT_NAME}
-#   LIBRARY DESTINATION ${CATKIN_DEVEL_PREFIX}/${PROJECT_NAME}/lib
-# )
-
-# install(TARGETS ${PROJECT_NAME}
-#   LIBRARY DESTINATION "/usr/lib")
-
-
-target_link_libraries(${PROJECT_NAME} PRIVATE
-  Logger
-  ${catkin_LIBRARIES} 
-  ${OpenCV_LIBS} 
-  ${CURSES_LIBRARIES}
-  Boost::system
-  asynccamera
-  Boost::filesystem
-  jsoncpp
-  # ${LIBNOTIFY_LIBRARIES}
-  $<$<BOOL:${IS_JETSON}>:IS_JETSON_PLATFORM>
-)
-
 message("")
-
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/release/bin)
 
 file(GLOB SRC_FILES example/*.cpp)
