@@ -164,24 +164,74 @@ namespace EMIRO
 
     Control::~Control() {}
 
+    // PIDControl
+    void PIDControl::change(const float &Kp, const float &Ki, const float &Kd)
+    {
+        if (Kp < 0 || Ki < 0 || Kd < 0)
+        {
+            Copter::get_logger().write_show(LogLevel::ERROR, "PID values must be positive");
+            return;
+        }
+        _Kp = Kp;
+        _Ki = Ki;
+        _Kd = Kd;
+    }
+
     void PIDControl::set_linear_speed(const float &linear_speed_m_s)
     {
+        if (linear_speed_m_s > 20)
+        {
+            Copter::get_logger().write_show(LogLevel::ERROR, "Linear Speed too high (> 20 m/s). Use previous value : %d", (int)_linear_speed);
+            return;
+        }
+        else if (linear_speed_m_s < 0.1)
+        {
+            Copter::get_logger().write_show(LogLevel::ERROR, "Linear Speed too low (< 0.1 m/s). Use previous value : %d", (int)_linear_speed);
+            return;
+        }
         _linear_speed = linear_speed_m_s;
     }
     void PIDControl::set_rotation_speed(const float &rotation_speed_deg_s)
     {
+        if (rotation_speed_deg_s > 90)
+        {
+            Copter::get_logger().write_show(LogLevel::ERROR, "Rotation Speed too high (> 90°). Use previous value : %d", (int)_rotation_speed);
+            return;
+        }
+        else if (rotation_speed_deg_s < 1)
+        {
+            Copter::get_logger().write_show(LogLevel::ERROR, "Rotation Speed too low (< 1°). Use previous value : %d", (int)_rotation_speed);
+            return;
+        }
+
         _rotation_speed = rotation_speed_deg_s;
     }
     void PIDControl::set_target_point(const WayPoint &wp)
     {
+        float _dist = std::sqrt(std::pow(wp.x - _target_point.x, 2) + std::pow(wp.y - _target_point.y, 2) + std::pow(wp.z - _target_point.z, 2));
+        Copter::get_logger().write_show(LogLevel::INFO, "Target point set to (%.2f, %.2f, %.2f, %d°). Distance : %.2f", wp.x, wp.y, wp.z, (int)wp.yaw, _dist);
+        if (_dist > 100.f)
+            Copter::get_logger().write_show(LogLevel::WARNING, "Target point too far from current position.");
+        else if (_dist < 1.f)
+            Copter::get_logger().write_show(LogLevel::WARNING, "Target point too close from current position");
         _target_point = wp;
     }
-    void PIDControl::set_linear_tolerance(float tolerance)
+    void PIDControl::set_linear_tolerance(const float &tolerance)
     {
+        if (tolerance > _linear_speed / 2.f)
+        {
+            Copter::get_logger().write_show(LogLevel::ERROR, "Linear tolerance too high (> %.2f m/s or half of current linear speed). Use previous value : %.2f m/s", _linear_speed / 2.f, _linear_tolerance);
+            return;
+        }
         _linear_tolerance = tolerance;
     }
-    void PIDControl::set_rotation_tolerance(float tolerance)
+    void PIDControl::set_rotation_tolerance(const float &tolerance)
     {
+        if (tolerance > _rotation_speed / 2.f)
+        {
+            Copter::get_logger().write_show(LogLevel::ERROR, "Rotation tolerance too high (> %.2f °/s or half of current rotation speed). Use previous value : %.2f °/s", _rotation_speed / 2.f, _rotation_tolerance);
+            return;
+        }
         _rotation_tolerance = tolerance;
     }
 

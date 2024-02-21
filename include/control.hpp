@@ -136,11 +136,14 @@ namespace EMIRO
             static PIDControl _instance;
             return _instance;
         }
+
+        void change(const float &Kp, const float &Ki, const float &Kd);
+
         void set_linear_speed(const float &linear_speed_m_s) override;
         void set_rotation_speed(const float &rotation_speed_deg_s) override;
         void set_target_point(const WayPoint &wp) override;
-        void set_linear_tolerance(float tolerance);
-        void set_rotation_tolerance(float tolerance);
+        void set_linear_tolerance(const float &tolerance);
+        void set_rotation_tolerance(const float &tolerance);
 
         WayPoint &get_target_point() override;
         float &get_linear_speed() override;
