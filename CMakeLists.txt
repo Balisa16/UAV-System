@@ -23,24 +23,11 @@ set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/release/lib)
 
 # Check Platform
 set(IS_JETSON OFF CACHE BOOL "Is Jetson platform")
-if(CMAKE_SYSTEM_PROCESSOR MATCHES "arm")
-  message("ARM architecture detected")
-
-  try_compile(IS_JETSON
-    ${CMAKE_BINARY_DIR}/pin
-    SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/platform/jetson/pin.hpp
-    OUTPUT_VARIABLE OUTPUT_VAR
-  )
-
-  if(IS_JETSON)
-    message("Jetson platform detected")
-    add_definitions(-DJETSON)
-  else()
-    message("Not a Jetson platform")
-  endif()
-
+if(CMAKE_SYSTEM_PROCESSOR MATCHES "aarch64")
+  message("AARCH64 architecture detected")
+  add_subdirectory(thirdparty/JetsonGPIO)
 else()
-  message("Not an ARM architecture")
+  message("Not an AARCH64 architecture")
 endif()
 
 

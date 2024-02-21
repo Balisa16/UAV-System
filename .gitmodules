@@ -7,3 +7,6 @@
 [submodule "thirdparty/asynccamera"]
 	path = thirdparty/asynccamera
 	url = https://github.com/Balisa16/async-camera.git
+[submodule "thirdparty/JetsonGPIO"]
+	path = thirdparty/JetsonGPIO
+	url = https://github.com/pjueon/JetsonGPIO.git
