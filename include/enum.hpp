@@ -28,6 +28,7 @@
 #include <iostream>
 #include <string>
 #include <vector>
+#include <iomanip>
 
 namespace EMIRO
 {
@@ -172,6 +173,16 @@ namespace EMIRO
             z = 0.f;
             yaw = 0.f;
         }
+
+        friend std::ostream &operator<<(std::ostream &os, const WayPoint &wp)
+        {
+            std::cout << std::fixed << std::setprecision(3);
+            os << "(" << wp.x << ", " << wp.y << ", " << wp.z;
+            std::cout << std::fixed << std::setprecision(1);
+            std::cout << ")\tyaw:" << wp.yaw << "°";
+            std::cout << std::defaultfloat;
+            return os;
+        }
     };
 
     typedef struct
@@ -197,13 +208,6 @@ namespace EMIRO
         float linear_y;
         float linear_z;
     } LinearSpeed;
-
-    static std::ostream &operator<<(std::ostream &stream, WayPoint &data)
-    {
-        stream << "\n\tx\t: " << data.x << " m\n\ty\t: " << data.y
-               << " m\n\tz\t: " << data.z << " m\n\tyaw\t: " << data.yaw << " deg";
-        return stream;
-    }
 
     typedef struct
     {
