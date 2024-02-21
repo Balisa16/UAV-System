@@ -587,7 +587,8 @@ namespace EMIRO
         {
             float _curr_alt = get().get_alt();
             counter--;
-            std::cout << C_MAGENTA << S_BOLD << " >>> " << C_RESET << "alt : " << _curr_alt << "m\t" << takeoff_alt - tolerance << " <= alt <=  " << takeoff_alt + tolerance << "   \r" << std::flush;
+            std::cout << std::fixed << std::setprecision(3);
+            std::cout << CLEAR_LINE << C_MAGENTA << S_BOLD << " >>> " << C_RESET << "alt : " << _curr_alt << "m\t" << takeoff_alt - tolerance << " <= alt <=  " << takeoff_alt + tolerance << '\r' << std::flush;
             if (counter == 0)
             {
                 // get_logger().wait_failed();

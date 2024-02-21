@@ -111,4 +111,70 @@ namespace EMIRO
 
         void control_go(bool yaw_control = true);
     };
+
+    class BaseControl
+    {
+    public:
+        virtual bool go_wait() = 0;
+        // Setter
+        virtual void set_linear_speed(const float &linear_speed_m_s) = 0;
+        virtual void set_rotation_speed(const float &rotation_speed_deg_s) = 0;
+        virtual void set_target_point(const WayPoint &wp) = 0;
+
+        // Getter
+        virtual WayPoint &get_target_point() = 0;
+        virtual float &get_linear_speed() = 0;
+        virtual float &get_rotation_speed() = 0;
+        virtual ~BaseControl() = default;
+    };
+
+    class PIDControl : public BaseControl
+    {
+    public:
+        static PIDControl &get()
+        {
+            static PIDControl _instance;
+            return _instance;
+        }
+
+        void change(const float &Kp, const float &Ki, const float &Kd);
+
+        void set_linear_speed(const float &linear_speed_m_s) override;
+        void set_rotation_speed(const float &rotation_speed_deg_s) override;
+        void set_target_point(const WayPoint &wp) override;
+        void set_linear_tolerance(const float &tolerance);
+        void set_rotation_tolerance(const float &tolerance);
+
+        WayPoint &get_target_point() override;
+        float &get_linear_speed() override;
+        float &get_rotation_speed() override;
+        bool go_wait() override;
+
+    private:
+        PIDControl(const PIDControl &&) = delete;
+        PIDControl(const PIDControl &) = delete;
+        PIDControl &operator=(const PIDControl &) = delete;
+        PIDControl &&operator=(const PIDControl &&) = delete;
+
+        PIDControl() = default;
+        ~PIDControl() = default;
+        struct PIDOut
+        {
+            float x_out, y_out, z_out, yaw_out;
+
+            PIDOut()
+            {
+                x_out = y_out = z_out = yaw_out = .0f;
+            }
+        };
+        void calculate(WayPoint &current_pos, PIDOut &out);
+
+    private:
+        WayPoint _target_point;
+        WayPoint _integral, _prev_error;
+        float _Kp = .5f, _Ki = .0f, _Kd = .05f;
+        float _linear_speed = 2.f;
+        float _rotation_speed = 10.f;
+        float _linear_tolerance, _rotation_tolerance;
+    };
 } // namespace EMIRO

@@ -163,4 +163,148 @@ namespace EMIRO
     }
 
     Control::~Control() {}
+
+    // PIDControl
+    void PIDControl::change(const float &Kp, const float &Ki, const float &Kd)
+    {
+        if (Kp < 0 || Ki < 0 || Kd < 0)
+        {
+            Copter::get_logger().write_show(LogLevel::ERROR, "PID values must be positive");
+            return;
+        }
+        _Kp = Kp;
+        _Ki = Ki;
+        _Kd = Kd;
+    }
+
+    void PIDControl::set_linear_speed(const float &linear_speed_m_s)
+    {
+        if (linear_speed_m_s > 20)
+        {
+            Copter::get_logger().write_show(LogLevel::ERROR, "Linear Speed too high (> 20 m/s). Use previous value : %d", (int)_linear_speed);
+            return;
+        }
+        else if (linear_speed_m_s < 0.1)
+        {
+            Copter::get_logger().write_show(LogLevel::ERROR, "Linear Speed too low (< 0.1 m/s). Use previous value : %d", (int)_linear_speed);
+            return;
+        }
+        _linear_speed = linear_speed_m_s;
+    }
+    void PIDControl::set_rotation_speed(const float &rotation_speed_deg_s)
+    {
+        if (rotation_speed_deg_s > 90)
+        {
+            Copter::get_logger().write_show(LogLevel::ERROR, "Rotation Speed too high (> 90°). Use previous value : %d", (int)_rotation_speed);
+            return;
+        }
+        else if (rotation_speed_deg_s < 1)
+        {
+            Copter::get_logger().write_show(LogLevel::ERROR, "Rotation Speed too low (< 1°). Use previous value : %d", (int)_rotation_speed);
+            return;
+        }
+
+        _rotation_speed = rotation_speed_deg_s;
+    }
+    void PIDControl::set_target_point(const WayPoint &wp)
+    {
+        float _dist = std::sqrt(std::pow(wp.x - _target_point.x, 2) + std::pow(wp.y - _target_point.y, 2) + std::pow(wp.z - _target_point.z, 2));
+        Copter::get_logger().write_show(LogLevel::INFO, "Target point set to [%.2f, %.2f, %.2f, %d°]. Distance : %.2f", wp.x, wp.y, wp.z, (int)wp.yaw, _dist);
+        if (_dist > 100.f)
+            Copter::get_logger().write_show(LogLevel::WARNING, "Target point too far from current position.");
+        else if (_dist < 1.f)
+            Copter::get_logger().write_show(LogLevel::WARNING, "Target point too close from current position");
+        _target_point = wp;
+    }
+    void PIDControl::set_linear_tolerance(const float &tolerance)
+    {
+        if (tolerance > _linear_speed / 2.f)
+        {
+            Copter::get_logger().write_show(LogLevel::ERROR, "Linear tolerance too high (> %.2f m/s or half of current linear speed). Use previous value : %.2f m/s", _linear_speed / 2.f, _linear_tolerance);
+            return;
+        }
+        _linear_tolerance = tolerance;
+    }
+    void PIDControl::set_rotation_tolerance(const float &tolerance)
+    {
+        if (tolerance > _rotation_speed / 2.f)
+        {
+            Copter::get_logger().write_show(LogLevel::ERROR, "Rotation tolerance too high (> %.2f °/s or half of current rotation speed). Use previous value : %.2f °/s", _rotation_speed / 2.f, _rotation_tolerance);
+            return;
+        }
+        _rotation_tolerance = tolerance;
+    }
+
+    WayPoint &PIDControl::get_target_point()
+    {
+        return _target_point;
+    }
+    float &PIDControl::get_linear_speed()
+    {
+        return _linear_speed;
+    }
+    float &PIDControl::get_rotation_speed()
+    {
+        return _rotation_speed;
+    }
+    bool PIDControl::go_wait()
+    {
+        Copter::get_logger().write_show(LogLevel::INFO, "Go to [%.2f, %.2f, %.2f, %d°]", _target_point.x, _target_point.y, _target_point.z, (int)_target_point.yaw);
+
+        // Reset PID
+        _integral.clear();
+        _prev_error.clear();
+
+        PIDOut __output_pid;
+        WayPoint __current_pos;
+
+        ros::Rate r(5);
+        while (true)
+        {
+            if (!ros::ok())
+                return false;
+            Copter::get_position(__current_pos);
+            if (std::fabs(__current_pos.x - _target_point.x) < _linear_tolerance &&
+                std::fabs(__current_pos.y - _target_point.y) < _linear_tolerance &&
+                std::fabs(__current_pos.z - _target_point.z) < _linear_tolerance &&
+                std::fabs(__current_pos.yaw - _target_point.yaw) < _rotation_tolerance)
+                break;
+
+            calculate(__current_pos, __output_pid);
+
+            Copter::get().set_vel(__output_pid.x_out, __output_pid.y_out, __output_pid.z_out, 0.f, 0.f, __output_pid.yaw_out);
+
+            std::cout << CLEAR_LINE << '\r' << C_MAGENTA << S_BOLD << " >>> " << C_RESET << "To target\t["
+                      << __current_pos.x - _target_point.x << ", "
+                      << __current_pos.y - _target_point.y << ", "
+                      << __current_pos.z - _target_point.z << ", "
+                      << __current_pos.yaw - _target_point.yaw << "°]" << std::flush;
+
+            ros::spinOnce();
+            r.sleep();
+        }
+        std::cout << CLEAR_LINE << '\r';
+        Copter::get_logger().write_show(
+            LogLevel::INFO,
+            "Reached (%.2f, %.2f, %.2f, %d°) => (%.2f, %.2f, %.2f, %d°)", _target_point.x, _target_point.y, _target_point.z, (int)_target_point.yaw,
+            __current_pos.x, __current_pos.y, __current_pos.z, (int)__current_pos.yaw);
+        return true;
+    }
+
+    void PIDControl::calculate(WayPoint &current_pos, PIDOut &out)
+    {
+        WayPoint __wp_error = _target_point - current_pos;
+        _integral += __wp_error;
+        out.x_out = _Kp * __wp_error.x + _Ki * _integral.x + _Kd * (__wp_error.x - _prev_error.x);
+        out.y_out = _Kp * __wp_error.y + _Ki * _integral.y + _Kd * (__wp_error.y - _prev_error.y);
+        out.z_out = _Kp * __wp_error.z + _Ki * _integral.z + _Kd * (__wp_error.z - _prev_error.z);
+
+        float diff_yaw = __wp_error.yaw - _prev_error.yaw;
+        diff_yaw = std::fabs(diff_yaw) > _rotation_speed ? _rotation_speed : diff_yaw;
+        diff_yaw *= 3.14f / 180.f;
+
+        out.yaw_out = _Kp * __wp_error.yaw * 3.14f / 180.f + _Ki * _integral.yaw * 3.14f / 180.f + _Kd * diff_yaw;
+
+        _prev_error = __wp_error;
+    }
 } // namespace EMIRO
