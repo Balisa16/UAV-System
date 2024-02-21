@@ -578,7 +578,7 @@ namespace EMIRO
         {
             get_logger().write_show(LogLevel::ERROR, "Failed Call Takeoff");
             this->~Copter();
-            exit(0);
+            exit(EXIT_FAILURE);
         }
 
         // Takeoff
@@ -588,7 +588,7 @@ namespace EMIRO
             float _curr_alt = get().get_alt();
             counter--;
             std::cout << std::fixed << std::setprecision(3);
-            std::cout << CLEAR_LINE << C_MAGENTA << S_BOLD << " >>> " << C_RESET << "alt : " << _curr_alt << "m\t" << takeoff_alt - tolerance << " <= alt <=  " << takeoff_alt + tolerance << '\r' << std::flush;
+            std::cout << CLEAR_LINE << C_MAGENTA << S_BOLD << " >>> " << C_RESET << "alt : " << _curr_alt << "m\t" << takeoff_alt - tolerance << " <= alt <=  " << takeoff_alt + tolerance << std::flush;
             if (counter == 0)
             {
                 // get_logger().wait_failed();
@@ -598,7 +598,8 @@ namespace EMIRO
             }
             if (_curr_alt >= takeoff_alt - tolerance && _curr_alt <= takeoff_alt + tolerance)
             {
-                get_logger().write_show(LogLevel::INFO, "Success Takeoff         ");
+                std::cout << CLEAR_LINE;
+                get_logger().write_show(LogLevel::INFO, "Success Takeoff");
                 status = CopterStatus::Takeoff;
                 break;
             }

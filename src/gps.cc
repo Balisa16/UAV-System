@@ -91,9 +91,9 @@ namespace EMIRO
 
         // Get radians value
         start_point.yaw += 90;
-        if (start_point.yaw >= 360.0f)
+        if (start_point.yaw >= 360.f)
             start_point.yaw = (int)start_point.yaw % 360;
-        radians = start_point.yaw * M_PI / 180.0;
+        radians = start_point.yaw * M_PI / 180.f;
     }
 
     void
