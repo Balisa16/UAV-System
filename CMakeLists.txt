@@ -32,11 +32,6 @@ endif()
 
 
 find_package(OpenCV REQUIRED)
-if(IS_JETSON)
-  message("Find Package JetsonGPIO")
-  find_package(JetsonGPIO)
-endif()
-
 find_package(Boost REQUIRED COMPONENTS system filesystem)
 find_package(Curses REQUIRED)
 find_package(CURL REQUIRED)
