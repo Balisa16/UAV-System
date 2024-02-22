@@ -34,7 +34,7 @@ catkin build emiro
 pip3 install pyautogui
 ```
 
-## Autonomous Landing System
+<!-- ## Autonomous Landing System
 This project using simple object detection by color to determine landing pad position. To reducing noise, i am used simple sigmoid. Here is sigmoid model.
 ![Sigmoid Model on Autonomous Landing System](docs/images/sigmoid.png)
 
@@ -45,3 +45,4 @@ This project using simple object detection by color to determine landing pad pos
     ```
     cp src/emiro/release/lib/* devel/lib/
     ```
+-->
