@@ -111,9 +111,9 @@ namespace EMIRO
     }
 
     void
-    Copter::Land()
+    Copter::Land(float ground_tolerance)
     {
-        get().copter_Land();
+        get().copter_Land(ground_tolerance);
     }
 
     int
@@ -578,7 +578,7 @@ namespace EMIRO
         {
             get_logger().write_show(LogLevel::ERROR, "Failed Call Takeoff");
             this->~Copter();
-            exit(0);
+            exit(EXIT_FAILURE);
         }
 
         // Takeoff
@@ -588,7 +588,7 @@ namespace EMIRO
             float _curr_alt = get().get_alt();
             counter--;
             std::cout << std::fixed << std::setprecision(3);
-            std::cout << CLEAR_LINE << C_MAGENTA << S_BOLD << " >>> " << C_RESET << "alt : " << _curr_alt << "m\t" << takeoff_alt - tolerance << " <= alt <=  " << takeoff_alt + tolerance << '\r' << std::flush;
+            std::cout << CLEAR_LINE << C_MAGENTA << S_BOLD << " >>> " << C_RESET << "alt : " << _curr_alt << "m\t" << takeoff_alt - tolerance << " <= alt <=  " << takeoff_alt + tolerance << std::flush;
             if (counter == 0)
             {
                 // get_logger().wait_failed();
@@ -598,7 +598,8 @@ namespace EMIRO
             }
             if (_curr_alt >= takeoff_alt - tolerance && _curr_alt <= takeoff_alt + tolerance)
             {
-                get_logger().write_show(LogLevel::INFO, "Success Takeoff         ");
+                std::cout << CLEAR_LINE;
+                get_logger().write_show(LogLevel::INFO, "Success Takeoff");
                 status = CopterStatus::Takeoff;
                 break;
             }
@@ -614,19 +615,35 @@ namespace EMIRO
     }
 
 #pragma region Land
-    int
-    Copter::_land()
+    bool
+    Copter::_land(float tolerance)
     {
         mavros_msgs::CommandTOL srv_land;
         if (land_client.call(srv_land) && srv_land.response.success)
         {
+            WayPoint _wp;
+            get_logger().wait("Waiting to Land");
+            while (true)
+            {
+                if (!ros::ok())
+                {
+                    get_logger().wait_failed();
+                    return false;
+                }
+                copter_get_position(_wp);
+                if (std::fabs(_wp.z) < tolerance)
+                    break;
+                ros::spinOnce();
+                ros::Duration(0.1).sleep();
+            }
+            get_logger().wait_success();
             get_logger().write_show(LogLevel::INFO, "Success Land");
             status = CopterStatus::Land;
-            return 0;
+            return true;
         }
         get_logger().write_show(LogLevel::ERROR, "Land Failed : %d",
                                 srv_land.response.success);
-        return -1;
+        return false;
     }
 
     void
@@ -643,14 +660,14 @@ namespace EMIRO
 
         ros::Duration(1).sleep();
         get_logger().write_show(LogLevel::INFO, "System Land");
-        _land();
+        _land(tolerance);
     }
 
     void
-    Copter::copter_Land()
+    Copter::copter_Land(float ground_tolerance)
     {
         get_logger().write_show(LogLevel::INFO, "System Land");
-        _land();
+        _land(ground_tolerance);
     }
 #pragma endregion
 
@@ -894,15 +911,18 @@ namespace EMIRO
                 _wp.y > takeoff_wp.y - tolerance && _wp.y < takeoff_wp.y + tolerance &&
                 _wp.z > takeoff_wp.z - tolerance && _wp.z < takeoff_wp.z + tolerance)
                 break;
+            ros::spinOnce();
             ros::Duration(0.2).sleep();
         }
+
+        copter_Land(tolerance);
     }
 #pragma endregion
 
     Copter::~Copter()
     {
         if (status == CopterStatus::Flying || status == CopterStatus::Takeoff)
-            copter_Land();
+            copter_Land(.5f);
         get_logger().finish();
         traj_logger.finish(false);
     }

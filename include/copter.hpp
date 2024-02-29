@@ -165,7 +165,7 @@ namespace EMIRO
          * @brief Just Send Land Command
          *
          */
-        static void Land();
+        static void Land(float ground_tolerance = 0.2f);
 
         /**
          * @brief             Set drone speed besed Ground Speed of drones.
@@ -273,7 +273,7 @@ namespace EMIRO
         int copter_takeoff(float takeoff_alt, float tolerance);
         void copter_Go(WayPoint &wp, bool show = false, std::string header = "Go to");
         void copter_Go_Land(WayPoint wp, float tolerance = 0.15f);
-        void copter_Land();
+        void copter_Land(float tolerance);
         bool copter_is_reached(WayPoint dest, float tolerance) const;
         bool copter_check_alt(float dist_alt, float tolerance) const;
         WayPoint copter_calc_transition(WayPoint start_point, WayPoint stop_point, float copter_deg, float copter_alt = 0.8f) const;
@@ -294,7 +294,7 @@ namespace EMIRO
         void _go_to(geometry_msgs::Pose pose);
         void _goto_xyz_rpy(float x, float y, float z, float roll, float pitch, float yaw);
         void _viso_align() const;
-        int _land();
+        bool _land(float tolerance);
 
     public:
         ros::ServiceClient command_client;

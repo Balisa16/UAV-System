@@ -22,7 +22,7 @@
 #define S_BOLD "\033[1m"
 #define S_ITALIC "\033[3m"
 #define S_UNDERLINE "\033[4m"
-#define CLEAR_LINE "\033[2K"
+#define CLEAR_LINE "\033[2K\r"
 #endif
 
 #include <iostream>

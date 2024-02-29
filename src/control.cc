@@ -149,9 +149,9 @@ namespace EMIRO
                                   _out_pid.linear_z, 0.f, 0.f, avz);
 
             // Print position
-            std::cout << C_MAGENTA << S_BOLD << " >>> " << C_RESET << "Target ("
+            std::cout << CLEAR_LINE << C_MAGENTA << S_BOLD << " >>> " << C_RESET << "Target ("
                       << diff_x << ", " << diff_y << ", " << diff_z << ", "
-                      << diff_yaw << "°)     \r" << std::flush;
+                      << diff_yaw << "°)" << std::flush;
 
             ros::spinOnce();
             r.sleep();
@@ -274,7 +274,7 @@ namespace EMIRO
 
             Copter::get().set_vel(__output_pid.x_out, __output_pid.y_out, __output_pid.z_out, 0.f, 0.f, __output_pid.yaw_out);
 
-            std::cout << CLEAR_LINE << '\r' << C_MAGENTA << S_BOLD << " >>> " << C_RESET << "To target\t["
+            std::cout << CLEAR_LINE << C_MAGENTA << S_BOLD << " >>> " << C_RESET << "To target\t["
                       << __current_pos.x - _target_point.x << ", "
                       << __current_pos.y - _target_point.y << ", "
                       << __current_pos.z - _target_point.z << ", "
@@ -283,7 +283,7 @@ namespace EMIRO
             ros::spinOnce();
             r.sleep();
         }
-        std::cout << CLEAR_LINE << '\r';
+        std::cout << CLEAR_LINE;
         Copter::get_logger().write_show(
             LogLevel::INFO,
             "Reached (%.2f, %.2f, %.2f, %d°) => (%.2f, %.2f, %.2f, %d°)", _target_point.x, _target_point.y, _target_point.z, (int)_target_point.yaw,
