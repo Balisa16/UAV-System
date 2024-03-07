@@ -175,6 +175,6 @@ namespace EMIRO
         float _Kp = .5f, _Ki = .0f, _Kd = .05f;
         float _linear_speed = 2.f;
         float _rotation_speed = 10.f;
-        float _linear_tolerance, _rotation_tolerance;
+        float _linear_tolerance = .2f, _rotation_tolerance = 5.0f;
     };
-} // namespace EMIRO
+}
