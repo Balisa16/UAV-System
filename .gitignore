@@ -4,5 +4,4 @@ release
 .vscode
 lib
 .swp
-example/*.txt
 copter
