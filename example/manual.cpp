@@ -7,6 +7,12 @@ int main(int argc, char **argv)
 {
     Copter::init(argc, argv);
 
+    if (!Copter::PreArmedCheck())
+    {
+        Copter::Land();
+        exit(EXIT_FAILURE);
+    }
+
     Copter::takeoff(1);
     // ros::Duration(10).sleep();
 

@@ -45,6 +45,12 @@ namespace EMIRO
         return get().copter_FCUstart(timeout_s);
     }
 
+    bool Copter::PreArmedCheck(float timeout_s)
+    {
+        uint64_t _cnt = 5 * timeout_s;
+        return get().copter_PreArmedCheck(_cnt);
+    }
+
     int
     Copter::set_mode(CopterMode mode)
     {
@@ -322,6 +328,55 @@ namespace EMIRO
     }
 #pragma endregion
 
+    bool Copter::copter_PreArmedCheck(uint64_t &cnt) const
+    {
+        // Validation position
+        WayPoint _wp;
+        ros::Rate _rate(5);
+        copter_get_position(_wp);
+        get_logger().wait("Waiting for Valid Position");
+        while (std::fabs(_wp.x) < 0.0001 && std::fabs(_wp.y) < 0.0001 && std::fabs(_wp.z) < 0.0001 && ros::ok() && cnt)
+        {
+            copter_get_position(_wp);
+            cnt--;
+            ros::spinOnce();
+            _rate.sleep();
+        }
+        if (std::fabs(_wp.x) < 0.0001 && std::fabs(_wp.y) < 0.0001 && std::fabs(_wp.z) < 0.0001)
+        {
+            get_logger().wait_failed();
+            get_logger().write_show(LogLevel::ERROR, "Position Validation Failed");
+            return false;
+        }
+        else
+        {
+            get_logger().wait_success();
+            get_logger().write_show(LogLevel::INFO, "Position Validation Success");
+        }
+
+        // Validation Mode
+        get_logger().wait("Waiting for GUIDED Mode");
+        while (current_state_g.mode != "GUIDED" && ros::ok() && cnt)
+        {
+            cnt--;
+            ros::spinOnce();
+            _rate.sleep();
+        }
+        if (current_state_g.mode == "GUIDED")
+        {
+            get_logger().wait_success();
+            get_logger().write_show(LogLevel::INFO, "Mode Validation Success");
+        }
+        else
+        {
+            get_logger().wait_failed();
+            get_logger().write_show(LogLevel::ERROR, "Mode Validation Failed");
+            return false;
+        }
+
+        return true;
+    }
+
 #pragma region Pose
     Quaternion
     Copter::_to_quaternion(float roll_rate, float pitch_rate, float yaw_rate) const
@@ -582,20 +637,22 @@ namespace EMIRO
         }
 
         // Takeoff
-        int counter = 10 * 5; // 10 sec timeout
+        uint32_t counter = 20 * 5; // 10 sec timeout
         while (ros::ok() && current_state_g.mode != "AUTO.TAKEOFF")
         {
             float _curr_alt = get().get_alt();
             counter--;
             std::cout << std::fixed << std::setprecision(3);
-            std::cout << CLEAR_LINE << C_MAGENTA << S_BOLD << " >>> " << C_RESET << "alt : " << _curr_alt << "m\t" << takeoff_alt - tolerance << " <= alt <=  " << takeoff_alt + tolerance << std::flush;
-            if (counter == 0)
+            std::cout << CLEAR_LINE << C_MAGENTA << S_BOLD << " >>> " << C_RESET << "Alt : " << _curr_alt << "m\t" << takeoff_alt - tolerance << " <= Alt <=  " << takeoff_alt + tolerance << std::flush;
+            if (!counter)
             {
                 // get_logger().wait_failed();
+                std::cout << '\n';
                 get_logger().write_show(LogLevel::ERROR, "Failed Takeoff [TIMEOUT]");
                 this->~Copter();
                 exit(0);
             }
+
             if (_curr_alt >= takeoff_alt - tolerance && _curr_alt <= takeoff_alt + tolerance)
             {
                 std::cout << CLEAR_LINE;
