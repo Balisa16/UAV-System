@@ -98,6 +98,15 @@ namespace EMIRO
         static bool FCUstart(float timeout_s = 1.0f);
 
         /**
+         * @brief Waiting for Arming
+         *
+         * @param timeout_s Timeout for connect (second)
+         * @return true     FCU in GUIDED mode
+         * @return false    FCU not in GUIDED mode
+         */
+        static bool PreArmedCheck(float timeout_s = 60.0f);
+
+        /**
          * @brief Set drone mode.
          *
          * @param mode    Copter mode (Capitatize)
@@ -261,6 +270,7 @@ namespace EMIRO
         void copter_init_frame(float timeout_s);
         bool copter_FCUconnect(float timeout_s = 1.0f) const;
         bool copter_FCUstart(float timeout_s = 1.0f) const;
+        bool copter_PreArmedCheck(uint64_t &cnt) const;
         int copter_set_mode(CopterMode mode);
         void copter_set_vel(const float &vx, const float &vy, const float &vz, const float &avx, const float &avy, const float &avz);
         void copter_set_vel(geometry_msgs::Twist &cmd_vel);
