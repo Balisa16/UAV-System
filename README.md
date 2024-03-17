@@ -34,10 +34,6 @@ catkin build emiro
 pip3 install pyautogui
 ```
 
-<!-- ## Autonomous Landing System
-This project using simple object detection by color to determine landing pad position. To reducing noise, i am used simple sigmoid. Here is sigmoid model.
-![Sigmoid Model on Autonomous Landing System](docs/images/sigmoid.png)
-
 ## Troubleshoot
 
 1. If there an error like this `src/emiro/release/manual: error while loading shared libraries: libLogger.so: cannot open shared object file: No such file or directory
@@ -45,4 +41,3 @@ This project using simple object detection by color to determine landing pad pos
     ```
     cp src/emiro/release/lib/* devel/lib/
     ```
--->

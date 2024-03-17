@@ -251,6 +251,8 @@ namespace EMIRO
         // WayPoint and WayPointG
         static void get_position(WayPoint &pose_ref);
 
+        static WayPoint get_takeoff_position();
+
         static Mode get_current_mission();
 
         static void go_rtl(float alt = -1.f, float tolerance = 0.2f);

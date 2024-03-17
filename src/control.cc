@@ -239,15 +239,18 @@ namespace EMIRO
     {
         return _target_point;
     }
+
     float &PIDControl::get_linear_speed()
     {
         return _linear_speed;
     }
+
     float &PIDControl::get_rotation_speed()
     {
         return _rotation_speed;
     }
-    bool PIDControl::go_wait()
+
+    bool PIDControl::go_wait(const bool use_takeoff_position)
     {
         Copter::get_logger().write_show(LogLevel::INFO, "Go to [%.2f, %.2f, %.2f, %d°]", _target_point.x, _target_point.y, _target_point.z, (int)_target_point.yaw);
 
@@ -259,6 +262,13 @@ namespace EMIRO
         WayPoint __current_pos;
 
         ros::Rate r(5);
+        if (use_takeoff_position)
+        {
+            auto _takeoff_pos = Copter::get_takeoff_position();
+            _target_point.x += _takeoff_pos.x;
+            _target_point.y += _takeoff_pos.y;
+        }
+
         while (true)
         {
             if (!ros::ok())
