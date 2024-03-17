@@ -190,6 +190,11 @@ namespace EMIRO
         get().copter_get_position(pose_ref);
     }
 
+    WayPoint Copter::get_takeoff_position()
+    {
+        return get().takeoff_wp;
+    }
+
     Mode
     Copter::get_current_mission()
     {

@@ -41,4 +41,3 @@ pip3 install pyautogui
     ```
     cp src/emiro/release/lib/* devel/lib/
     ```
--->

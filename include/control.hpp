@@ -115,7 +115,7 @@ namespace EMIRO
     class BaseControl
     {
     public:
-        virtual bool go_wait() = 0;
+        virtual bool go_wait(const bool use_takeoff_position = false) = 0;
         // Setter
         virtual void set_linear_speed(const float &linear_speed_m_s) = 0;
         virtual void set_rotation_speed(const float &rotation_speed_deg_s) = 0;
@@ -148,7 +148,7 @@ namespace EMIRO
         WayPoint &get_target_point() override;
         float &get_linear_speed() override;
         float &get_rotation_speed() override;
-        bool go_wait() override;
+        bool go_wait(const bool use_takeoff_position) override;
 
     private:
         PIDControl(const PIDControl &&) = delete;
