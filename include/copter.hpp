@@ -194,6 +194,8 @@ namespace EMIRO
          */
         static void set_ekf_source(EKF_Source source);
 
+        static void realign_viso();
+
         /**
          * @brief       Set the EKF Origin for the desired GPS global.
          *
@@ -295,6 +297,7 @@ namespace EMIRO
         void copter_get_position(WayPoint &pose_ref) const;
         Mode copter_get_current_mission() const;
         void copter_Go_RTL(float alt, float tolerance);
+        void copter_realign_viso() const;
 
         // Private Implementation
         Quaternion _to_quaternion(float roll_rate, float pitch_rate, float yaw_rate) const;
@@ -305,7 +308,6 @@ namespace EMIRO
         geometry_msgs::Point _get_hexa_point() const;
         void _go_to(geometry_msgs::Pose pose);
         void _goto_xyz_rpy(float x, float y, float z, float roll, float pitch, float yaw);
-        void _viso_align() const;
         bool _land(float tolerance);
 
     public:
