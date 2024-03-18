@@ -8,6 +8,7 @@
 #include <json.hpp>
 #include <map>
 #include <vector>
+#include <cmath>
 
 namespace EMIRO
 {
@@ -72,6 +73,7 @@ namespace EMIRO
         std::map<TargetKey, Target> &get_data_map();
         std::vector<Target> get_data_vector() const;
         void get_data(std::map<TargetKey, Target> &target) const;
+        void optimize_distance();
         ~JsonIO();
         void operator=(std::string path);
         void operator+=(const Target &target);

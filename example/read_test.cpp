@@ -7,7 +7,7 @@ int main()
 {
     JsonIO reader;
     reader = COPTER_DIR + "/docs/plan.json";
-
+    reader.optimize_distance();
     std::vector<Target> target = reader.get_data_vector();
     for (auto i : target)
         std::cout << i << std::endl;
