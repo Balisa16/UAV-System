@@ -70,9 +70,32 @@ namespace EMIRO
     public:
         JsonIO();
         JsonIO(std::string path);
+
+        /**
+         * @brief Get the data in map format
+         *
+         * @return std::map<TargetKey, Target>& data
+         */
         std::map<TargetKey, Target> &get_data_map();
+
+        /**
+         * @brief Get the data in vector format
+         *
+         * @return std::vector<Target> data
+         */
         std::vector<Target> get_data_vector() const;
+
+        /**
+         * @brief Get the data in map format
+         *
+         * @param target reference of std::map
+         */
         void get_data(std::map<TargetKey, Target> &target) const;
+
+        /**
+         * @brief Do simple optimization of track
+         *
+         */
         void optimize_distance();
         ~JsonIO();
         void operator=(std::string path);
