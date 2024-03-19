@@ -134,6 +134,11 @@ namespace EMIRO
         get().copter_set_ekf_source(source);
     }
 
+    void Copter::realign_viso()
+    {
+        get().copter_realign_viso();
+    }
+
     void
     Copter::set_ekf_origin(float lat, float lnt, float alt)
     {
@@ -188,6 +193,11 @@ namespace EMIRO
     Copter::get_position(WayPoint &pose_ref)
     {
         get().copter_get_position(pose_ref);
+    }
+
+    WayPoint Copter::get_takeoff_position()
+    {
+        return get().takeoff_wp;
     }
 
     Mode
@@ -778,7 +788,7 @@ namespace EMIRO
     }
 
     void
-    Copter::_viso_align() const
+    Copter::copter_realign_viso() const
     {
         uint16_t rc7_pwm = 1000;
         mavros_msgs::RCIn rc1;

@@ -86,7 +86,7 @@ if(IS_JETSON)
     JetsonGPIO)
 
 else()
-  message(STATUS "Not adding JetsonGPIO in library")
+  message(STATUS "Not adding Jetson GPIO in library")
   add_library(${PROJECT_NAME} SHARED
     ${emiro_file})
 

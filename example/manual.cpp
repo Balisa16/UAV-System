@@ -19,6 +19,7 @@ int main(int argc, char **argv)
     // Read JSON point
     JsonIO reader;
     reader = COPTER_DIR + "/docs/plan.json";
+    reader.optimize_distance();
     std::vector<Target> target = reader.get_data_vector();
 
     // Set Speed limit
@@ -37,7 +38,7 @@ int main(int argc, char **argv)
 
         PIDControl::get().set_target_point(t.wp);
         PIDControl::get().set_linear_speed(t.speed);
-        PIDControl::get().go_wait();
+        PIDControl::get().go_wait(true);
         // Control::go(t.wp.x, t.wp.y, t.wp.z, t.wp.yaw, 0.05f, 5);
     }
 
