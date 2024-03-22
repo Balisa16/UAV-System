@@ -1,8 +1,6 @@
 # Autonomous Copter System
 
 Simple UAV System using ROS. This created primarily for my Final Project on Bachelor Degree</br></br>
-## System Diagram
-
 
 ## Dependencies
 1. [Ardupilot & MAVProxy](https://github.com/Intelligent-Quads/iq_tutorials)
