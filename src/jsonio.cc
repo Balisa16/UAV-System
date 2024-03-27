@@ -18,6 +18,64 @@ namespace EMIRO
 
     void JsonIO::get_data(std::map<TargetKey, Target> &target) const { target = data; }
 
+    void JsonIO::optimize_distance()
+    {
+        std::vector<Target> data_vector;
+        for (auto &i : data)
+            data_vector.push_back(i.second);
+
+        float before_distance = 0;
+        for (int i = 1; i < data_vector.size(); i++)
+            before_distance += sqrt(pow(data_vector[i].wp.x - data_vector[i - 1].wp.x, 2) + pow(data_vector[i].wp.y - data_vector[i - 1].wp.y, 2) + pow(data_vector[i].wp.z - data_vector[i - 1].wp.z, 2));
+
+        WayPoint prev_target, curr_target;
+        bool _first = true;
+        int maks_data = data_vector.size() < data.size() ? data_vector.size() : data.size();
+        float total_distance = 0;
+
+        for (int i = 0; i < maks_data - 1; i++)
+        {
+            if (!data_vector[i].header.compare("Home") || !data_vector[i].header.compare("Takeoff"))
+                continue;
+            float min_distance = MAXFLOAT;
+            int selected_idx = i;
+            for (int j = i + 1; j < maks_data; j++)
+            {
+                if (!data_vector[j].header.compare("Home") || !data_vector[j].header.compare("Takeoff"))
+                    continue;
+                float distance = sqrt(pow(data_vector[j].wp.x - data_vector[i].wp.x, 2) + pow(data_vector[j].wp.y - data_vector[i].wp.y, 2) + pow(data_vector[j].wp.z - data_vector[i].wp.z, 2));
+                if (distance < min_distance)
+                {
+                    min_distance = distance;
+                    selected_idx = j;
+                }
+            }
+            Target _temp = data_vector[i];
+            data_vector[i] = data_vector[selected_idx];
+            data_vector[selected_idx] = _temp;
+            total_distance += min_distance;
+        }
+
+        if (before_distance <= total_distance)
+        {
+            std::cout << "Already Optimized : " << before_distance << std::endl;
+            return;
+        }
+        std::cout << "Optimized : " << before_distance << "m => " << total_distance << "m\n";
+
+        std::map<TargetKey, Target> _updated_data;
+        for (int i = 0; i < data_vector.size(); i++)
+            for (auto j : data)
+                if (j.second.header == data_vector[i].header)
+                {
+                    TargetKey _key(i, j.second.header);
+                    _updated_data.emplace(_key, data_vector[i]);
+                    break;
+                }
+
+        data = _updated_data;
+    }
+
     void JsonIO::operator=(std::string path)
     {
         this->file_path = path;
@@ -57,17 +115,6 @@ namespace EMIRO
 
             std::cout << "\033[31m\033[1mError :\033[0m Failed Open File."
                       << std::endl;
-
-            // std::cerr << "Failed to Open File." << std::endl;
-            // FILE *pipe = popen("pwd", "r");
-            // if (!pipe)
-            // 	return;
-            // char buffer[128];
-            // std::string result;
-            // while (fgets(buffer, sizeof(buffer), pipe) != nullptr)
-            // 	result += buffer;
-            // std::cout << "Current path : " << result << std::endl;
-            // pclose(pipe);
             exit(EXIT_FAILURE);
         }
 
@@ -87,10 +134,13 @@ namespace EMIRO
                           << "' already exists.\n";
                 continue;
             }
-            data.emplace(t_key,
-                         Target(item["header"].asString(), item["speed"].asFloat(),
-                                {item["x"].asFloat(), item["y"].asFloat(),
-                                 item["z"].asFloat(), item["yaw"].asFloat()}));
+            Target _new_data = Target(item["header"].asString(),
+                                      item["speed"].asFloat(),
+                                      {item["x"].asFloat(),
+                                       item["y"].asFloat(),
+                                       item["z"].asFloat(),
+                                       item["yaw"].asFloat()});
+            data.emplace(t_key, _new_data);
             data_counter++;
         }
 
