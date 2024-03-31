@@ -184,9 +184,9 @@ namespace EMIRO
     }
 
     float
-    Copter::get_yaw(bool use360)
+    Copter::get_yaw()
     {
-        return get().copter_get_yaw(use360);
+        return get().copter_get_yaw();
     }
 
     void
@@ -210,6 +210,10 @@ namespace EMIRO
     Copter::go_rtl(float alt, float tolerance)
     {
         get().copter_Go_RTL(alt, tolerance);
+    }
+
+    void Copter::set_yaw(YawMode _yaw_mode){
+        get().yaw_mode = _yaw_mode;
     }
 
 #pragma region Initialize
@@ -490,16 +494,24 @@ namespace EMIRO
     }
 
     float
-    Copter::copter_get_yaw(bool use360) const
+    Copter::copter_get_yaw() const
     {
-        float w = pose_data_local.pose.orientation.w;
-        float x = pose_data_local.pose.orientation.x;
-        float y = pose_data_local.pose.orientation.y;
-        float z = pose_data_local.pose.orientation.z;
-        float _deg = atan2(2.0f * (w * z + x * y), 1.0f - 2.0f * (y * y + z * z)) * 180.0f / M_PI;
-        if (use360)
-            _deg = _deg > 0.0f ? 360.0f - _deg : _deg;
-        return _deg;
+        Eigen::Quaternionf c_quat(pose_data_local.pose.orientation.w, pose_data_local.pose.orientation.x, pose_data_local.pose.orientation.y, pose_data_local.pose.orientation.z);
+        float _yaw = std::atan2(2.0f * (c_quat.w() * c_quat.z() + c_quat.x() * c_quat.y()), 1.0f - 2.0f * (c_quat.y() * c_quat.y() + c_quat.z() * c_quat.z())) * 180.0f / M_PI;
+
+        if(yaw_mode == YawMode::RELATIVE)
+        {
+            Eigen::Quaternionf r_quat = start_quat.inverse() * c_quat; // Relative
+            _yaw = std::atan2(2.0f * (r_quat.w() * r_quat.z() + r_quat.x() * r_quat.y()), 1.0f - 2.0f * (r_quat.y() * r_quat.y() + r_quat.z() * r_quat.z())) * 180.0f / M_PI;
+        }
+
+        while (_yaw > 180.0) {
+            _yaw -= 360.0;
+        }
+        while (_yaw < -180.0) {
+            _yaw += 360.0;
+        }
+        return _yaw;
     }
 #pragma endregion
 
@@ -573,6 +585,11 @@ namespace EMIRO
             ros::spinOnce();
             ros::Duration(0.1).sleep();
         }
+
+        start_quat = {(float)pose_data_local.pose.orientation.w, 
+                      (float)pose_data_local.pose.orientation.x, 
+                      (float)pose_data_local.pose.orientation.y,
+                      (float)pose_data_local.pose.orientation.z};
 
         get_logger().wait("Arming drone");
         mavros_msgs::CommandBool arm_request;
@@ -984,6 +1001,7 @@ namespace EMIRO
 
         copter_Land(tolerance);
     }
+
 #pragma endregion
 
     Copter::~Copter()

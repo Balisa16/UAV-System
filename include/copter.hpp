@@ -4,7 +4,7 @@
 // ROS Library
 #include <ros/duration.h>
 #include <ros/ros.h>
-
+#include <Eigen/Geometry> 
 #include <tf/transform_datatypes.h>
 
 // Mavros Message
@@ -248,7 +248,7 @@ namespace EMIRO
          *
          * @return float  Degree of drone's yaw
          */
-        static float get_yaw(bool use360 = false);
+        static float get_yaw();
 
         // WayPoint and WayPointG
         static void get_position(WayPoint &pose_ref);
@@ -258,6 +258,8 @@ namespace EMIRO
         static Mode get_current_mission();
 
         static void go_rtl(float alt = -1.f, float tolerance = 0.2f);
+
+        static void set_yaw(YawMode _yaw_mode);
 
     private:
         Copter();
@@ -293,7 +295,7 @@ namespace EMIRO
         WayPoint copter_calc_transition(WayPoint start_point, WayPoint stop_point, float copter_deg, float copter_alt = 0.8f) const;
         float copter_get_alt() const;
         void copter_get_pose(Position *pos, Quaternion *quat) const;
-        float copter_get_yaw(bool use360 = false) const;
+        float copter_get_yaw() const;
         void copter_get_position(WayPoint &pose_ref) const;
         Mode copter_get_current_mission() const;
         void copter_Go_RTL(float alt, float tolerance);
@@ -367,6 +369,9 @@ namespace EMIRO
         // RC
         uint16_t rc6_pwm = 1000;
         uint16_t rc7_pwm = 1000;
+        
+        Eigen::Quaternionf start_quat;
+        YawMode yaw_mode = YawMode::ABSOLUTE;
     };
 
 } // namespace EMIRO

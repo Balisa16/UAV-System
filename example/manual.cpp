@@ -26,6 +26,7 @@ int main(int argc, char **argv)
     PIDControl::get().set_rotation_speed(10.f);
     PIDControl::get().set_linear_tolerance(0.2f);
     PIDControl::get().set_rotation_tolerance(5.f);
+    Copter::set_yaw(YawMode::RELATIVE);
 
     for (Target &t : target)
     {

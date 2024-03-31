@@ -104,18 +104,23 @@ namespace EMIRO
 
     typedef struct
     {
-        float x, y, z;
+        double x, y, z;
     } Position;
 
     typedef struct
     {
-        float w, x, y, z;
+        double w, x, y, z;
     } Quaternion;
 
     typedef struct
     {
         float roll, pitch, yaw;
     } Euler;
+
+    enum class YawMode{
+        ABSOLUTE,
+        RELATIVE
+    };
 
     struct WayPoint
     {
