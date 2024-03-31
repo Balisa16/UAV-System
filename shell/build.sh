@@ -1,4 +1,4 @@
-#!/usr/bin/bash
+#!/bin/bash
 
 if ! grep -q "export EMIRO_PATH=" "$HOME/.bashrc"; then
     	echo "EMIRO_PATH is not defined in .bashrc."
