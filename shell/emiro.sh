@@ -8,9 +8,9 @@ manual()
 {
 	rosrun emiro manual
 }
-manual_vision()
+manual_rtl()
 {
-	rosrun emiro manual_vision
+	rosrun emiro manual_rtl
 }
 read_test()
 {

@@ -40,6 +40,7 @@ int main(int argc, char **argv)
         PIDControl::get().set_target_point(t.wp);
         PIDControl::get().set_linear_speed(t.speed);
         PIDControl::get().go_wait(true);
+        ros::Duration(1).sleep();
         // Control::go(t.wp.x, t.wp.y, t.wp.z, t.wp.yaw, 0.05f, 5);
     }
 
