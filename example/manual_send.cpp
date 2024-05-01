@@ -8,6 +8,10 @@ int main(int argc, char **argv)
 {
 
     Copter::init(argc, argv);
+
+    std::string _client_ip = argc > 1 ? argv[1] : "127.0.0.1";
+    std::cout << "IP: " << _client_ip << '\n';
+
     std::cout << "Running\n";
     ros::Duration(5).sleep();
 
@@ -51,7 +55,7 @@ int main(int argc, char **argv)
         Position pos;
         Quaternion quat;
         TCPClient client;
-        client.connect();
+        client.connect(_client_ip);
         Copter::get_pose(&pos, &quat);
         Pose pose = {pos.x, pos.y, pos.z, quat.w, quat.x, quat.y, quat.z};
 
