@@ -9,7 +9,7 @@
 #include <ros/ros.h>
 
 #include <cmath>
-#include <enum.hpp>
+#include <types.hpp>
 #include <fstream>
 #include <jsoncpp/json/json.h>
 #include <string>

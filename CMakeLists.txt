@@ -30,6 +30,7 @@ set(emiro_file
   src/servo.cc
   src/simplepid.cc
   src/tfmini.cc
+  src/tcpclient.cc
   src/uart.cc)
 
 
@@ -45,7 +46,7 @@ endif()
 
 
 find_package(OpenCV REQUIRED)
-find_package(Boost REQUIRED COMPONENTS system filesystem)
+find_package(Boost REQUIRED COMPONENTS system filesystem thread)
 find_package(Curses REQUIRED)
 find_package(CURL REQUIRED)
 # find_package(PkgConfig REQUIRED)
@@ -80,8 +81,9 @@ if(IS_JETSON)
     ${OpenCV_LIBS} 
     ${CURSES_LIBRARIES}
     Boost::system
-    asynccamera
     Boost::filesystem
+    Boost::thread
+    asynccamera
     jsoncpp
     JetsonGPIO)
 
@@ -99,8 +101,9 @@ else()
     ${OpenCV_LIBS} 
     ${CURSES_LIBRARIES}
     Boost::system
-    asynccamera
     Boost::filesystem
+    Boost::thread
+    asynccamera
     jsoncpp)
 endif()
 

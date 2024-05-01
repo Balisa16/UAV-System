@@ -1,6 +1,6 @@
 #pragma once
 
-#include <enum.hpp>
+#include <types.hpp>
 
 namespace EMIRO
 {

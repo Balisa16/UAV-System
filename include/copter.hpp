@@ -4,7 +4,7 @@
 // ROS Library
 #include <ros/duration.h>
 #include <ros/ros.h>
-#include <Eigen/Geometry> 
+#include <Eigen/Geometry>
 #include <tf/transform_datatypes.h>
 
 // Mavros Message
@@ -42,7 +42,7 @@
 
 #include <Logger.hpp>
 #include <control.hpp>
-#include <enum.hpp>
+#include <types.hpp>
 #include <gps.hpp>
 
 namespace EMIRO
@@ -369,7 +369,7 @@ namespace EMIRO
         // RC
         uint16_t rc6_pwm = 1000;
         uint16_t rc7_pwm = 1000;
-        
+
         Eigen::Quaternionf start_quat;
         YawMode yaw_mode = YawMode::ABSOLUTE;
     };

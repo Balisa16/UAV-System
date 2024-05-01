@@ -1,7 +1,7 @@
 #pragma once
 
 #include "copter.hpp"
-#include "enum.hpp"
+#include "types.hpp"
 #include <Logger.hpp>
 #include <memory>
 #include <mutex>

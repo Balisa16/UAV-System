@@ -1,7 +1,7 @@
 #pragma once
 
 #include <boost/filesystem.hpp>
-#include <enum.hpp>
+#include <types.hpp>
 #include <fstream>
 #include <iomanip>
 #include <iostream>

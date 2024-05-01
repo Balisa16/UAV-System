@@ -3,7 +3,7 @@
 
 #include <Logger.hpp>
 #include <copter.hpp>
-#include <enum.hpp>
+#include <types.hpp>
 #include <vector>
 
 namespace EMIRO

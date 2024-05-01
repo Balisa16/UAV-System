@@ -1,6 +1,6 @@
 #pragma once
 
-#include <enum.hpp>
+#include <types.hpp>
 #include <fcntl.h>
 #include <iostream>
 #include <sstream>

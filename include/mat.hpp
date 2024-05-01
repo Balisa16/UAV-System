@@ -1,6 +1,6 @@
 #pragma once
 
-#include <enum.hpp>
+#include <types.hpp>
 #include <math.h>
 
 inline EMIRO::Euler to_euler(double w, double x, double y, double z)

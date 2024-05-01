@@ -7,7 +7,7 @@
 #include <cstring>
 #include <enum.hpp>
 #include <iostream>
-#include <ncurses.h>
+// #include <ncurses.h>
 #include <thread>
 
 namespace EMIRO
