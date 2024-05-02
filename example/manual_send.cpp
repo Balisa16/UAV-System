@@ -37,6 +37,13 @@ int main(int argc, char **argv)
     // Copter::set_yaw(YawMode::RELATIVE);
 
     int _cnt = 20;
+    ros::Rate rate(5);
+
+    for (size_t i = 0; i < 5; i++)
+    {
+        ros::spinOnce();
+        rate.sleep();
+    }
 
     while (_cnt)
     {
@@ -45,6 +52,13 @@ int main(int argc, char **argv)
             Copter::Land();
             exit(EXIT_FAILURE);
         }
+
+        for (size_t i = 0; i < 5; i++)
+        {
+            ros::spinOnce();
+            rate.sleep();
+        }
+
         std::cout << "Counter : " << _cnt << '\n';
         // std::cout << C_GREEN << S_BOLD << '[' << t.header << ']' << C_RESET << '\n';
 
@@ -63,7 +77,6 @@ int main(int argc, char **argv)
         client.read_response();
         client.close();
 
-        ros::Duration(5).sleep();
         _cnt--;
         // ros::Duration(1).sleep();
     }
