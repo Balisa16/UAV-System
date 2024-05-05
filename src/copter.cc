@@ -52,7 +52,7 @@ namespace EMIRO
     }
 
     int
-    Copter::set_mode(CopterMode mode)
+    Copter::set_mode(FlightMode mode)
     {
         return get().copter_set_mode(mode);
     }
@@ -129,7 +129,7 @@ namespace EMIRO
     }
 
     void
-    Copter::set_ekf_source(EKF_Source source)
+    Copter::set_ekf_source(EKFSource source)
     {
         get().copter_set_ekf_source(source);
     }
@@ -200,7 +200,7 @@ namespace EMIRO
         return get().takeoff_wp;
     }
 
-    Mode
+    Environment
     Copter::get_current_mission()
     {
         return get().copter_get_current_mission();
@@ -212,7 +212,8 @@ namespace EMIRO
         get().copter_Go_RTL(alt, tolerance);
     }
 
-    void Copter::set_yaw(YawMode _yaw_mode){
+    void Copter::set_yaw(YawMode _yaw_mode)
+    {
         get().yaw_mode = _yaw_mode;
     }
 
@@ -460,7 +461,7 @@ namespace EMIRO
         return pose_data_local.pose.position;
     }
 
-    Mode
+    Environment
     Copter::copter_get_current_mission() const
     {
         return misi_mode;
@@ -499,16 +500,18 @@ namespace EMIRO
         Eigen::Quaternionf c_quat(pose_data_local.pose.orientation.w, pose_data_local.pose.orientation.x, pose_data_local.pose.orientation.y, pose_data_local.pose.orientation.z);
         float _yaw = std::atan2(2.0f * (c_quat.w() * c_quat.z() + c_quat.x() * c_quat.y()), 1.0f - 2.0f * (c_quat.y() * c_quat.y() + c_quat.z() * c_quat.z())) * 180.0f / M_PI;
 
-        if(yaw_mode == YawMode::RELATIVE)
+        if (yaw_mode == YawMode::RELATIVE)
         {
             Eigen::Quaternionf r_quat = start_quat.inverse() * c_quat; // Relative
             _yaw = std::atan2(2.0f * (r_quat.w() * r_quat.z() + r_quat.x() * r_quat.y()), 1.0f - 2.0f * (r_quat.y() * r_quat.y() + r_quat.z() * r_quat.z())) * 180.0f / M_PI;
         }
 
-        while (_yaw > 180.0) {
+        while (_yaw > 180.0)
+        {
             _yaw -= 360.0;
         }
-        while (_yaw < -180.0) {
+        while (_yaw < -180.0)
+        {
             _yaw += 360.0;
         }
         return _yaw;
@@ -586,8 +589,8 @@ namespace EMIRO
             ros::Duration(0.1).sleep();
         }
 
-        start_quat = {(float)pose_data_local.pose.orientation.w, 
-                      (float)pose_data_local.pose.orientation.x, 
+        start_quat = {(float)pose_data_local.pose.orientation.w,
+                      (float)pose_data_local.pose.orientation.x,
                       (float)pose_data_local.pose.orientation.y,
                       (float)pose_data_local.pose.orientation.z};
 
@@ -610,7 +613,7 @@ namespace EMIRO
 
         if (arm_request.response.success)
         {
-            status = CopterStatus::Armed;
+            status = Status::Armed;
             get_logger().wait_success();
             get_logger().write_show(LogLevel::INFO, "Drone armed successfully.");
             return true;
@@ -684,7 +687,7 @@ namespace EMIRO
             {
                 std::cout << CLEAR_LINE;
                 get_logger().write_show(LogLevel::INFO, "Success Takeoff");
-                status = CopterStatus::Takeoff;
+                status = Status::Takeoff;
                 break;
             }
             ros::spinOnce();
@@ -722,7 +725,7 @@ namespace EMIRO
             }
             get_logger().wait_success();
             get_logger().write_show(LogLevel::INFO, "Success Land");
-            status = CopterStatus::Land;
+            status = Status::Land;
             return true;
         }
         get_logger().write_show(LogLevel::ERROR, "Land Failed : %d",
@@ -775,23 +778,23 @@ namespace EMIRO
     }
 
     void
-    Copter::copter_set_ekf_source(EKF_Source source)
+    Copter::copter_set_ekf_source(EKFSource source)
     {
         mavros_msgs::RCIn rc;
         uint16_t data = 1000;
         switch (source)
         {
-        case EKF_Source::GPS_BARO:
+        case EKFSource::GPS_BARO:
             data = 1000;
             get_logger().write_show(LogLevel::INFO, "EKF Source : GPS-Baro [%d]",
                                     data);
             break;
-        case EKF_Source::GPS_GY:
+        case EKFSource::GPS_GY:
             data = 1500;
             get_logger().write_show(LogLevel::INFO, "EKF Source : GPS-GY [%d]",
                                     data);
             break;
-        case EKF_Source::T265_GY:
+        case EKFSource::T265_GY:
             data = 2000;
             get_logger().write_show(LogLevel::INFO, "EKF Source : T265-GY [%d]",
                                     data);
@@ -879,21 +882,21 @@ namespace EMIRO
     }
 
     int
-    Copter::copter_set_mode(CopterMode mode)
+    Copter::copter_set_mode(FlightMode mode)
     {
         std::string mode_str = "";
         switch (mode)
         {
-        case CopterMode::LAND:
+        case FlightMode::LAND:
             mode_str = "LAND";
             break;
-        case CopterMode::GUIDED:
+        case FlightMode::GUIDED:
             mode_str = "GUIDED";
             break;
-        case CopterMode::AUTO:
+        case FlightMode::AUTO:
             mode_str = "AUTO";
             break;
-        case CopterMode::RTL:
+        case FlightMode::RTL:
             mode_str = "RTL";
             break;
         default:
@@ -1006,7 +1009,7 @@ namespace EMIRO
 
     Copter::~Copter()
     {
-        if (status == CopterStatus::Flying || status == CopterStatus::Takeoff)
+        if (status == Status::Flying || status == Status::Takeoff)
             copter_Land(.5f);
         get_logger().finish();
         traj_logger.finish(false);

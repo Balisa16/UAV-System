@@ -24,21 +24,16 @@
 #define CLEAR_LINE "\033[2K\r"
 #endif
 
-#include <iostream>
-#include <string>
-#include <vector>
-#include <iomanip>
-
 namespace EMIRO
 {
 
-    enum class Mode
+    enum class Environment
     {
         Indoor,
         Outdoor
     };
 
-    enum class CopterStatus
+    enum class Status
     {
         None,
         Armed,
@@ -48,7 +43,7 @@ namespace EMIRO
         Disarmed
     };
 
-    enum class CopterMode
+    enum class FlightMode
     {
         LAND,
         GUIDED,
@@ -56,17 +51,7 @@ namespace EMIRO
         RTL
     };
 
-    enum Indoor_State
-    {
-        Takeoff,
-        GetPayload,
-        PreInterchange,
-        Left_Right,
-        DropPayload,
-        ChangeNav
-    };
-
-    enum class EKF_Source
+    enum class EKFSource
     {
         GPS_BARO,
         GPS_GY,

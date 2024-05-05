@@ -35,7 +35,7 @@ int main(int argc, char **argv)
         {
             Copter::go_rtl();
             ros::Duration(5).sleep();
-            if (!Copter::set_mode(CopterMode::GUIDED))
+            if (!Copter::set_mode(FlightMode::GUIDED))
                 exit(EXIT_FAILURE);
             Copter::takeoff(1.f);
         }

@@ -44,6 +44,7 @@
 #include <control.hpp>
 #include <types.hpp>
 #include <gps.hpp>
+#include <settings.hpp>
 
 namespace EMIRO
 {
@@ -113,7 +114,7 @@ namespace EMIRO
          * @see https://ardupilot.org/copter/docs/flight-modes.html
          * @return int
          */
-        static int set_mode(CopterMode mode);
+        static int set_mode(FlightMode mode);
 
         /**
          * @brief Set the linear velocity and angular velocity
@@ -192,7 +193,7 @@ namespace EMIRO
          *
          * @param source      EKF Source Type
          */
-        static void set_ekf_source(EKF_Source source);
+        static void set_ekf_source(EKFSource source);
 
         static void realign_viso();
 
@@ -255,7 +256,7 @@ namespace EMIRO
 
         static WayPoint get_takeoff_position();
 
-        static Mode get_current_mission();
+        static Environment get_current_mission();
 
         static void go_rtl(float alt = -1.f, float tolerance = 0.2f);
 
@@ -277,11 +278,11 @@ namespace EMIRO
         bool copter_FCUconnect(float timeout_s = 1.0f) const;
         bool copter_FCUstart(float timeout_s = 1.0f) const;
         bool copter_PreArmedCheck(uint64_t &cnt) const;
-        int copter_set_mode(CopterMode mode);
+        int copter_set_mode(FlightMode mode);
         void copter_set_vel(const float &vx, const float &vy, const float &vz, const float &avx, const float &avy, const float &avz);
         void copter_set_vel(geometry_msgs::Twist &cmd_vel);
         int copter_set_speed(float speed_mps);
-        void copter_set_ekf_source(EKF_Source source);
+        void copter_set_ekf_source(EKFSource source);
         void copter_set_ekf_origin(float lat, float lnt, float alt);
         int copter_set_home(float lat, float lnt, float alt);
         void copter_set_rc(int channel, int pwm);
@@ -297,7 +298,7 @@ namespace EMIRO
         void copter_get_pose(Position *pos, Quaternion *quat) const;
         float copter_get_yaw() const;
         void copter_get_position(WayPoint &pose_ref) const;
-        Mode copter_get_current_mission() const;
+        Environment copter_get_current_mission() const;
         void copter_Go_RTL(float alt, float tolerance);
         void copter_realign_viso() const;
 
@@ -314,7 +315,7 @@ namespace EMIRO
 
     public:
         ros::ServiceClient command_client;
-        CopterStatus status = CopterStatus::None;
+        Status status = Status::None;
         void print_wp(std::string header, WayPoint &wp) const;
 
     private:
@@ -350,7 +351,7 @@ namespace EMIRO
         ros::ServiceClient arming_client;
         ros::ServiceClient takeoff_client;
         ros::ServiceClient land_client;
-        Mode misi_mode;
+        Environment misi_mode;
 
         // Parameter settings
         Param copter_param;

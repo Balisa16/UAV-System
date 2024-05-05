@@ -1,6 +1,10 @@
 #pragma once
 
-#include "enum.hpp"
+#include <enum.hpp>
+#include <iostream>
+#include <string>
+#include <vector>
+#include <iomanip>
 
 namespace EMIRO
 {
