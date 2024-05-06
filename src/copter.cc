@@ -195,6 +195,30 @@ namespace EMIRO
         get().copter_get_position(pose_ref);
     }
 
+    float
+    Copter::get_hdop()
+    {
+        return get().copter_get_hdop();
+    }
+
+    float
+    Copter::get_vdop()
+    {
+        return get().copter_get_vdop();
+    }
+
+    int
+    Copter::get_satelite_num()
+    {
+        return get().copter_get_satelite_num();
+    }
+
+    int
+    Copter::get_gps_status()
+    {
+        return get().copter_get_gps_status();
+    }
+
     WayPoint Copter::get_takeoff_position()
     {
         return get().takeoff_wp;
@@ -257,10 +281,16 @@ namespace EMIRO
                     _state_cb(msg);
                 });
             cmd_pos_sub_local = get_nh()->subscribe<geometry_msgs::PoseStamped>(
-                "/mavros/local_position/pose", 2,
+                "/mavros/local_position/pose", 5,
                 [this](const geometry_msgs::PoseStamped::ConstPtr &msg)
                 {
                     _pose_cb_local(msg);
+                });
+            gps_raw_sub = get_nh()->subscribe<mavros_msgs::GPSRAW>(
+                "/mavros/gpsstatus/gps1/raw", 5,
+                [this](const mavros_msgs::GPSRAW::ConstPtr &msg)
+                {
+                    _gps_raw_subscriber(msg);
                 });
 
             cmd_vel_pub = get_nh()->advertise<geometry_msgs::Twist>(
@@ -442,6 +472,12 @@ namespace EMIRO
     }
 
     void
+    Copter::_gps_raw_subscriber(const mavros_msgs::GPSRAW::ConstPtr &msg)
+    {
+        gps_raw = *msg;
+    }
+
+    void
     Copter::_pose_cb_global(const geographic_msgs::GeoPoseStamped::ConstPtr &msg)
     {
         pose_data_global = *msg;
@@ -492,6 +528,28 @@ namespace EMIRO
         pose_ref = {(float)pose_data_local.pose.position.x,
                     (float)pose_data_local.pose.position.y,
                     (float)pose_data_local.pose.position.z, get_yaw()};
+    }
+
+    float Copter::copter_get_hdop() const
+    {
+        return gps_raw.eph;
+    }
+
+    float Copter::copter_get_vdop() const
+    {
+        return gps_raw.epv;
+    }
+
+    int
+    Copter::copter_get_satelite_num() const
+    {
+        return gps_raw.satellites_visible;
+    }
+
+    int
+    Copter::copter_get_gps_status() const
+    {
+        return gps_raw.fix_type;
     }
 
     float

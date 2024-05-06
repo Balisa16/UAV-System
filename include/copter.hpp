@@ -18,6 +18,7 @@
 #include <mavros_msgs/RCIn.h>
 #include <mavros_msgs/SetMode.h>
 #include <mavros_msgs/State.h>
+#include <mavros_msgs/GPSRAW.h>
 
 // GEometry Message
 #include <geometry_msgs/Pose.h>
@@ -254,6 +255,14 @@ namespace EMIRO
         // WayPoint and WayPointG
         static void get_position(WayPoint &pose_ref);
 
+        static float get_hdop();
+
+        static float get_vdop();
+
+        static int get_satelite_num();
+
+        static int get_gps_status();
+
         static WayPoint get_takeoff_position();
 
         static Environment get_current_mission();
@@ -298,6 +307,10 @@ namespace EMIRO
         void copter_get_pose(Position *pos, Quaternion *quat) const;
         float copter_get_yaw() const;
         void copter_get_position(WayPoint &pose_ref) const;
+        float copter_get_hdop() const;
+        float copter_get_vdop() const;
+        int copter_get_satelite_num() const;
+        int copter_get_gps_status() const;
         Environment copter_get_current_mission() const;
         void copter_Go_RTL(float alt, float tolerance);
         void copter_realign_viso() const;
@@ -306,6 +319,7 @@ namespace EMIRO
         Quaternion _to_quaternion(float roll_rate, float pitch_rate, float yaw_rate) const;
         geometry_msgs::Point _enu_2_local(nav_msgs::Odometry current_pose_enu) const;
         void _pose_cb_local(const geometry_msgs::PoseStamped::ConstPtr &msg);
+        void _gps_raw_subscriber(const mavros_msgs::GPSRAW::ConstPtr &msg);
         void _pose_cb_global(const geographic_msgs::GeoPoseStamped::ConstPtr &msg);
         void _state_cb(const mavros_msgs::State::ConstPtr &msg);
         geometry_msgs::Point _get_hexa_point() const;
@@ -330,6 +344,7 @@ namespace EMIRO
         geometry_msgs::Point local_offset_pose_g;
 
         mavros_msgs::State current_state_g;
+        mavros_msgs::GPSRAW gps_raw;
 
         ros::Time timestamp;
         ros::Time last_request;
@@ -338,6 +353,7 @@ namespace EMIRO
         ros::Subscriber cmd_pos_sub_local;
         ros::Subscriber cmd_pos_sub_global;
         ros::Subscriber state_sub;
+        ros::Subscriber gps_raw_sub;
 
         // Publisher
         ros::Publisher cmd_pos_pub;
