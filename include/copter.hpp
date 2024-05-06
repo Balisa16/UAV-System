@@ -108,6 +108,8 @@ namespace EMIRO
          */
         static bool PreArmedCheck(float timeout_s = 60.0f);
 
+        static void waitHDOP(u_int64_t duration_ms = UINT64_MAX);
+
         /**
          * @brief Set drone mode.
          *
@@ -287,6 +289,7 @@ namespace EMIRO
         bool copter_FCUconnect(float timeout_s = 1.0f) const;
         bool copter_FCUstart(float timeout_s = 1.0f) const;
         bool copter_PreArmedCheck(uint64_t &cnt) const;
+        void copter_waitHDOP(float hdop_limit, u_int64_t duration_ms) const;
         int copter_set_mode(FlightMode mode);
         void copter_set_vel(const float &vx, const float &vy, const float &vz, const float &avx, const float &avy, const float &avz);
         void copter_set_vel(geometry_msgs::Twist &cmd_vel);

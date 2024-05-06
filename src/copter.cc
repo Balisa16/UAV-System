@@ -51,6 +51,11 @@ namespace EMIRO
         return get().copter_PreArmedCheck(_cnt);
     }
 
+    void Copter::waitHDOP(u_int64_t duration_ms)
+    {
+        get().copter_waitHDOP(duration_ms);
+    }
+
     int
     Copter::set_mode(FlightMode mode)
     {
@@ -420,6 +425,26 @@ namespace EMIRO
         }
 
         return true;
+    }
+
+    void
+    Copter::copter_waitHDOP(float hdop_limit, u_int64_t duration_ms) const
+    {
+        float _hdop = get_hdop() / 1E2F;
+        if (hdop_limit > 2.0f)
+        {
+            get_logger().write_show(LogLevel::INFO, "HDOP limit too high. Setting to 2.0");
+            hdop_limit = 2.0f;
+        }
+        ros::Rate _rate(5);
+        get_logger().wait("Waiting for HDOP");
+        while (ros::ok() && _hdop > hdop_limit && duration_ms)
+        {
+            ros::spinOnce();
+            _rate.sleep();
+            duration_ms -= 200;
+        }
+        get_logger().wait_success();
     }
 
 #pragma region Pose
