@@ -208,9 +208,9 @@ namespace EMIRO
     }
 
     int
-    Copter::get_satelite_num()
+    Copter::get_satellites_num()
     {
-        return get().copter_get_satelite_num();
+        return get().copter_get_satellites_num();
     }
 
     int
@@ -541,7 +541,7 @@ namespace EMIRO
     }
 
     int
-    Copter::copter_get_satelite_num() const
+    Copter::copter_get_satellites_num() const
     {
         return gps_raw.satellites_visible;
     }

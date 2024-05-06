@@ -15,7 +15,7 @@ int main(int argc, char **argv)
     ros::Rate _rate(2);
     while (ros::ok())
     {
-        std::cout << "HDOP : " << Copter::get_hdop() << std::endl;
+        std::cout << "HDOP: " << Copter::get_hdop() << " , VDOP: " << Copter::get_vdop() << ", Satellites: " << Copter::get_satellites_num() << "GPS Status: " << Copter::get_gps_status() << "" << std::endl;
         ros::spinOnce();
         _rate.sleep();
     }

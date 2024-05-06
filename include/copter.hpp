@@ -259,7 +259,7 @@ namespace EMIRO
 
         static float get_vdop();
 
-        static int get_satelite_num();
+        static int get_satellites_num();
 
         static int get_gps_status();
 
@@ -309,7 +309,7 @@ namespace EMIRO
         void copter_get_position(WayPoint &pose_ref) const;
         float copter_get_hdop() const;
         float copter_get_vdop() const;
-        int copter_get_satelite_num() const;
+        int copter_get_satellites_num() const;
         int copter_get_gps_status() const;
         Environment copter_get_current_mission() const;
         void copter_Go_RTL(float alt, float tolerance);
