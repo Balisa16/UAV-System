@@ -213,10 +213,10 @@ namespace EMIRO
         return get().copter_get_satellites_num();
     }
 
-    int
-    Copter::get_gps_status()
+    GPS_FIX_TYPE
+    Copter::get_gps_fix_type()
     {
-        return get().copter_get_gps_status();
+        return get().copter_get_gps_fix_type();
     }
 
     WayPoint Copter::get_takeoff_position()
@@ -546,10 +546,10 @@ namespace EMIRO
         return gps_raw.satellites_visible;
     }
 
-    int
-    Copter::copter_get_gps_status() const
+    GPS_FIX_TYPE
+    Copter::copter_get_gps_fix_type() const
     {
-        return gps_raw.fix_type;
+        return static_cast<GPS_FIX_TYPE>(gps_raw.fix_type);
     }
 
     float

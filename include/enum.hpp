@@ -33,6 +33,19 @@ namespace EMIRO
         Outdoor
     };
 
+    enum class GPS_FIX_TYPE
+    {
+        GPS_FIX_TYPE_NO_GPS,
+        GPS_FIX_TYPE_NO_FIX,
+        GPS_FIX_TYPE_2D_FIX,
+        GPS_FIX_TYPE_3D_FIX,
+        GPS_FIX_TYPE_DGPS,
+        GPS_FIX_TYPE_RTK_FLOATR,
+        GPS_FIX_TYPE_RTK_FIXEDR,
+        GPS_FIX_TYPE_STATIC,
+        GPS_FIX_TYPE_PPP
+    };
+
     enum class Status
     {
         None,
