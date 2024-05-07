@@ -100,23 +100,6 @@ namespace EMIRO
         static bool FCUstart(const float timeout_s = 1.0f);
 
         /**
-         * @brief Waiting for Arming
-         *
-         * @param timeout_s Timeout for connect (second)
-         * @return true     FCU in GUIDED mode
-         * @return false    FCU not in GUIDED mode
-         */
-        static bool PreArmedCheck(const float timeout_s = 60.0f);
-
-        /**
-         * @brief Waiting for HDOP
-         *
-         * @param hdop_limit Default value is 1.4. Greater than 1.4 indicates poor GPS tolerance
-         * @param duration_ms Timeout for connect (millisecond)
-         */
-        static void waitHDOP(float hdop_limit = 1.4f, const u_int64_t duration_ms = UINT64_MAX);
-
-        /**
          * @brief Set drone mode.
          *
          * @param mode    Copter mode (Capitatize)
@@ -238,6 +221,23 @@ namespace EMIRO
          * @return int  Service feedback
          */
         static int set_home(const float lat, const float lnt, const float alt);
+
+        /**
+         * @brief Waiting for Arming
+         *
+         * @param timeout_s Timeout for connect (second)
+         * @return true     FCU in GUIDED mode
+         * @return false    FCU not in GUIDED mode
+         */
+        static bool PreArmedCheck(const float timeout_s = 60.0f);
+
+        /**
+         * @brief Waiting for HDOP
+         *
+         * @param hdop_limit Default value is 1.4. Greater than 1.4 indicates poor GPS tolerance
+         * @param duration_ms Timeout for connect (millisecond)
+         */
+        static void waitHDOP(float hdop_limit = 1.4f, const u_int64_t duration_ms = UINT64_MAX);
 
         /**
          * @brief             Check if copter in range of tolerance waypoint
@@ -371,45 +371,83 @@ namespace EMIRO
 
         // Static Implementation
         bool copter_init(const std::string logger_name, const FileType logger_type);
+
         void copter_init_frame(const float timeout_s);
+
         bool copter_FCUconnect(const float timeout_s = 1.0f) const;
+
         bool copter_FCUstart(const float timeout_s = 1.0f) const;
+
         bool copter_PreArmedCheck(uint64_t &cnt) const;
+
         void copter_waitHDOP(float hdop_limit, u_int64_t duration_ms) const;
+
         int copter_set_mode(FlightMode mode);
+
         void copter_set_vel(const float &vx, const float &vy, const float &vz, const float &avx, const float &avy, const float &avz);
+
         void copter_set_vel(geometry_msgs::Twist &cmd_vel);
+
         int copter_set_speed(float speed_mps);
+
         void copter_set_ekf_source(EKFSource source);
+
         void copter_set_ekf_origin(float lat, float lnt, float alt);
+
         int copter_set_home(float lat, float lnt, float alt);
+
         void copter_set_rc(int channel, int pwm);
+
         bool copter_Arming();
+
         int copter_takeoff(float takeoff_alt, float tolerance);
+
         void copter_Go(WayPoint &wp, bool show = false, std::string header = "Go to");
+
         void copter_Go_Land(WayPoint wp, float tolerance = 0.15f);
+
         void copter_Land(float tolerance);
+
         bool copter_is_reached(WayPoint dest, float tolerance) const;
+
         bool copter_check_alt(float dist_alt, float tolerance) const;
+
         WayPoint copter_calc_transition(WayPoint start_point, WayPoint stop_point, float copter_deg, float copter_alt = 0.8f) const;
+
         float copter_get_alt() const;
+
         void copter_get_pose(Position *pos, Quaternion *quat) const;
+
         float copter_get_yaw() const;
+
         void copter_get_position(WayPoint &pose_ref) const;
+
         float copter_get_hdop() const;
+
         float copter_get_vdop() const;
+
         int copter_get_satellites_num() const;
+
         GPS_FIX_TYPE copter_get_gps_fix_type() const;
+
         Environment copter_get_current_mission() const;
+
         void copter_Go_RTL(float alt, float tolerance);
+
         void copter_realign_viso() const;
 
         // Private Implementation
+
         Quaternion _to_quaternion(const float roll_rate, const float pitch_rate, const float yaw_rate) const;
+
         geometry_msgs::Point _enu_2_local(const nav_msgs::Odometry current_pose_enu) const;
+
         geometry_msgs::Point _get_hexa_point() const;
+
         void _go_to(const geometry_msgs::Pose pose);
+
         void _goto_xyz_rpy(const float x, const float y, const float z, const float roll, const float pitch, const float yaw);
+
         bool _land(const float tolerance);
 
     public:

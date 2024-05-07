@@ -14,6 +14,15 @@ namespace EMIRO
         traj_logger.start(true);
     }
 
+    Copter::~Copter()
+    {
+        if (status == Status::Flying || status == Status::Takeoff)
+            copter_Land(.5f);
+        get_logger().finish();
+        traj_logger.finish(false);
+    }
+
+#pragma region Static Class
     bool
     Copter::init(int argc, char **argv, std::string copter_name, std::string log_name, FileType log_type)
     {
@@ -96,18 +105,6 @@ namespace EMIRO
     {
         return get().copter_takeoff(takeoff_alt, tolerance);
     }
-
-    // int
-    // Copter::just_takeoff(float takeoff_alt, float _yaw)
-    // {
-    //     return get().copter_just_takeoff(takeoff_alt, _yaw);
-    // }
-
-    // int
-    // Copter::takeoff2(WayPoint wp)
-    // {
-    //     return get().copter_takeoff2(wp);
-    // }
 
     void
     Copter::Go(WayPoint &wp, const bool show, const std::string header)
@@ -251,9 +248,9 @@ namespace EMIRO
     {
         get().yaw_mode = _yaw_mode;
     }
+#pragma endregion
 
 #pragma region Initialize
-
     bool
     Copter::copter_init(const std::string logger_name, const FileType logger_type)
     {
@@ -390,69 +387,6 @@ namespace EMIRO
     }
 #pragma endregion
 
-    bool Copter::copter_PreArmedCheck(uint64_t &cnt) const
-    {
-        // Validation position
-        WayPoint _wp;
-        ros::Rate _rate(5);
-        copter_get_position(_wp);
-        get_logger().wait("Waiting for Valid Position");
-        while (std::fabs(_wp.x) < 0.0001 && std::fabs(_wp.y) < 0.0001 && std::fabs(_wp.z) < 0.0001 && ros::ok() && cnt)
-        {
-            copter_get_position(_wp);
-            cnt--;
-            ros::spinOnce();
-            _rate.sleep();
-        }
-        if (std::fabs(_wp.x) < 0.0001 && std::fabs(_wp.y) < 0.0001 && std::fabs(_wp.z) < 0.0001)
-        {
-            get_logger().wait_failed();
-            get_logger().write_show(LogLevel::ERROR, "Position Validation Failed");
-            return false;
-        }
-        else
-        {
-            get_logger().wait_success();
-            get_logger().write_show(LogLevel::INFO, "Position Validation Success");
-        }
-
-        // Validation Mode
-        get_logger().wait("Waiting for GUIDED Mode");
-        while (current_state_g.mode != "GUIDED" && ros::ok() && cnt)
-        {
-            cnt--;
-            ros::spinOnce();
-            _rate.sleep();
-        }
-        if (current_state_g.mode == "GUIDED")
-        {
-            get_logger().wait_success();
-            get_logger().write_show(LogLevel::INFO, "Mode Validation Success");
-        }
-        else
-        {
-            get_logger().wait_failed();
-            get_logger().write_show(LogLevel::ERROR, "Mode Validation Failed");
-            return false;
-        }
-
-        return true;
-    }
-
-    void
-    Copter::copter_waitHDOP(float hdop_limit, u_int64_t duration_ms) const
-    {
-        ros::Rate _rate(5);
-        get_logger().wait("Waiting for HDOP");
-        while (ros::ok() && gps_raw.eph / 1E2F > hdop_limit && duration_ms)
-        {
-            ros::spinOnce();
-            _rate.sleep();
-            duration_ms -= 200;
-        }
-        get_logger().wait_success();
-    }
-
 #pragma region Pose
     Quaternion
     Copter::_to_quaternion(const float roll_rate, const float pitch_rate, const float yaw_rate) const
@@ -566,13 +500,11 @@ namespace EMIRO
         }
 
         while (_yaw > 180.0)
-        {
             _yaw -= 360.0;
-        }
+
         while (_yaw < -180.0)
-        {
             _yaw += 360.0;
-        }
+
         return _yaw;
     }
 #pragma endregion
@@ -614,7 +546,7 @@ namespace EMIRO
     }
 #pragma endregion
 
-#pragma region Set_velocity
+#pragma region Set Velocity
     void
     Copter::copter_set_vel(const float &vx, const float &vy, const float &vz,
                            const float &avx, const float &avy, const float &avz)
@@ -760,7 +692,7 @@ namespace EMIRO
         return 0;
     }
 
-#pragma region Land
+#pragma region Landing
     bool
     Copter::_land(const float tolerance)
     {
@@ -980,6 +912,69 @@ namespace EMIRO
 #pragma endregion
 
 #pragma region Check
+    bool Copter::copter_PreArmedCheck(uint64_t &cnt) const
+    {
+        // Validation position
+        WayPoint _wp;
+        ros::Rate _rate(5);
+        copter_get_position(_wp);
+        get_logger().wait("Waiting for Valid Position");
+        while (std::fabs(_wp.x) < 0.0001 && std::fabs(_wp.y) < 0.0001 && std::fabs(_wp.z) < 0.0001 && ros::ok() && cnt)
+        {
+            copter_get_position(_wp);
+            cnt--;
+            ros::spinOnce();
+            _rate.sleep();
+        }
+        if (std::fabs(_wp.x) < 0.0001 && std::fabs(_wp.y) < 0.0001 && std::fabs(_wp.z) < 0.0001)
+        {
+            get_logger().wait_failed();
+            get_logger().write_show(LogLevel::ERROR, "Position Validation Failed");
+            return false;
+        }
+        else
+        {
+            get_logger().wait_success();
+            get_logger().write_show(LogLevel::INFO, "Position Validation Success");
+        }
+
+        // Validation Mode
+        get_logger().wait("Waiting for GUIDED Mode");
+        while (current_state_g.mode != "GUIDED" && ros::ok() && cnt)
+        {
+            cnt--;
+            ros::spinOnce();
+            _rate.sleep();
+        }
+        if (current_state_g.mode == "GUIDED")
+        {
+            get_logger().wait_success();
+            get_logger().write_show(LogLevel::INFO, "Mode Validation Success");
+        }
+        else
+        {
+            get_logger().wait_failed();
+            get_logger().write_show(LogLevel::ERROR, "Mode Validation Failed");
+            return false;
+        }
+
+        return true;
+    }
+
+    void
+    Copter::copter_waitHDOP(float hdop_limit, u_int64_t duration_ms) const
+    {
+        ros::Rate _rate(5);
+        get_logger().wait("Waiting for HDOP");
+        while (ros::ok() && gps_raw.eph / 1E2F > hdop_limit && duration_ms)
+        {
+            ros::spinOnce();
+            _rate.sleep();
+            duration_ms -= 200;
+        }
+        get_logger().wait_success();
+    }
+
     bool
     Copter::copter_is_reached(WayPoint dest, float tolerance) const
     {
@@ -1063,14 +1058,5 @@ namespace EMIRO
 
         copter_Land(tolerance);
     }
-
 #pragma endregion
-
-    Copter::~Copter()
-    {
-        if (status == Status::Flying || status == Status::Takeoff)
-            copter_Land(.5f);
-        get_logger().finish();
-        traj_logger.finish(false);
-    }
 } // namespace EMIRO
