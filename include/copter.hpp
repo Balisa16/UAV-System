@@ -79,7 +79,7 @@ namespace EMIRO
          *
          * @param timeout_s timeout of init (second)
          */
-        static void init_frame(float timeout_s = 1.0f);
+        static void init_frame(const float timeout_s = 1.0f);
 
         /**
          * @brief           Waiting for FCU to connect
@@ -88,7 +88,7 @@ namespace EMIRO
          * @return false:   Failed to connect FCU.
          * @return true:    FCU Connected successfully
          */
-        static bool FCUconnect(float timeout_s = 1.0f);
+        static bool FCUconnect(const float timeout_s = 1.0f);
 
         /**
          * @brief           Waiting FCU turn into GUIDED Mode.
@@ -97,7 +97,7 @@ namespace EMIRO
          * @return true     FCU in GUIDED mode
          * @return false    FCU not in GUIDED mode
          */
-        static bool FCUstart(float timeout_s = 1.0f);
+        static bool FCUstart(const float timeout_s = 1.0f);
 
         /**
          * @brief Waiting for Arming
@@ -106,9 +106,15 @@ namespace EMIRO
          * @return true     FCU in GUIDED mode
          * @return false    FCU not in GUIDED mode
          */
-        static bool PreArmedCheck(float timeout_s = 60.0f);
+        static bool PreArmedCheck(const float timeout_s = 60.0f);
 
-        static void waitHDOP(float hdop_limit, u_int64_t duration_ms = UINT64_MAX);
+        /**
+         * @brief Waiting for HDOP
+         *
+         * @param hdop_limit Default value is 1.4. Greater than 1.4 indicates poor GPS tolerance
+         * @param duration_ms Timeout for connect (millisecond)
+         */
+        static void waitHDOP(float hdop_limit = 1.4f, const u_int64_t duration_ms = UINT64_MAX);
 
         /**
          * @brief Set drone mode.
@@ -117,7 +123,7 @@ namespace EMIRO
          * @see https://ardupilot.org/copter/docs/flight-modes.html
          * @return int
          */
-        static int set_mode(FlightMode mode);
+        static int set_mode(const FlightMode mode);
 
         /**
          * @brief Set the linear velocity and angular velocity
@@ -154,16 +160,20 @@ namespace EMIRO
          * @param takeoff_alt   Target altitude (m)
          * @return int          Service feedback
          */
-        static int takeoff(float takeoff_alt, float tolerance = 0.2f);
+        static int takeoff(const float takeoff_alt, const float tolerance = 0.2f);
 
         /**
          * @brief     Give command to copter to go to desire Waypoint
          *
          * @param wp  Target point
          */
-        static void Go(WayPoint &wp, bool show = false,
-                       std::string header = "Go to");
+        static void Go(WayPoint &wp, const bool show = false, const std::string header = "Go to");
 
+        /**
+         * @brief Get the drone relative altitude
+         *
+         * @return float
+         */
         static float get_alt();
 
         /**
@@ -172,13 +182,13 @@ namespace EMIRO
          *
          * @param wp
          */
-        static void Go_Land(WayPoint wp, float tolerance = 0.15f);
+        static void Go_Land(WayPoint &wp, const float tolerance = 0.15f);
 
         /**
          * @brief Just Send Land Command
          *
          */
-        static void Land(float ground_tolerance = 0.2f);
+        static void Land(const float ground_tolerance = 0.2f);
 
         /**
          * @brief             Set drone speed besed Ground Speed of drones.
@@ -188,7 +198,7 @@ namespace EMIRO
          *
          * @return int        Service feedback
          */
-        static int set_speed(float speed_mps);
+        static int set_speed(const float speed_mps);
 
         /**
          * @brief             Set the EKF Source. Can be GPS or Non-GPS (T265
@@ -196,8 +206,12 @@ namespace EMIRO
          *
          * @param source      EKF Source Type
          */
-        static void set_ekf_source(EKFSource source);
+        static void set_ekf_source(const EKFSource source);
 
+        /**
+         * @brief Realign the Visual Odometry (VISO) camera
+         *
+         */
         static void realign_viso();
 
         /**
@@ -209,7 +223,7 @@ namespace EMIRO
          *
          * @note This parameter just can be once setting
          */
-        static void set_ekf_origin(float lat, float lnt, float alt);
+        static void set_ekf_origin(const float lat, const float lnt, const float alt);
 
         /**
          * @brief Set the home position.
@@ -223,7 +237,7 @@ namespace EMIRO
          *
          * @return int  Service feedback
          */
-        static int set_home(float lat, float lnt, float alt);
+        static int set_home(const float lat, const float lnt, const float alt);
 
         /**
          * @brief             Check if copter in range of tolerance waypoint
@@ -234,17 +248,44 @@ namespace EMIRO
          * @return true       Copter successfully reached the waypoint
          * @return false      Copter isn't reached the waypoint
          */
-        static bool is_reached(WayPoint dest, float tolerance);
+        static bool is_reached(const WayPoint dest, const float tolerance);
 
-        static bool check_alt(float dist_alt, float tolerance);
+        /**
+         * @brief Check altitude
+         *
+         * @param dist_alt Desire altitude
+         * @param tolerance altitude tolerance (m)
+         * @return true Altitude is reached
+         * @return false Altitude isn't reached
+         */
+        static bool check_alt(const float dist_alt, const float tolerance);
 
-        static WayPoint calc_transition(WayPoint start_point, WayPoint stop_point,
-                                        float copter_deg, float copter_alt = 0.8f);
+        /**
+         * @brief Calculate transition between two WayPoint
+         *
+         * @param start_point Start WayPoint
+         * @param stop_point Stop WayPoint
+         * @param copter_deg Copter's yaw (degree)
+         * @param copter_alt Copter's altitude
+         * @return WayPoint
+         */
+        static WayPoint calc_transition(const WayPoint start_point, const WayPoint stop_point,
+                                        const float copter_deg, const float copter_alt = 0.8f);
 
-        // Setter
-        static void set_rc(int channel, int pwm);
+        /**
+         * @brief Set the remote control PWM
+         *
+         * @param channel desire channel
+         * @param pwm pwm value. Usually in range of 1000 - 2000
+         */
+        static void set_rc(const int channel, const int pwm);
 
-        // Getter
+        /**
+         * @brief Get the copter pose data
+         *
+         * @param pos Copter position (x(m), y(m), z(m))
+         * @param quat Copter quaternion (w, x, y, z)
+         */
         static void get_pose(Position *pos, Quaternion *quat);
 
         /**
@@ -254,24 +295,69 @@ namespace EMIRO
          */
         static float get_yaw();
 
-        // WayPoint and WayPointG
+        /**
+         * @brief Get the copter position
+         *
+         * @param pose_ref Waypoint reference
+         */
         static void get_position(WayPoint &pose_ref);
 
+        /**
+         * @brief Get the GPS Horizontal Dilution of Precision (HDOP)
+         *
+         * @return float HDOP value
+         */
         static float get_hdop();
 
+        /**
+         * @brief Get the GPS Vertical Dilution of Precision (VDOP)
+         *
+         * @return float VDOP value
+         */
         static float get_vdop();
 
+        /**
+         * @brief Get the GPS satellites number
+         *
+         * @return int Number of satellites
+         */
         static int get_satellites_num();
 
+        /**
+         * @brief Get the gps fix type
+         *
+         * @return GPS_FIX_TYPE Type of GPS fix status
+         */
         static GPS_FIX_TYPE get_gps_fix_type();
 
+        /**
+         * @brief Get the takeoff position
+         *
+         * @return WayPoint Position of takeoff
+         */
         static WayPoint get_takeoff_position();
 
+        /**
+         * @brief Get the current mission object
+         *
+         * @return Environment Current mission type
+         */
         static Environment get_current_mission();
 
-        static void go_rtl(float alt = -1.f, float tolerance = 0.2f);
+        /**
+         * @brief Return to takeoff position
+         *
+         * @param alt copter takeoff altitude
+         * @param tolerance tolerance of position
+         */
+        static void go_rtl(const float alt = -1.f, const float tolerance = 0.2f);
 
-        static void set_yaw(YawMode _yaw_mode);
+        /**
+         * @brief Set the copter yaw
+         *
+         * @param _yaw_mode Yaw mode (Relative, Absolute)
+         */
+        static void set_yaw(const YawMode _yaw_mode);
 
     private:
         Copter();

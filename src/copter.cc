@@ -28,30 +28,30 @@ namespace EMIRO
 
     // Copter
     void
-    Copter::init_frame(float timeout_s)
+    Copter::init_frame(const float timeout_s)
     {
         get().copter_init_frame(timeout_s);
     }
 
     bool
-    Copter::FCUconnect(float timeout_s)
+    Copter::FCUconnect(const float timeout_s)
     {
         return get().copter_FCUconnect(timeout_s);
     }
 
     bool
-    Copter::FCUstart(float timeout_s)
+    Copter::FCUstart(const float timeout_s)
     {
         return get().copter_FCUstart(timeout_s);
     }
 
-    bool Copter::PreArmedCheck(float timeout_s)
+    bool Copter::PreArmedCheck(const float timeout_s)
     {
         uint64_t _cnt = 5 * timeout_s;
         return get().copter_PreArmedCheck(_cnt);
     }
 
-    void Copter::waitHDOP(float hdop_limit, u_int64_t duration_ms)
+    void Copter::waitHDOP(float hdop_limit, const u_int64_t duration_ms)
     {
         if (hdop_limit > 2.0f)
         {
@@ -62,13 +62,14 @@ namespace EMIRO
     }
 
     int
-    Copter::set_mode(FlightMode mode)
+    Copter::set_mode(const FlightMode mode)
     {
         return get().copter_set_mode(mode);
     }
 
     void
-    Copter::set_vel(const float &vx, const float &vy, const float &vz, const float &avx, const float &avy, const float &avz)
+    Copter::set_vel(const float &vx, const float &vy, const float &vz,
+                    const float &avx, const float &avy, const float &avz)
     {
         get().copter_set_vel(vx, vy, vz, avx, avy, avz);
     }
@@ -91,7 +92,7 @@ namespace EMIRO
     }
 
     int
-    Copter::takeoff(float takeoff_alt, float tolerance)
+    Copter::takeoff(const float takeoff_alt, const float tolerance)
     {
         return get().copter_takeoff(takeoff_alt, tolerance);
     }
@@ -109,7 +110,7 @@ namespace EMIRO
     // }
 
     void
-    Copter::Go(WayPoint &wp, bool show, std::string header)
+    Copter::Go(WayPoint &wp, const bool show, const std::string header)
     {
         return get().copter_Go(wp, show, header);
     }
@@ -121,25 +122,25 @@ namespace EMIRO
     }
 
     void
-    Copter::Go_Land(WayPoint wp, float tolerance)
+    Copter::Go_Land(WayPoint &wp, const float tolerance)
     {
         get().copter_Go_Land(wp, tolerance);
     }
 
     void
-    Copter::Land(float ground_tolerance)
+    Copter::Land(const float ground_tolerance)
     {
         get().copter_Land(ground_tolerance);
     }
 
     int
-    Copter::set_speed(float speed_mps)
+    Copter::set_speed(const float speed_mps)
     {
         return get().copter_set_speed(speed_mps);
     }
 
     void
-    Copter::set_ekf_source(EKFSource source)
+    Copter::set_ekf_source(const EKFSource source)
     {
         get().copter_set_ekf_source(source);
     }
@@ -150,19 +151,19 @@ namespace EMIRO
     }
 
     void
-    Copter::set_ekf_origin(float lat, float lnt, float alt)
+    Copter::set_ekf_origin(const float lat, const float lnt, const float alt)
     {
         get().copter_set_ekf_origin(lat, lnt, alt);
     }
 
     int
-    Copter::set_home(float lat, float lnt, float alt)
+    Copter::set_home(const float lat, const float lnt, const float alt)
     {
         return get().copter_set_home(lat, lnt, alt);
     }
 
     bool
-    Copter::is_reached(WayPoint dest, float tolerance)
+    Copter::is_reached(const WayPoint dest, const float tolerance)
     {
         return get().copter_is_reached(dest, tolerance);
     }
@@ -174,15 +175,15 @@ namespace EMIRO
     }
 
     WayPoint
-    Copter::calc_transition(WayPoint start_point, WayPoint stop_point,
-                            float copter_deg, float copter_alt)
+    Copter::calc_transition(const WayPoint start_point, const WayPoint stop_point,
+                            const float copter_deg, const float copter_alt)
     {
         return get().copter_calc_transition(start_point, stop_point, copter_deg,
                                             copter_alt);
     }
 
     void
-    Copter::set_rc(int channel, int pwm)
+    Copter::set_rc(const int channel, const int pwm)
     {
         get().copter_set_rc(channel, pwm);
     }
@@ -241,12 +242,12 @@ namespace EMIRO
     }
 
     void
-    Copter::go_rtl(float alt, float tolerance)
+    Copter::go_rtl(const float alt, const float tolerance)
     {
         get().copter_Go_RTL(alt, tolerance);
     }
 
-    void Copter::set_yaw(YawMode _yaw_mode)
+    void Copter::set_yaw(const YawMode _yaw_mode)
     {
         get().yaw_mode = _yaw_mode;
     }
