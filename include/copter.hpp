@@ -108,7 +108,7 @@ namespace EMIRO
          */
         static bool PreArmedCheck(float timeout_s = 60.0f);
 
-        static void waitHDOP(u_int64_t duration_ms = UINT64_MAX);
+        static void waitHDOP(float hdop_limit, u_int64_t duration_ms = UINT64_MAX);
 
         /**
          * @brief Set drone mode.
@@ -284,10 +284,10 @@ namespace EMIRO
         virtual ~Copter();
 
         // Static Implementation
-        bool copter_init(std::string logger_name, FileType logger_type);
-        void copter_init_frame(float timeout_s);
-        bool copter_FCUconnect(float timeout_s = 1.0f) const;
-        bool copter_FCUstart(float timeout_s = 1.0f) const;
+        bool copter_init(const std::string logger_name, const FileType logger_type);
+        void copter_init_frame(const float timeout_s);
+        bool copter_FCUconnect(const float timeout_s = 1.0f) const;
+        bool copter_FCUstart(const float timeout_s = 1.0f) const;
         bool copter_PreArmedCheck(uint64_t &cnt) const;
         void copter_waitHDOP(float hdop_limit, u_int64_t duration_ms) const;
         int copter_set_mode(FlightMode mode);
@@ -319,16 +319,12 @@ namespace EMIRO
         void copter_realign_viso() const;
 
         // Private Implementation
-        Quaternion _to_quaternion(float roll_rate, float pitch_rate, float yaw_rate) const;
-        geometry_msgs::Point _enu_2_local(nav_msgs::Odometry current_pose_enu) const;
-        void _pose_cb_local(const geometry_msgs::PoseStamped::ConstPtr &msg);
-        void _gps_raw_subscriber(const mavros_msgs::GPSRAW::ConstPtr &msg);
-        void _pose_cb_global(const geographic_msgs::GeoPoseStamped::ConstPtr &msg);
-        void _state_cb(const mavros_msgs::State::ConstPtr &msg);
+        Quaternion _to_quaternion(const float roll_rate, const float pitch_rate, const float yaw_rate) const;
+        geometry_msgs::Point _enu_2_local(const nav_msgs::Odometry current_pose_enu) const;
         geometry_msgs::Point _get_hexa_point() const;
-        void _go_to(geometry_msgs::Pose pose);
-        void _goto_xyz_rpy(float x, float y, float z, float roll, float pitch, float yaw);
-        bool _land(float tolerance);
+        void _go_to(const geometry_msgs::Pose pose);
+        void _goto_xyz_rpy(const float x, const float y, const float z, const float roll, const float pitch, const float yaw);
+        bool _land(const float tolerance);
 
     public:
         ros::ServiceClient command_client;

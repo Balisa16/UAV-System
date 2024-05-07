@@ -51,9 +51,14 @@ namespace EMIRO
         return get().copter_PreArmedCheck(_cnt);
     }
 
-    void Copter::waitHDOP(u_int64_t duration_ms)
+    void Copter::waitHDOP(float hdop_limit, u_int64_t duration_ms)
     {
-        get().copter_waitHDOP(duration_ms);
+        if (hdop_limit > 2.0f)
+        {
+            get_logger().write_show(LogLevel::INFO, "HDOP limit too high. Setting to 2.0");
+            hdop_limit = 2.0f;
+        }
+        get().copter_waitHDOP(hdop_limit, duration_ms);
     }
 
     int
@@ -249,7 +254,7 @@ namespace EMIRO
 #pragma region Initialize
 
     bool
-    Copter::copter_init(std::string logger_name, FileType logger_type)
+    Copter::copter_init(const std::string logger_name, const FileType logger_type)
     {
         get_logger().init(logger_name, logger_type);
         get_logger().start(true);
@@ -283,19 +288,25 @@ namespace EMIRO
                 "/mavros/state", 10,
                 [this](const mavros_msgs::State::ConstPtr &msg)
                 {
-                    _state_cb(msg);
+                    current_state_g = *msg;
                 });
             cmd_pos_sub_local = get_nh()->subscribe<geometry_msgs::PoseStamped>(
                 "/mavros/local_position/pose", 5,
                 [this](const geometry_msgs::PoseStamped::ConstPtr &msg)
                 {
-                    _pose_cb_local(msg);
+                    pose_data_local = *msg;
+                    traj_logger.write(
+                        LogLevel::INFO, "%f,%f,%f,%f,%f,%f,%f", pose_data_local.pose.position.x,
+                        pose_data_local.pose.position.y, pose_data_local.pose.position.z,
+                        pose_data_local.pose.orientation.w, pose_data_local.pose.orientation.x,
+                        pose_data_local.pose.orientation.y, pose_data_local.pose.orientation.z);
+                    timestamp = pose_data_local.header.stamp;
                 });
             gps_raw_sub = get_nh()->subscribe<mavros_msgs::GPSRAW>(
                 "/mavros/gpsstatus/gps1/raw", 5,
                 [this](const mavros_msgs::GPSRAW::ConstPtr &msg)
                 {
-                    _gps_raw_subscriber(msg);
+                    gps_raw = *msg;
                 });
 
             cmd_vel_pub = get_nh()->advertise<geometry_msgs::Twist>(
@@ -314,7 +325,7 @@ namespace EMIRO
     }
 
     void
-    Copter::copter_init_frame(float timeout_s)
+    Copter::copter_init_frame(const float timeout_s)
     {
         ros::Rate _timeout_rate(20);
         int _timeout_int = timeout_s < 0.2f ? 4 : timeout_s * 20;
@@ -341,7 +352,7 @@ namespace EMIRO
 
 #pragma region FCU
     bool
-    Copter::copter_FCUconnect(float timeout_s) const
+    Copter::copter_FCUconnect(const float timeout_s) const
     {
         ros::Rate _timeout_rate(20);
         int _timeout_int = timeout_s < 0.2f ? 4 : timeout_s * 20;
@@ -358,7 +369,7 @@ namespace EMIRO
     }
 
     bool
-    Copter::copter_FCUstart(float timeout_s) const
+    Copter::copter_FCUstart(const float timeout_s) const
     {
         ros::Rate _timeout_rate(20);
         int _timeout_int = timeout_s < 0.2f ? 4 : timeout_s * 20;
@@ -430,15 +441,9 @@ namespace EMIRO
     void
     Copter::copter_waitHDOP(float hdop_limit, u_int64_t duration_ms) const
     {
-        float _hdop = get_hdop() / 1E2F;
-        if (hdop_limit > 2.0f)
-        {
-            get_logger().write_show(LogLevel::INFO, "HDOP limit too high. Setting to 2.0");
-            hdop_limit = 2.0f;
-        }
         ros::Rate _rate(5);
         get_logger().wait("Waiting for HDOP");
-        while (ros::ok() && _hdop > hdop_limit && duration_ms)
+        while (ros::ok() && gps_raw.eph / 1E2F > hdop_limit && duration_ms)
         {
             ros::spinOnce();
             _rate.sleep();
@@ -449,69 +454,39 @@ namespace EMIRO
 
 #pragma region Pose
     Quaternion
-    Copter::_to_quaternion(float roll_rate, float pitch_rate, float yaw_rate) const
+    Copter::_to_quaternion(const float roll_rate, const float pitch_rate, const float yaw_rate) const
     {
-        float yaw = yaw_rate * (M_PI / 180);
-        float pitch = pitch_rate * (M_PI / 180);
-        float roll = roll_rate * (M_PI / 180);
+        const float yaw = yaw_rate * (M_PI / 180);
+        const float pitch = pitch_rate * (M_PI / 180);
+        const float roll = roll_rate * (M_PI / 180);
 
-        float cy = cos(yaw * 0.5);
-        float sy = sin(yaw * 0.5);
-        float cr = cos(roll * 0.5);
-        float sr = sin(roll * 0.5);
-        float cp = cos(pitch * 0.5);
-        float sp = sin(pitch * 0.5);
+        const float cy = cos(yaw * 0.5);
+        const float sy = sin(yaw * 0.5);
+        const float cr = cos(roll * 0.5);
+        const float sr = sin(roll * 0.5);
+        const float cp = cos(pitch * 0.5);
+        const float sp = sin(pitch * 0.5);
 
-        float qw = cy * cr * cp + sy * sr * sp;
-        float qx = cy * sr * cp - sy * cr * sp;
-        float qy = cy * cr * sp + sy * sr * cp;
-        float qz = sy * cr * cp - cy * sr * sp;
+        const float qw = cy * cr * cp + sy * sr * sp;
+        const float qx = cy * sr * cp - sy * cr * sp;
+        const float qy = cy * cr * sp + sy * sr * cp;
+        const float qz = sy * cr * cp - cy * sr * sp;
 
         return {qw, qx, qy, qz};
     }
 
     geometry_msgs::Point
-    Copter::_enu_2_local(nav_msgs::Odometry current_pose_enu) const
+    Copter::_enu_2_local(const nav_msgs::Odometry current_pose_enu) const
     {
-        float x = current_pose_enu.pose.pose.position.x;
-        float y = current_pose_enu.pose.pose.position.y;
-        float z = current_pose_enu.pose.pose.position.z;
-        float deg2rad = (M_PI / 180);
+        const float x = current_pose_enu.pose.pose.position.x;
+        const float y = current_pose_enu.pose.pose.position.y;
+        const float z = current_pose_enu.pose.pose.position.z;
+        const float deg2rad = (M_PI / 180);
         geometry_msgs::Point current_pos_local;
         current_pos_local.x = x * cos((local_offset_g - 90) * deg2rad) - y * sin((local_offset_g - 90) * deg2rad);
         current_pos_local.y = x * sin((local_offset_g - 90) * deg2rad) + y * cos((local_offset_g - 90) * deg2rad);
         current_pos_local.z = z;
         return current_pos_local;
-    }
-
-    void
-    Copter::_pose_cb_local(const geometry_msgs::PoseStamped::ConstPtr &msg)
-    {
-        pose_data_local = *msg;
-        traj_logger.write(
-            LogLevel::INFO, "%f,%f,%f,%f,%f,%f,%f", pose_data_local.pose.position.x,
-            pose_data_local.pose.position.y, pose_data_local.pose.position.z,
-            pose_data_local.pose.orientation.w, pose_data_local.pose.orientation.x,
-            pose_data_local.pose.orientation.y, pose_data_local.pose.orientation.z);
-        timestamp = pose_data_local.header.stamp;
-    }
-
-    void
-    Copter::_gps_raw_subscriber(const mavros_msgs::GPSRAW::ConstPtr &msg)
-    {
-        gps_raw = *msg;
-    }
-
-    void
-    Copter::_pose_cb_global(const geographic_msgs::GeoPoseStamped::ConstPtr &msg)
-    {
-        pose_data_global = *msg;
-    }
-
-    void
-    Copter::_state_cb(const mavros_msgs::State::ConstPtr &msg)
-    {
-        current_state_g = *msg;
     }
 #pragma endregion
 
@@ -603,7 +578,7 @@ namespace EMIRO
 
 #pragma region Go
     void
-    Copter::_go_to(geometry_msgs::Pose pose)
+    Copter::_go_to(const geometry_msgs::Pose pose)
     {
         pose_stamped.header.stamp = timestamp;
         pose_stamped.pose = pose;
@@ -612,8 +587,8 @@ namespace EMIRO
     }
 
     void
-    Copter::_goto_xyz_rpy(float x, float y, float z, float roll, float pitch,
-                          float yaw)
+    Copter::_goto_xyz_rpy(const float x, const float y, const float z,
+                          const float roll, const float pitch, const float yaw)
     {
         pose_data2.position.x = x;
         pose_data2.position.y = y;
@@ -786,7 +761,7 @@ namespace EMIRO
 
 #pragma region Land
     bool
-    Copter::_land(float tolerance)
+    Copter::_land(const float tolerance)
     {
         mavros_msgs::CommandTOL srv_land;
         if (land_client.call(srv_land) && srv_land.response.success)
