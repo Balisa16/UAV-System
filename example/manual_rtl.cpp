@@ -7,6 +7,8 @@ int main(int argc, char **argv)
 {
     Copter::init(argc, argv);
 
+    Copter::waitHDOP(1.0f, 5000);
+
     Copter::takeoff(1);
     // ros::Duration(10).sleep();
 
@@ -29,7 +31,8 @@ int main(int argc, char **argv)
             Copter::Land();
             exit(EXIT_FAILURE);
         }
-        std::cout << C_GREEN << S_BOLD << '[' << t.header << ']' << C_RESET << '\n';
+        std::cout << '\n'
+                  << C_GREEN << S_BOLD << '[' << t.header << ']' << C_RESET << '\n';
 
         if (cnt == 0)
         {

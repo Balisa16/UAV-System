@@ -317,8 +317,8 @@ namespace EMIRO
                                     "Publisher and Subscriber Already Initialized");
 
         get_logger().write_show(LogLevel::INFO, "Initializing GPS");
-
         GPS::init();
+        gps_raw.eph = 100.0f;
         return true;
     }
 
@@ -700,6 +700,7 @@ namespace EMIRO
         if (land_client.call(srv_land) && srv_land.response.success)
         {
             WayPoint _wp;
+            std::cout.flush();
             get_logger().wait("Waiting to Land");
             while (true)
             {
@@ -728,7 +729,7 @@ namespace EMIRO
     Copter::copter_Go_Land(WayPoint wp, float tolerance)
     {
         get_logger().wait("Go to Land Position");
-        ros::Rate wait_land(2);
+        ros::Rate wait_land(5);
         while (ros::ok() && !copter_is_reached(wp, 0.2f))
         {
             get().copter_Go(wp);
@@ -738,14 +739,14 @@ namespace EMIRO
 
         ros::Duration(1).sleep();
         get_logger().write_show(LogLevel::INFO, "System Land");
-        _land(tolerance);
+        get()._land(tolerance);
     }
 
     void
     Copter::copter_Land(float ground_tolerance)
     {
         get_logger().write_show(LogLevel::INFO, "System Land");
-        _land(ground_tolerance);
+        get()._land(ground_tolerance);
     }
 #pragma endregion
 
@@ -966,6 +967,12 @@ namespace EMIRO
     {
         ros::Rate _rate(5);
         get_logger().wait("Waiting for HDOP");
+        for (size_t i = 0; i < 15; i++) // 5 seconds
+        {
+            ros::spinOnce();
+            _rate.sleep();
+        }
+
         while (ros::ok() && gps_raw.eph / 1E2F > hdop_limit && duration_ms)
         {
             ros::spinOnce();
@@ -973,6 +980,7 @@ namespace EMIRO
             duration_ms -= 200;
         }
         get_logger().wait_success();
+        get_logger().write_show(LogLevel::INFO, "HDOP Validation Success. HDOP = %.2f", gps_raw.eph / 1E2F);
     }
 
     bool
