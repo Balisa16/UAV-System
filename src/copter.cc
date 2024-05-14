@@ -966,7 +966,7 @@ namespace EMIRO
     Copter::copter_waitHDOP(float hdop_limit, u_int64_t duration_ms) const
     {
         ros::Rate _rate(5);
-        get_logger().wait("Waiting for HDOP");
+        get_logger().wait("Waiting for HDOP = %.2f", hdop_limit);
         for (size_t i = 0; i < 15; i++) // 5 seconds
         {
             ros::spinOnce();
