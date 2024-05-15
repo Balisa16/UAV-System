@@ -14,6 +14,7 @@ bool TCPClient::connect(const std::string &hostname, int port)
     try
     {
         this->hostname = hostname;
+        std::cout << "Connecting to " << hostname << ":" << port << std::endl;
         this->port = port;
         tcp::resolver resolver(_io_context);
         boost::asio::connect(_socket, resolver.resolve(hostname, std::to_string(port)));
