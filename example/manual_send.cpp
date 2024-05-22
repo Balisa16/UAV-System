@@ -59,9 +59,8 @@ int main(int argc, char **argv)
             rate.sleep();
         }
 
-        std::cout << "Counter : " << _cnt << '\n';
+        std::cout << "Capture: " << _cnt << '\n';
         // std::cout << C_GREEN << S_BOLD << '[' << t.header << ']' << C_RESET << '\n';
-
         // PIDControl::get().set_target_point(t.wp);
         // PIDControl::get().set_linear_speed(t.speed);
         // PIDControl::get().go_wait(true);
