@@ -10,14 +10,13 @@
 #include <random>
 #include <types.hpp>
 
-using boost::asio::ip::tcp;
-
 class TCPClient
 {
 public:
     TCPClient();
     ~TCPClient();
-    bool connect(const std::string &hostname = "localhost", int port = 8888);
+
+    bool connect(const std::string &hostname, int port = 8888);
     bool close();
     std::string get_hostname() const;
     int get_port() const;
@@ -25,9 +24,9 @@ public:
     void read_response();
 
 private:
+    boost::asio::io_service _io_service;
+    boost::asio::ip::tcp::socket _socket;
+    boost::asio::ip::tcp::resolver _resolver;
     std::string hostname;
     int port;
-    boost::asio::io_context _io_context;
-    tcp::socket _socket;
-    tcp::resolver _resolver;
 };
