@@ -1,6 +1,6 @@
 #include <tcpclient.hpp>
 
-TCPClient::TCPClient() : _socket(_io_service), _resolver(_io_service) {}
+TCPClient::TCPClient() : _socket(_io_service) {}
 
 TCPClient::~TCPClient()
 {
@@ -16,8 +16,7 @@ bool TCPClient::connect(const std::string &hostname, int port)
         std::cout << "Connecting to " << hostname << ":" << port << std::endl;
         this->port = port;
 
-        auto endpoints = _resolver.resolve(boost::asio::ip::tcp::v4(), hostname, std::to_string(port));
-        boost::asio::connect(_socket, endpoints);
+        _socket.connect( boost::asio::ip::tcp::endpoint( boost::asio::ip::address::from_string(hostname), port ));
 
         return true;
     }
