@@ -24,7 +24,7 @@ int main(int argc, char **argv)
 
     // Set Speed limit
     PIDControl::get().set_rotation_speed(10.f);
-    PIDControl::get().set_linear_tolerance(0.2f);
+    PIDControl::get().set_linear_tolerance(0.1f);
     PIDControl::get().set_rotation_tolerance(5.f);
     Copter::set_yaw(YawMode::RELATIVE);
 
@@ -39,7 +39,7 @@ int main(int argc, char **argv)
 
         PIDControl::get().set_target_point(t.wp);
         PIDControl::get().set_linear_speed(t.speed);
-        PIDControl::get().go_wait(true);
+        PIDControl::get().go_wait(true, 2);
         ros::Duration(1).sleep();
         // Control::go(t.wp.x, t.wp.y, t.wp.z, t.wp.yaw, 0.05f, 5);
     }

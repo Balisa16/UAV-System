@@ -1,82 +1,50 @@
 [
     {
-        "header": "Takeoff",
-        "speed": 0.50,
+        "header": "Takeoff (Point A)",
+        "speed": 0.5,
         "x": 0.00,
         "y": 0.00,
         "z": 1.00,
         "yaw": 0.00
     },
     {
-        "header": "Waypoint 1",
-        "speed": 0.50,
-        "x": -1.50,
-        "y": 0.00,
+        "header": "Point B",
+        "speed": 0.5,
+        "x": 10.0,
+        "y": 5.00,
+        "z": 2.00,
+        "yaw": 0.00
+    },
+    {
+        "header": "Point C",
+        "speed": 0.5,
+        "x": 15.0,
+        "y": 2.5,
+        "z": 5.00,
+        "yaw": 0.00
+    },
+    {
+        "header": "Point D",
+        "speed": 0.5,
+        "x": 10.0,
+        "y": 0.0,
         "z": 1.00,
         "yaw": 0.00
     },
     {
-        "header": "Waypoint 2",
-        "speed": 0.50,
-        "x": -3.00,
-        "y": 0.00,
-        "z": 1.00,
+        "header": "Point E",
+        "speed": 0.5,
+        "x": 0.0,
+        "y": 5.0,
+        "z": 3.0,
         "yaw": 0.00
     },
     {
-        "header": "Waypoint 3",
-        "speed": 0.50,
-        "x": -3.00,
-        "y": 1.50,
-        "z": 1.00,
-        "yaw": 0.00
-    },
-    {
-        "header": "Waypoint 4",
-        "speed": 0.50,
-        "x": -1.50,
-        "y": 1.50,
-        "z": 1.00,
-        "yaw": 0.00
-    },
-    {
-        "header": "Waypoint 5",
-        "speed": 0.50,
-        "x": 0.00,
-        "y": 1.50,
-        "z": 1.00,
-        "yaw": 0.00
-    },
-    {
-        "header": "Waypoint 6",
-        "speed": 0.50,
-        "x": 1.50,
-        "y": 1.50,
-        "z": 1.00,
-        "yaw": 0.00
-    },
-    {
-        "header": "Waypoint 7",
-        "speed": 0.50,
-        "x": 3.00,
-        "y": 1.50,
-        "z": 1.00,
-        "yaw": 0.00
-    },
-    {
-        "header": "Waypoint 8",
-        "speed": 0.50,
-        "x": 3.00,
-        "y": 0.00,
-        "z": 1.00,
-        "yaw": 0.00
-    },
-    {
-        "header": "Waypoint 9",
-        "speed": 0.50,
-        "x": 1.50,
-        "y": 0.00,
-        "z": 1.00,
+        "header": "Point F",
+        "speed": 0.5,
+        "x": -5.0,
+        "y": 2.5,
+        "z": 0.5,
         "yaw": 0.00
     },
     {
