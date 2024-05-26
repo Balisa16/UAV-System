@@ -26,7 +26,6 @@ public:
 private:
     boost::asio::io_service _io_service;
     boost::asio::ip::tcp::socket _socket;
-    boost::asio::ip::tcp::resolver _resolver;
     std::string hostname;
     int port;
 };
