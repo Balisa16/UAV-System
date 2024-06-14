@@ -118,7 +118,7 @@ namespace EMIRO
     public:
         virtual bool go_wait(const bool use_takeoff_position = false, const float stable_time_s = 0.0f) = 0;
         // Setter
-        virtual void set_linear_speed(const float &linear_speed_m_s) = 0;
+        virtual void set_linear_speed(const float linear_speed_m_s) = 0;
         virtual void set_rotation_speed(const float &rotation_speed_deg_s) = 0;
         virtual void set_target_point(const WayPoint &wp) = 0;
 
@@ -140,7 +140,7 @@ namespace EMIRO
 
         void change(const float &Kp, const float &Ki, const float &Kd);
 
-        void set_linear_speed(const float &linear_speed_m_s) override;
+        void set_linear_speed(const float linear_speed_m_s) override;
         void set_rotation_speed(const float &rotation_speed_deg_s) override;
         void set_target_point(const WayPoint &wp) override;
         void set_linear_tolerance(const float &tolerance);

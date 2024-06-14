@@ -177,19 +177,19 @@ namespace EMIRO
         _Kd = Kd;
     }
 
-    void PIDControl::set_linear_speed(const float &linear_speed_m_s)
+    void PIDControl::set_linear_speed(const float linear_speed_m_s)
     {
         if (linear_speed_m_s > 20)
         {
-            Copter::get_logger().write_show(LogLevel::ERROR, "Linear Speed too high (> 20 m/s). Use previous value : %d", (int)_linear_speed);
+            Copter::get_logger().write_show(LogLevel::ERROR, "Linear Speed too high (> 20 m/s). Use previous value : %.2f", _linear_speed);
             return;
         }
         else if (linear_speed_m_s < 0.1)
         {
-            Copter::get_logger().write_show(LogLevel::ERROR, "Linear Speed too low (< 0.1 m/s). Use previous value : %d", (int)_linear_speed);
+            Copter::get_logger().write_show(LogLevel::ERROR, "Linear Speed too low (< 0.1 m/s). Use previous value : %.2f", _linear_speed);
             return;
         }
-        _linear_speed = linear_speed_m_s;
+        this->_linear_speed = linear_speed_m_s;
     }
     void PIDControl::set_rotation_speed(const float &rotation_speed_deg_s)
     {
@@ -253,8 +253,8 @@ namespace EMIRO
     bool PIDControl::go_wait(const bool use_takeoff_position, const float stable_time_s)
     {
         // Copter::get_logger().write_show(LogLevel::INFO, "Go to [%.2f, %.2f, %.2f, %d°]", _target_point.x, _target_point.y, _target_point.z, (int)_target_point.yaw);
-        _prev_error.clear();
-        _integral.clear();
+        // _prev_error.clear();
+        // _integral.clear();
         Copter::get().print_wp("Go to", _target_point);
 
         // Reset PID
@@ -279,17 +279,25 @@ namespace EMIRO
         {
             if (!ros::ok())
                 return false;
+
+            ros::spinOnce();
+            r.sleep();
+
             Copter::get_position(__current_pos);
+
+            if (__current_pos.x == 0 && __current_pos.y == 0 && __current_pos.z == 0 && __current_pos.yaw == 0)
+                continue;
+
             if (std::fabs(__current_pos.x - _target_point.x) < _linear_tolerance &&
                 std::fabs(__current_pos.y - _target_point.y) < _linear_tolerance &&
                 std::fabs(__current_pos.z - _target_point.z) < _linear_tolerance &&
                 std::fabs(__current_pos.yaw - _target_point.yaw) < _rotation_tolerance)
-                {
-                    if(start == static_start)
-                        start = std::chrono::high_resolution_clock::now();
-                    else if (std::chrono::duration_cast<std::chrono::duration<float>>(std::chrono::high_resolution_clock::now() - start).count() > stable_time_s)
-                        break;
-                }
+            {
+                if (start == static_start)
+                    start = std::chrono::high_resolution_clock::now();
+                else if (std::chrono::duration_cast<std::chrono::duration<float>>(std::chrono::high_resolution_clock::now() - start).count() > stable_time_s)
+                    break;
+            }
 
             calculate(__current_pos, __output_pid);
 
@@ -300,9 +308,6 @@ namespace EMIRO
                       << __current_pos.y - _target_point.y << ", "
                       << __current_pos.z - _target_point.z << ", "
                       << __current_pos.yaw - _target_point.yaw << "°]" << std::flush;
-
-            ros::spinOnce();
-            r.sleep();
         }
         std::cout << CLEAR_LINE;
         Copter::get_logger().write_show(
@@ -319,14 +324,15 @@ namespace EMIRO
         out.x_out = _Kp * __wp_error.x + _Ki * _integral.x + _Kd * (__wp_error.x - _prev_error.x);
         out.y_out = _Kp * __wp_error.y + _Ki * _integral.y + _Kd * (__wp_error.y - _prev_error.y);
         out.z_out = _Kp * __wp_error.z + _Ki * _integral.z + _Kd * (__wp_error.z - _prev_error.z);
+        // std::cout << "Error : " << out.x_out << ", " << out.y_out << ", " << out.z_out << '\n';
 
         if (std::fabs(out.x_out) > _linear_speed || std::fabs(out.y_out) > _linear_speed || std::fabs(out.z_out) > _linear_speed)
         {
-            std::vector<float> _error = {__wp_error.x, __wp_error.y, __wp_error.z};
+            std::vector<float> _error = {std::fabs(__wp_error.x), std::fabs(__wp_error.y), std::fabs(__wp_error.z)};
             float largest_error = *std::max_element(_error.begin(), _error.end());
-            out.x_out = __wp_error.x / std::fabs(largest_error) * _linear_speed;
-            out.y_out = __wp_error.y / std::fabs(largest_error) * _linear_speed;
-            out.z_out = __wp_error.z / std::fabs(largest_error) * _linear_speed;
+            out.x_out = __wp_error.x / largest_error * _linear_speed;
+            out.y_out = __wp_error.y / largest_error * _linear_speed;
+            out.z_out = __wp_error.z / largest_error * _linear_speed;
         }
 
         float diff_yaw = __wp_error.yaw - _prev_error.yaw;
