@@ -7,6 +7,12 @@ int main(int argc, char **argv)
 {
     Copter::init(argc, argv);
 
+    if (!Copter::PreArmedCheck())
+    {
+        Copter::Land();
+        exit(EXIT_FAILURE);
+    }
+
     // Copter::waitHDOP(1.0f, 5000);
 
     Copter::takeoff(1);
@@ -22,6 +28,7 @@ int main(int argc, char **argv)
     PIDControl::get().set_rotation_speed(10.f);
     PIDControl::get().set_linear_tolerance(0.1f);
     PIDControl::get().set_rotation_tolerance(5.f);
+    Copter::set_yaw(YawMode::RELATIVE);
 
     for (Target &t : target)
     {
