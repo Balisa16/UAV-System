@@ -5,3 +5,4 @@ release
 lib
 .swp
 copter
+/example/cek_lidar.cpp
